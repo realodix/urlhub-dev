@@ -14,8 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('visitors', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('url_id');
+            $table->string('refered', 300)->nullable()->default(0);
+            $table->ipAddress('ip');
+            $table->date('last_counter');
+
+            $table->foreign('url_id')
+                ->references('id')->on('urls')
+                ->onDelete('cascade');
         });
     }
 
