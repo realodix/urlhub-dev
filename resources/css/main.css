@@ -1,0 +1,62 @@
+@import 'base.css';
+
+main {
+  @apply sm:mt-10;
+}
+
+.frontend, .backend, .auth {
+  @apply bg-bg-primary font-sans text-gray-900 antialiased;
+}
+
+.navbar {
+  @apply bg-white text-uh-blue;
+
+  &-brand {
+    @apply font-serif text-4xl font-bold;
+    @apply flex items-center;
+  }
+
+  &-toggler {
+    @apply text-uh-indigo-500;
+  }
+
+  .nav-item {
+    @apply text-sm text-gray-700 hover:bg-slate-50 focus:bg-slate-100 leading-5;
+    @apply block px-4 py-2 focus:outline-none transition;
+  }
+
+  &-mobile {
+    .nav-item {
+      @apply text-gray-700;
+      @apply block pl-3 pr-4 py-2 font-medium transition;
+
+      &-username {
+        @apply font-semibold;
+      }
+
+      &-email {
+        @apply text-gray-500 font-medium text-sm;
+      }
+    }
+  }
+}
+
+.power-grid {
+  .pg-header {
+    input {
+      @apply bg-white focus:ring-uh-indigo-400 focus:border-uh-indigo-400;
+    }
+  }
+
+  .pg-footer {
+    select {
+      @apply bg-white focus:border-gray-300;
+    }
+
+    nav {
+      a {
+        @apply bg-uh-indigo-600 hover:bg-uh-indigo-700 active:bg-uh-indigo-600;
+      }
+    }
+  }
+}

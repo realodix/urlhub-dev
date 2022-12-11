@@ -1,0 +1,52 @@
+name: tests
+
+on: [pull_request, push]
+
+jobs:
+  build:
+    name: PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        php-version: ['8.0', '8.1', '8.2']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          coverage: xdebug
+
+      - name: Install Dependencies (Composer)
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: composer update --no-interaction --no-progress
+
+      - name: Install Dependencies (NPM)
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: npm install
+
+      - name: Prepare
+        run: |
+          php artisan config:clear
+          npm run dev
+
+      - name: Execute Tests
+        run: ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+
+      - name: Upload Coverage Results To Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          composer global require php-coveralls/php-coveralls
+          php-coveralls --coverage_clover=build/logs/clover.xml --verbose
