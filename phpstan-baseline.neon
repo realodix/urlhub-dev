@@ -1,2 +1,141 @@
 parameters:
 	ignoreErrors:
+		-
+			message: "#^Call to method handle\\(\\) on an unknown class Psr\\\\Http\\\\Server\\\\RequestHandlerInterface\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Call to method resolveEnabledShortUrl\\(\\) on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\ShortUrlResolverInterface\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Call to method stringify\\(\\) on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\Helper\\\\ShortUrlStringifierInterface\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Call to static method fromRedirectRequest\\(\\) on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\Model\\\\ShortUrlIdentifier\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Call to static method fromRequest\\(\\) on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\Action\\\\Model\\\\QrCodeParams\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Caught class Shlinkio\\\\Shlink\\\\Core\\\\Exception\\\\ShortUrlNotFoundException not found\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Instantiated class Shlinkio\\\\Shlink\\\\Common\\\\Response\\\\QrCodeResponse not found\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:process\\(\\) should return Psr\\\\Http\\\\Message\\\\ResponseInterface but returns Shlinkio\\\\Shlink\\\\Common\\\\Response\\\\QrCodeResponse\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Parameter \\$defaultOptions of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:__construct\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Parameter \\$handler of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:process\\(\\) has invalid type Psr\\\\Http\\\\Server\\\\RequestHandlerInterface\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Parameter \\$stringifier of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:__construct\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\Helper\\\\ShortUrlStringifierInterface\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Parameter \\$urlResolver of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:__construct\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\ShortUrlResolverInterface\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$defaultOptions has unknown class Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions as its type\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$stringifier has unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\Helper\\\\ShortUrlStringifierInterface as its type\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$urlResolver has unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\ShortUrlResolverInterface as its type\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Access to property \\$errorCorrection on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Access to property \\$format on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Access to property \\$margin on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Access to property \\$roundBlockSize on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Access to property \\$size on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Function Functional\\\\contains not found\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Parameter \\$defaults of method App\\\\Actions\\\\QrCode\\\\QrCodeParams\\:\\:fromRequest\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Parameter \\$defaults of method App\\\\Actions\\\\QrCode\\\\QrCodeParams\\:\\:resolveErrorCorrection\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Parameter \\$defaults of method App\\\\Actions\\\\QrCode\\\\QrCodeParams\\:\\:resolveMargin\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Parameter \\$defaults of method App\\\\Actions\\\\QrCode\\\\QrCodeParams\\:\\:resolveRoundBlockSize\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Parameter \\$defaults of method App\\\\Actions\\\\QrCode\\\\QrCodeParams\\:\\:resolveSize\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Parameter \\$defaults of method App\\\\Actions\\\\QrCode\\\\QrCodeParams\\:\\:resolveWriter\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\Options\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
+
+		-
+			message: "#^Used function Functional\\\\contains not found\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeParams.php
