@@ -122,7 +122,7 @@ return [
      * Type: int
      * Accepted values: 50 to 1000
      */
-    'qrcode_size' => env('QRCODE_SIZE', 300),
+    'qrcode_size' => env('QRCODE_SIZE', 170),
 
     /**
      * The space in pixels between the QR code itself and the border of the image.

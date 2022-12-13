@@ -23,15 +23,14 @@ class QrCodeAction
 
     public function process(string $data): ResultInterface
     {
-        $qrCodeBuilder = Builder::create()
+        return Builder::create()
             ->data($data)
             ->size($this->resolveSize())
             ->margin($this->resolveMargin())
             ->writer($this->resolveWriter())
             ->errorCorrectionLevel($this->resolveErrorCorrection())
-            ->roundBlockSizeMode($this->resolveRoundBlockSize());
-
-        return $qrCodeBuilder->build();
+            ->roundBlockSizeMode($this->resolveRoundBlockSize())
+            ->build();
     }
 
     private static function resolveSize(): int
