@@ -114,7 +114,7 @@ return [
      * Type: bool
      * Accepted values: true or false
      */
-    'qrcode' => env('UH_QRCODE', true),
+    'qrcode' => env('QRCODE', true),
 
     /**
      * Determines the width/height in pixels.
