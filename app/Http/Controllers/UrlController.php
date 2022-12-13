@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\QrCode\QrCodeAction;
+use App\Actions\QrCode;
 use App\Http\Requests\StoreUrl;
 use App\Models\Url;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +43,7 @@ class UrlController extends Controller
         $url = Url::with('visit')->whereKeyword($key)->firstOrFail();
 
         if (config('urlhub.qrcode')) {
-            $qrCode = (new QrCodeAction())->process($url->short_url);
+            $qrCode = (new QrCode)->process($url->short_url);
 
             return view('frontend.short', compact(['qrCode']), ['url' => $url]);
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\QrCode;
+namespace App\Actions;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\ErrorCorrectionLevel;
@@ -8,7 +8,7 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 
-class QrCodeAction
+class QrCode
 {
     private const MIN_SIZE = 50;
 
