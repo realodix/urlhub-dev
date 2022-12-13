@@ -70,8 +70,6 @@ return [
 
     'web_title' => env('UH_WEB_TITLE', true),
 
-    'qrcode' => env('UH_QRCODE', true),
-
     /*
     |--------------------------------------------------------------------------
     | Visiting
@@ -111,6 +109,12 @@ return [
     | QR codes
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Type: bool
+     * Accepted values: true or false
+     */
+    'qrcode' => env('UH_QRCODE', true),
 
     /**
      * Determines the width/height in pixels.
