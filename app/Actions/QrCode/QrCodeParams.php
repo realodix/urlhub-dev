@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Actions\QrCode;
 
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
@@ -17,7 +15,6 @@ use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Writer\WriterInterface;
 use function Functional\contains;
 use Psr\Http\Message\ServerRequestInterface;
-use Shlinkio\Shlink\Core\Options\QrCodeOptions;
 use function strtolower;
 use function trim;
 

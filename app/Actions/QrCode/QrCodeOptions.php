@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Shlinkio\Shlink\Core\Options;
+namespace App\Actions\QrCode;
 
 final class QrCodeOptions
 {

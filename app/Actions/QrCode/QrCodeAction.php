@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Actions\QrCode;
 
 use Endroid\QrCode\Builder\Builder;
@@ -13,7 +11,6 @@ use Psr\Log\LoggerInterface;
 use Shlinkio\Shlink\Common\Response\QrCodeResponse;
 use Shlinkio\Shlink\Core\Action\Model\QrCodeParams;
 use Shlinkio\Shlink\Core\Exception\ShortUrlNotFoundException;
-use Shlinkio\Shlink\Core\Options\QrCodeOptions;
 use Shlinkio\Shlink\Core\ShortUrl\Helper\ShortUrlStringifierInterface;
 use Shlinkio\Shlink\Core\ShortUrl\Model\ShortUrlIdentifier;
 use Shlinkio\Shlink\Core\ShortUrl\ShortUrlResolverInterface;
