@@ -105,4 +105,47 @@ return [
      * status is 301. Default values is 90.
      */
     'redirect_cache_lifetime' => env('UH_REDIRECT_CACHE_LIFETIME', 90),
+
+    /*
+    |--------------------------------------------------------------------------
+    | QR codes
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * It determines the width/height in pixels.
+     *
+     * Default value is 300 and accepts values from 50 to 1000.
+     */
+    'QRCODE_SIZE' => env('QRCODE_SIZE', 300),
+
+    /**
+     * The space in pixels between the QR code itself and the border of the image.
+     *
+     * Default value is 0 and accepts positive numbers.
+     */
+    'QRCODE_MARGIN' => env('QRCODE_MARGIN', 0),
+
+    /**
+     * Can be png or svg.
+     *
+     * Default values is png.
+     */
+    'QRCODE_FORMAT' => env('QRCODE_FORMAT', 'png'),
+
+    /**
+     * Can be L (Low), M (Medium), Q (Quartile) or H (High).
+     *
+     * Default value is L.
+     *
+     * See https://www.qrcode.com/en/about/error_correction.html for more information.
+     */
+    'QRCODE_ERROR_CORRECTION' => env('QRCODE_ERROR_CORRECTION', 'l'),
+
+    /**
+     * Can be true or false.
+     *
+     * Tells if the block size should be rounded, making the QR code more readable, but potentially adding some extra margin as a side effect.
+     */
+    'QRCODE_ROUND_BLOCK_SIZE' => env('QRCODE_ROUND_BLOCK_SIZE', true),
 ];
