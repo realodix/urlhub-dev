@@ -49,6 +49,7 @@ final class QrCodeParams
     private static function resolveSize(array $query, QrCodeOptions $defaults): int
     {
         $size = (int) ($query['size'] ?? $defaults->size);
+
         if ($size < self::MIN_SIZE) {
             return self::MIN_SIZE;
         }
@@ -60,6 +61,7 @@ final class QrCodeParams
     {
         $margin = $query['margin'] ?? (string) $defaults->margin;
         $intMargin = (int) $margin;
+
         if ($margin !== (string) $intMargin) {
             return 0;
         }
