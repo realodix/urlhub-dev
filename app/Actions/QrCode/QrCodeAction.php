@@ -3,12 +3,11 @@
 namespace App\Actions\QrCode;
 
 use Endroid\QrCode\Builder\Builder;
-use Psr\Http\Message\ResponseInterface as Response;
+use Endroid\QrCode\Writer\Result\ResultInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
-use Shlinkio\Shlink\Common\Response\QrCodeResponse;
 use Shlinkio\Shlink\Core\Action\Model\QrCodeParams;
 use Shlinkio\Shlink\Core\Exception\ShortUrlNotFoundException;
 use Shlinkio\Shlink\Core\ShortUrl\Helper\ShortUrlStringifierInterface;
@@ -25,7 +24,7 @@ class QrCodeAction implements MiddlewareInterface
     ) {
     }
 
-    public function process(Request $request, RequestHandlerInterface $handler): Response
+    public function process(Request $request, RequestHandlerInterface $handler): ResultInterface
     {
         $identifier = ShortUrlIdentifier::fromRedirectRequest($request);
 
@@ -46,6 +45,6 @@ class QrCodeAction implements MiddlewareInterface
             ->errorCorrectionLevel($params->errorCorrectionLevel)
             ->roundBlockSizeMode($params->roundBlockSizeMode);
 
-        return new QrCodeResponse($qrCodeBuilder->build());
+        return $qrCodeBuilder->build();
     }
 }

@@ -31,16 +31,6 @@ parameters:
 			path: app/Actions/QrCode/QrCodeAction.php
 
 		-
-			message: "#^Instantiated class Shlinkio\\\\Shlink\\\\Common\\\\Response\\\\QrCodeResponse not found\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:process\\(\\) should return Psr\\\\Http\\\\Message\\\\ResponseInterface but returns Shlinkio\\\\Shlink\\\\Common\\\\Response\\\\QrCodeResponse\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
 			message: "#^Parameter \\$handler of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:process\\(\\) has invalid type Psr\\\\Http\\\\Server\\\\RequestHandlerInterface\\.$#"
 			count: 1
 			path: app/Actions/QrCode/QrCodeAction.php

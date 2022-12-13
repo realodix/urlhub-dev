@@ -15,8 +15,6 @@ use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Writer\WriterInterface;
 use function Functional\contains;
 use Psr\Http\Message\ServerRequestInterface;
-use function strtolower;
-use function trim;
 
 final class QrCodeParams
 {
