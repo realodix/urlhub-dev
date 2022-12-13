@@ -8,9 +8,6 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 
-/**
- * @codeCoverageIgnore
- */
 class QrCodeAction
 {
     private const MIN_SIZE = 50;
@@ -25,6 +22,7 @@ class QrCodeAction
     {
         return Builder::create()
             ->data($data)
+            ->labelText('Scan QR Code')
             ->size($this->resolveSize())
             ->margin($this->resolveMargin())
             ->writer($this->resolveWriter())
