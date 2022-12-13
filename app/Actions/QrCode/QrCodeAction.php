@@ -8,6 +8,9 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class QrCodeAction
 {
     private const MIN_SIZE = 50;
