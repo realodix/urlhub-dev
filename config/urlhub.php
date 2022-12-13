@@ -113,39 +113,43 @@ return [
     */
 
     /**
-     * It determines the width/height in pixels.
+     * Determines the width/height in pixels.
      *
-     * Default value is 300 and accepts values from 50 to 1000.
+     * Type: int
+     * Accepted values: 50 to 1000
      */
-    'QRCODE_SIZE' => env('QRCODE_SIZE', 300),
+    'qrcode_size' => env('QRCODE_SIZE', 300),
 
     /**
      * The space in pixels between the QR code itself and the border of the image.
      *
-     * Default value is 0 and accepts positive numbers.
+     * Type: int (positive)
      */
-    'QRCODE_MARGIN' => env('QRCODE_MARGIN', 0),
+    'qrcode_margin' => env('QRCODE_MARGIN', 0),
 
     /**
-     * Can be png or svg.
-     *
-     * Default values is png.
+     * Type: string
+     * Accepted values: png or svg
      */
-    'QRCODE_FORMAT' => env('QRCODE_FORMAT', 'png'),
+    'qrcode_format' => env('QRCODE_FORMAT', 'png'),
 
     /**
-     * Can be L (Low), M (Medium), Q (Quartile) or H (High).
+     * Determine error correction levels to restore data if the code is dirty or
+     * damaged.
      *
-     * Default value is L.
+     * Type: string
+     * Accepted values: l, m, q, h
      *
      * See https://www.qrcode.com/en/about/error_correction.html for more information.
      */
-    'QRCODE_ERROR_CORRECTION' => env('QRCODE_ERROR_CORRECTION', 'l'),
+    'qrcode_error_correction' => env('QRCODE_ERROR_CORRECTION', 'l'),
 
     /**
-     * Can be true or false.
+     * Tells if the block size should be rounded, making the QR code more readable,
+     * but potentially adding some extra margin as a side effect.
      *
-     * Tells if the block size should be rounded, making the QR code more readable, but potentially adding some extra margin as a side effect.
+     * Type: bool
+     * Accepted values: true or false
      */
-    'QRCODE_ROUND_BLOCK_SIZE' => env('QRCODE_ROUND_BLOCK_SIZE', true),
+    'qrcode_round_block_size' => env('QRCODE_ROUND_BLOCK_SIZE', true),
 ];
