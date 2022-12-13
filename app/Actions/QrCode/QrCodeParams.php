@@ -15,17 +15,18 @@ use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeNone;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Writer\WriterInterface;
+use function Functional\contains;
 use Psr\Http\Message\ServerRequestInterface;
 use Shlinkio\Shlink\Core\Options\QrCodeOptions;
-
-use function Functional\contains;
 use function strtolower;
 use function trim;
 
 final class QrCodeParams
 {
     private const MIN_SIZE = 50;
+
     private const MAX_SIZE = 1000;
+
     private const SUPPORTED_FORMATS = ['png', 'svg'];
 
     private function __construct(
@@ -77,19 +78,20 @@ final class QrCodeParams
         $format = contains(self::SUPPORTED_FORMATS, $qFormat) ? $qFormat : self::normalizeParam($defaults->format);
 
         return match ($format) {
-            'svg' => new SvgWriter(),
-            default => new PngWriter(),
+            'svg' => new SvgWriter,
+            default => new PngWriter,
         };
     }
 
     private static function resolveErrorCorrection(array $query, QrCodeOptions $defaults): ErrorCorrectionLevelInterface
     {
         $errorCorrectionLevel = self::normalizeParam($query['errorCorrection'] ?? $defaults->errorCorrection);
+
         return match ($errorCorrectionLevel) {
-            'h' => new ErrorCorrectionLevelHigh(),
-            'q' => new ErrorCorrectionLevelQuartile(),
-            'm' => new ErrorCorrectionLevelMedium(),
-            default => new ErrorCorrectionLevelLow(), // 'l'
+            'h' => new ErrorCorrectionLevelHigh,
+            'q' => new ErrorCorrectionLevelQuartile,
+            'm' => new ErrorCorrectionLevelMedium,
+            default => new ErrorCorrectionLevelLow, // 'l'
         };
     }
 
@@ -98,7 +100,8 @@ final class QrCodeParams
         $doNotRoundBlockSize = isset($query['roundBlockSize'])
             ? $query['roundBlockSize'] === 'false'
             : ! $defaults->roundBlockSize;
-        return $doNotRoundBlockSize ? new RoundBlockSizeModeNone() : new RoundBlockSizeModeMargin();
+
+        return $doNotRoundBlockSize ? new RoundBlockSizeModeNone : new RoundBlockSizeModeMargin;
     }
 
     private static function normalizeParam(string $param): string

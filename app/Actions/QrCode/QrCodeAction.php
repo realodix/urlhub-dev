@@ -36,6 +36,7 @@ class QrCodeAction implements MiddlewareInterface
             $shortUrl = $this->urlResolver->resolveEnabledShortUrl($identifier);
         } catch (ShortUrlNotFoundException $e) {
             $this->logger->warning('An error occurred while creating QR code. {e}', ['e' => $e]);
+
             return $handler->handle($request);
         }
 
