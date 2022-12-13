@@ -1,51 +1,51 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Access to an undefined property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$defaultOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Access to property \\$format on an unknown class App\\\\Actions\\\\QrCode\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Access to property \\$roundBlockSize on an unknown class App\\\\Actions\\\\QrCode\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
 			message: "#^Call to static method fromRequest\\(\\) on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\Action\\\\Model\\\\QrCodeParams\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Parameter \\$stringifier of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:__construct\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\Helper\\\\ShortUrlStringifierInterface\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Parameter \\$urlResolver of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:__construct\\(\\) has invalid type Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\ShortUrlResolverInterface\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$stringifier has unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\Helper\\\\ShortUrlStringifierInterface as its type\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$stringifier is never read, only written\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$urlResolver has unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\ShortUrlResolverInterface as its type\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$urlResolver is never read, only written\\.$#"
 			count: 1
 			path: app/Actions/QrCode/QrCodeAction.php
 
 		-
 			message: "#^Function Functional\\\\contains not found\\.$#"
 			count: 1
-			path: app/Actions/QrCode/QrCodeParams.php
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Parameter \\$defaults of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:resolveRoundBlockSize\\(\\) has invalid type App\\\\Actions\\\\QrCode\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Parameter \\$defaults of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:resolveWriter\\(\\) has invalid type App\\\\Actions\\\\QrCode\\\\QrCodeOptions\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Static method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:resolveRoundBlockSize\\(\\) is unused\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Static method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:resolveWriter\\(\\) is unused\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
 
 		-
 			message: "#^Used function Functional\\\\contains not found\\.$#"
 			count: 1
-			path: app/Actions/QrCode/QrCodeParams.php
+			path: app/Actions/QrCode/QrCodeAction.php
