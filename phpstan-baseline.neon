@@ -1,37 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to method handle\\(\\) on an unknown class Psr\\\\Http\\\\Server\\\\RequestHandlerInterface\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Call to method resolveEnabledShortUrl\\(\\) on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\ShortUrlResolverInterface\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Call to method stringify\\(\\) on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\Helper\\\\ShortUrlStringifierInterface\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Call to static method fromRedirectRequest\\(\\) on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\Model\\\\ShortUrlIdentifier\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
 			message: "#^Call to static method fromRequest\\(\\) on an unknown class Shlinkio\\\\Shlink\\\\Core\\\\Action\\\\Model\\\\QrCodeParams\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Caught class Shlinkio\\\\Shlink\\\\Core\\\\Exception\\\\ShortUrlNotFoundException not found\\.$#"
-			count: 1
-			path: app/Actions/QrCode/QrCodeAction.php
-
-		-
-			message: "#^Parameter \\$handler of method App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:process\\(\\) has invalid type Psr\\\\Http\\\\Server\\\\RequestHandlerInterface\\.$#"
 			count: 1
 			path: app/Actions/QrCode/QrCodeAction.php
 
@@ -46,12 +16,27 @@ parameters:
 			path: app/Actions/QrCode/QrCodeAction.php
 
 		-
+			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$logger is never read, only written\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
 			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$stringifier has unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\Helper\\\\ShortUrlStringifierInterface as its type\\.$#"
 			count: 1
 			path: app/Actions/QrCode/QrCodeAction.php
 
 		-
+			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$stringifier is never read, only written\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
 			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$urlResolver has unknown class Shlinkio\\\\Shlink\\\\Core\\\\ShortUrl\\\\ShortUrlResolverInterface as its type\\.$#"
+			count: 1
+			path: app/Actions/QrCode/QrCodeAction.php
+
+		-
+			message: "#^Property App\\\\Actions\\\\QrCode\\\\QrCodeAction\\:\\:\\$urlResolver is never read, only written\\.$#"
 			count: 1
 			path: app/Actions/QrCode/QrCodeAction.php
 

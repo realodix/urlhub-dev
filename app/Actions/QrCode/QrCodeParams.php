@@ -67,7 +67,10 @@ final class QrCodeParams
         return $intMargin < 0 ? 0 : $intMargin;
     }
 
-    private static function resolveWriter(array $query, QrCodeOptions $defaults): WriterInterface
+    /**
+     * @return \Endroid\QrCode\Writer\WriterInterface
+     */
+    private static function resolveWriter(array $query, QrCodeOptions $defaults)
     {
         $qFormat = self::normalizeParam($query['format'] ?? '');
         $format = contains(self::SUPPORTED_FORMATS, $qFormat) ? $qFormat : self::normalizeParam($defaults->format);
@@ -78,7 +81,10 @@ final class QrCodeParams
         };
     }
 
-    private static function resolveErrorCorrection(array $query, QrCodeOptions $defaults): ErrorCorrectionLevelInterface
+    /**
+     * @return \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelInterface
+     */
+    private static function resolveErrorCorrection(array $query, QrCodeOptions $defaults)
     {
         $errorCorrectionLevel = self::normalizeParam($query['errorCorrection'] ?? $defaults->errorCorrection);
 
@@ -90,7 +96,10 @@ final class QrCodeParams
         };
     }
 
-    private static function resolveRoundBlockSize(array $query, QrCodeOptions $defaults): RoundBlockSizeModeInterface
+    /**
+     * @return \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface
+     */
+    private static function resolveRoundBlockSize(array $query, QrCodeOptions $defaults)
     {
         $doNotRoundBlockSize = isset($query['roundBlockSize'])
             ? $query['roundBlockSize'] === 'false'
