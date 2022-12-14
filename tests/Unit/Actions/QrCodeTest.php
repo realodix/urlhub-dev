@@ -3,9 +3,8 @@
 namespace Tests\Unit\Actions;
 
 use App\Actions\QrCode;
-use Tests\TestCase;
 use Endroid\QrCode\Writer\Result\ResultInterface;
-use Endroid\QrCode\Matrix\MatrixInterface;
+use Tests\TestCase;
 
 class QrCodeTest extends TestCase
 {
@@ -40,14 +39,29 @@ class QrCodeTest extends TestCase
      * @test
      * @group u-actions
      */
-    public function minSize()
+    public function sizeMin()
     {
-        $size = 5;
+        $size = QrCode::MIN_SIZE - 1;
         config(['urlhub.qrcode_size' => $size]);
 
         $image = imagecreatefromstring((new QrCode)->process('foo')->getString());
 
         $this->assertNotSame($size, imagesx($image));
         $this->assertSame(QrCode::MIN_SIZE, imagesx($image));
+    }
+
+    /**
+     * @test
+     * @group u-actions
+     */
+    public function sizeMax()
+    {
+        $size = QrCode::MAX_SIZE + 1;
+        config(['urlhub.qrcode_size' => $size]);
+
+        $image = imagecreatefromstring((new QrCode)->process('foo')->getString());
+
+        $this->assertNotSame($size, imagesx($image));
+        $this->assertSame(QrCode::MAX_SIZE, imagesx($image));
     }
 }
