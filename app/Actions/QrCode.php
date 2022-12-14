@@ -19,7 +19,7 @@ class QrCode
     {
         return Builder::create()
             ->data($data)
-            ->labelText('Scan QR Code')
+            ->labelText(__('Scan QR Code'))
             ->size($this->resolveSize())
             ->margin($this->resolveMargin())
             ->writer($this->resolveWriter())
