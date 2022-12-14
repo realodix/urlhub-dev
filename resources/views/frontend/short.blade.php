@@ -40,7 +40,7 @@
         </div>
 
         <div class="common-card-style flex flex-wrap mt-6 sm:mt-0 px-4 py-5 sm:p-6">
-            @if (config('urlhub.qrcode'))
+            @if (config('urlhub.qrcode_enable'))
                 <div class="w-full md:w-1/4 flex justify-center">
                     <img class="qrcode" src="{{$qrCode->getDataUri()}}" alt="QR Code">
                 </div>
