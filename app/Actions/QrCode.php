@@ -69,6 +69,7 @@ class QrCode
         };
     }
 
+
     /**
      * @return ErrorCorrectionLevel\ErrorCorrectionLevelInterface
      */
@@ -90,14 +91,12 @@ class QrCode
     private function resolveRoundBlockSize()
     {
         $isRounded = config('urlhub.qrcode_round_block_size');
-        $marginMode = new RoundBlockSizeMode\RoundBlockSizeModeMargin;
-        $noneMode = new RoundBlockSizeMode\RoundBlockSizeModeNone;
 
-        if ($isRounded) {
-            return $marginMode;
+        if (! $isRounded) {
+            return new RoundBlockSizeMode\RoundBlockSizeModeNone;
         }
 
-        return $noneMode;
+        return new RoundBlockSizeMode\RoundBlockSizeModeMargin;
     }
 
     private function normalizeValue(string $param): string
