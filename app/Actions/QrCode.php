@@ -13,7 +13,7 @@ class QrCode
 
     const FORMAT = 'png';
 
-    const SUPPORTED_FORMATS = ['png', 'svg'];
+    const SUPPORTED_FORMAT = ['png', 'svg'];
 
     public function process(string $data): ResultInterface
     {
@@ -57,9 +57,9 @@ class QrCode
     protected function resolveWriter()
     {
         $qFormat = self::normalizeValue(config('urlhub.qrcode_format'));
-        $isContainSupportedFormat = collect(self::SUPPORTED_FORMATS)
+        $containSupportedFormat = collect(self::SUPPORTED_FORMAT)
             ->containsStrict($qFormat);
-        $format = $isContainSupportedFormat ? $qFormat : self::FORMAT;
+        $format = $containSupportedFormat ? $qFormat : self::FORMAT;
 
         return match ($format) {
             'svg' => new \Endroid\QrCode\Writer\SvgWriter,
@@ -72,9 +72,9 @@ class QrCode
      */
     protected function resolveErrorCorrection()
     {
-        $errorCorrectionLevel = self::normalizeValue(config('urlhub.qrcode_error_correction'));
+        $level = self::normalizeValue(config('urlhub.qrcode_error_correction'));
 
-        return match ($errorCorrectionLevel) {
+        return match ($level) {
             'h' => new \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh,
             'q' => new \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelQuartile,
             'm' => new \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelMedium,
