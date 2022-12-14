@@ -146,7 +146,7 @@ return [
      *
      * See https://www.qrcode.com/en/about/error_correction.html for more information.
      */
-    'qrcode_error_correction' => env('QRCODE_ERROR_CORRECTION', 'l'),
+    'qrcode_error_correction' => env('QRCODE_ERROR_CORRECTION', 'm'),
 
     /**
      * Tells if the block size should be rounded, making the QR code more readable,
