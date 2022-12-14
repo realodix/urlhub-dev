@@ -3,9 +3,6 @@
 namespace App\Actions;
 
 use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\RoundBlockSizeMode;
-use Endroid\QrCode\Writer;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 
 class QrCode
@@ -31,7 +28,7 @@ class QrCode
             ->build();
     }
 
-    private function resolveSize(): int
+    protected function resolveSize(): int
     {
         $size = config('urlhub.qrcode_size');
 
@@ -42,7 +39,7 @@ class QrCode
         return $size > self::MAX_SIZE ? self::MAX_SIZE : $size;
     }
 
-    private function resolveMargin(): int
+    protected function resolveMargin(): int
     {
         $margin = config('urlhub.qrcode_margin');
         $intMargin = (int) $margin;
@@ -57,48 +54,48 @@ class QrCode
     /**
      * @return \Endroid\QrCode\Writer\WriterInterface
      */
-    private function resolveWriter()
+    protected function resolveWriter()
     {
         $qFormat = self::normalizeValue(config('urlhub.qrcode_format'));
         $format = collect(self::SUPPORTED_FORMATS)->containsStrict($qFormat)
             ? $qFormat : self::FORMAT;
 
         return match ($format) {
-            'svg' => new Writer\SvgWriter,
-            default => new Writer\PngWriter,
+            'svg' => new \Endroid\QrCode\Writer\SvgWriter,
+            default => new \Endroid\QrCode\Writer\PngWriter,
         };
     }
 
     /**
-     * @return ErrorCorrectionLevel\ErrorCorrectionLevelInterface
+     * @return \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelInterface
      */
-    private function resolveErrorCorrection()
+    protected function resolveErrorCorrection()
     {
         $errorCorrectionLevel = self::normalizeValue(config('urlhub.qrcode_error_correction'));
 
         return match ($errorCorrectionLevel) {
-            'h' => new ErrorCorrectionLevel\ErrorCorrectionLevelHigh,
-            'q' => new ErrorCorrectionLevel\ErrorCorrectionLevelQuartile,
-            'm' => new ErrorCorrectionLevel\ErrorCorrectionLevelMedium,
-            default => new ErrorCorrectionLevel\ErrorCorrectionLevelLow, // 'l'
+            'h' => new \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh,
+            'q' => new \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelQuartile,
+            'm' => new \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelMedium,
+            default => new \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow, // 'l'
         };
     }
 
     /**
      * @return \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface
      */
-    private function resolveRoundBlockSize()
+    protected function resolveRoundBlockSize()
     {
         $isRounded = config('urlhub.qrcode_round_block_size');
 
         if (! $isRounded) {
-            return new RoundBlockSizeMode\RoundBlockSizeModeNone;
+            return new \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeNone;
         }
 
-        return new RoundBlockSizeMode\RoundBlockSizeModeMargin;
+        return new \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
     }
 
-    private function normalizeValue(string $param): string
+    protected function normalizeValue(string $param): string
     {
         return strtolower(trim($param));
     }

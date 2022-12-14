@@ -8,31 +8,16 @@ use Tests\TestCase;
 
 class QrCodeTest extends TestCase
 {
-    protected object $qrCode;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->qrCode = (new QrCode)->process('foo');
-    }
-
     /**
      * @test
      * @group u-actions
      */
     public function qrCode()
     {
-        $this->assertInstanceOf(ResultInterface::class, $this->qrCode);
-    }
+        $qrCode = (new QrCode)->process('foo');
 
-    /**
-     * @test
-     * @group u-actions
-     */
-    public function getDataUri()
-    {
-        $this->assertIsString(ResultInterface::class, $this->qrCode->getDataUri());
+        $this->assertInstanceOf(ResultInterface::class, $qrCode);
+        $this->assertIsString($qrCode->getDataUri());
     }
 
     /**
@@ -46,7 +31,7 @@ class QrCodeTest extends TestCase
 
         $image = imagecreatefromstring((new QrCode)->process('foo')->getString());
 
-        $this->assertNotSame($size, imagesx($image));
+        $this->assertNotSame($size, (int) imagesx($image));
         $this->assertSame(QrCode::MIN_SIZE, imagesx($image));
     }
 
