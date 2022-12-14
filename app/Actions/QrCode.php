@@ -57,8 +57,9 @@ class QrCode
     protected function resolveWriter()
     {
         $qFormat = self::normalizeValue(config('urlhub.qrcode_format'));
-        $format = collect(self::SUPPORTED_FORMATS)->containsStrict($qFormat)
-            ? $qFormat : self::FORMAT;
+        $isContainSupportedFormat = collect(self::SUPPORTED_FORMATS)
+            ->containsStrict($qFormat);
+        $format = $isContainSupportedFormat ? $qFormat : self::FORMAT;
 
         return match ($format) {
             'svg' => new \Endroid\QrCode\Writer\SvgWriter,
