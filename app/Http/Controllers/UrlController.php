@@ -42,7 +42,7 @@ class UrlController extends Controller
     {
         $url = Url::with('visit')->whereKeyword($key)->firstOrFail();
 
-        if (config('urlhub.qrcode_enable')) {
+        if (config('urlhub.qrcode')) {
             $qrCode = (new QrCode)->process($url->short_url);
 
             return view('frontend.short', compact(['qrCode']), ['url' => $url]);
