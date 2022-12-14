@@ -69,7 +69,6 @@ class QrCode
         };
     }
 
-
     /**
      * @return ErrorCorrectionLevel\ErrorCorrectionLevelInterface
      */
