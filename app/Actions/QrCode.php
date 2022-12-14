@@ -10,13 +10,13 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 
 class QrCode
 {
-    const MIN_SIZE = 50;
+    private const MIN_SIZE = 50;
 
-    const MAX_SIZE = 1000;
+    private const MAX_SIZE = 1000;
 
-    const FORMAT = 'png';
+    private const FORMAT = 'png';
 
-    const SUPPORTED_FORMATS = ['png', 'svg'];
+    private const SUPPORTED_FORMATS = ['png', 'svg'];
 
     public function process(string $data): ResultInterface
     {
@@ -31,7 +31,7 @@ class QrCode
             ->build();
     }
 
-    private function resolveSize(): int
+    private static function resolveSize(): int
     {
         $size = config('urlhub.qrcode_size');
 
@@ -42,7 +42,7 @@ class QrCode
         return $size > self::MAX_SIZE ? self::MAX_SIZE : $size;
     }
 
-    private function resolveMargin(): int
+    private static function resolveMargin(): int
     {
         $margin = config('urlhub.qrcode_margin');
         $intMargin = (int) $margin;
@@ -57,7 +57,7 @@ class QrCode
     /**
      * @return \Endroid\QrCode\Writer\WriterInterface
      */
-    private function resolveWriter()
+    private static function resolveWriter()
     {
         $qFormat = self::normalizeValue(config('urlhub.qrcode_format'));
         $format = collect(self::SUPPORTED_FORMATS)->containsStrict($qFormat)
@@ -72,7 +72,7 @@ class QrCode
     /**
      * @return ErrorCorrectionLevel\ErrorCorrectionLevelInterface
      */
-    private function resolveErrorCorrection()
+    private static function resolveErrorCorrection()
     {
         $errorCorrectionLevel = self::normalizeValue(config('urlhub.qrcode_error_correction'));
 
@@ -87,7 +87,7 @@ class QrCode
     /**
      * @return \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface
      */
-    private function resolveRoundBlockSize()
+    private static function resolveRoundBlockSize()
     {
         $isRounded = config('urlhub.qrcode_round_block_size');
         $marginMode = new RoundBlockSizeMode\RoundBlockSizeModeMargin;
@@ -100,7 +100,7 @@ class QrCode
         return $noneMode;
     }
 
-    private function normalizeValue(string $param): string
+    private static function normalizeValue(string $param): string
     {
         return strtolower(trim($param));
     }
