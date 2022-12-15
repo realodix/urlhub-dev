@@ -92,10 +92,10 @@ class UrlHubLinkChecker
 
         if (Auth::check()) {
             $s_url = Url::whereUserId(Auth::id())
-                ->whereLongUrl($longUrl)
+                ->whereDestination($longUrl)
                 ->first();
         } else {
-            $s_url = Url::whereLongUrl($longUrl)
+            $s_url = Url::whereDestination($longUrl)
                 ->whereNull('user_id')
                 ->first();
         }

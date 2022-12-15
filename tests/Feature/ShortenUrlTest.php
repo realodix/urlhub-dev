@@ -29,7 +29,7 @@ class ShortenUrlTest extends TestCase
             'destination' => $longUrl,
         ]);
 
-        $url = Url::whereLongUrl($longUrl)->first();
+        $url = Url::whereDestination($longUrl)->first();
 
         $response->assertRedirectToRoute('su_detail', $url->keyword);
         $this->assertFalse($url->is_custom);
@@ -53,7 +53,7 @@ class ShortenUrlTest extends TestCase
         ]);
         $response->assertRedirectToRoute('su_detail', $customKey);
 
-        $url = Url::whereLongUrl($longUrl)->first();
+        $url = Url::whereDestination($longUrl)->first();
         $this->assertTrue($url->is_custom);
     }
 

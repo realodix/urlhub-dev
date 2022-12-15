@@ -101,7 +101,7 @@ class UrlTest extends TestCase
             'destination' => $longUrl,
         ]);
 
-        $url = Url::whereLongUrl($longUrl)->first();
+        $url = Url::whereDestination($longUrl)->first();
 
         $this->assertSame(null, $url->user_id);
     }
