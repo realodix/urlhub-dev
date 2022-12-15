@@ -90,7 +90,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $url = Url::factory()->create();
 
         $response = $this->post(route('su_create'), [
-            'destination' => $url->destination,
+            'long_url' => $url->destination,
         ]);
 
         $url = Url::whereUserId(null)->first();
@@ -115,7 +115,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->post(route('su_create'), [
-                'destination' => $url->destination,
+                'long_url' => $url->destination,
             ]);
 
         $url = Url::whereUserId($user->id)->first();
@@ -139,7 +139,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->post(route('su_create'), [
-                'destination' => $url->destination,
+                'long_url' => $url->destination,
             ]);
 
         $url = Url::whereUserId($user->id)->first();
@@ -152,12 +152,12 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
     public function createShortUrlWithWrongUrlFormat()
     {
         $response = $this->post(route('su_create'), [
-            'destination' => 'wrong-url-format',
+            'long_url' => 'wrong-url-format',
         ]);
 
         $response
             ->assertRedirectToRoute('home')
-            ->assertSessionHasErrors('destination');
+            ->assertSessionHasErrors('long_url');
     }
 
     /*
@@ -198,7 +198,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->nonAdmin())
             ->post(route('su_create'), [
-                'destination'   => $url->destination,
+                'long_url'   => $url->destination,
                 'custom_key' => $customKey,
             ]);
 

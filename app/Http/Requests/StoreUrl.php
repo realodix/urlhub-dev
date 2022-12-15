@@ -26,7 +26,7 @@ class StoreUrl extends FormRequest
     public function rules()
     {
         return [
-            'destination'   => ['required', 'url', 'max:65535', new DomainBlacklist],
+            'long_url'   => ['required', 'url', 'max:65535', new DomainBlacklist],
             'custom_key' => ['nullable', 'max:20', new StrAlphaUnderscore, 'unique:urls,keyword'],
         ];
     }
@@ -39,7 +39,7 @@ class StoreUrl extends FormRequest
     public function messages()
     {
         return [
-            'destination.required' => __('The URL field must be filled, should not be empty.'),
+            'long_url.required' => __('The URL field must be filled, should not be empty.'),
             'custom_key.max'    => __('The custom url may not be greater than :max characters.'),
             'custom_key.unique' => __(':input has already been taken'),
         ];

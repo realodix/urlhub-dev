@@ -14,14 +14,14 @@ class UrlTest extends TestCase
     public function canCreateUrl()
     {
         $data = [
-            'destination' => 'http://example.com',
+            'long_url' => 'http://example.com',
         ];
 
         $this->json('POST', '/api/url', $data)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonStructure([
                 'id',
-                'destination',
+                'long_url',
                 'short_url',
             ]);
 
@@ -38,7 +38,7 @@ class UrlTest extends TestCase
     public function shortenUrlFail($value)
     {
         $data = [
-            'destination' => $value,
+            'long_url' => $value,
         ];
 
         $this->json('POST', '/api/url', $data)

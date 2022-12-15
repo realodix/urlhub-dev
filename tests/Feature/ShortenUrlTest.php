@@ -26,7 +26,7 @@ class ShortenUrlTest extends TestCase
     {
         $longUrl = 'https://laravel.com';
         $response = $this->post(route('su_create'), [
-            'destination' => $longUrl,
+            'long_url' => $longUrl,
         ]);
 
         $url = Url::whereDestination($longUrl)->first();
@@ -48,7 +48,7 @@ class ShortenUrlTest extends TestCase
         $customKey = 'laravel';
 
         $response = $this->post(route('su_create'), [
-            'destination'   => $longUrl,
+            'long_url'   => $longUrl,
             'custom_key' => $customKey,
         ]);
         $response->assertRedirectToRoute('su_detail', $customKey);
@@ -100,7 +100,7 @@ class ShortenUrlTest extends TestCase
         ]);
 
         $this->post(route('su_create'), [
-            'destination' => $url->destination,
+            'long_url' => $url->destination,
         ]);
 
         $response = $this->from(route('su_detail', $url->keyword))
@@ -118,7 +118,7 @@ class ShortenUrlTest extends TestCase
         ]);
 
         $this->post(route('su_create'), [
-            'destination' => $url->destination,
+            'long_url' => $url->destination,
         ]);
 
         $this->from(route('su_detail', $url->keyword))
@@ -136,7 +136,7 @@ class ShortenUrlTest extends TestCase
 
         $this->actingAs($this->admin());
         $this->post(route('su_create'), [
-            'destination' => $url->destination,
+            'long_url' => $url->destination,
         ]);
 
         $this->from(route('su_detail', $url->keyword))

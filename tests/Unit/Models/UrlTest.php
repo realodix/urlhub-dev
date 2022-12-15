@@ -98,7 +98,7 @@ class UrlTest extends TestCase
         $longUrl = 'https://example.com';
 
         $this->post(route('su_create'), [
-            'destination' => $longUrl,
+            'long_url' => $longUrl,
         ]);
 
         $url = Url::whereDestination($longUrl)->first();

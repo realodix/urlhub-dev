@@ -135,12 +135,12 @@ class Url extends Model
      */
     public function shortenUrl(StoreUrl $request, $userId)
     {
-        $key = $request['custom_key'] ?? $this->urlKey($request['destination']);
+        $key = $request['custom_key'] ?? $this->urlKey($request['long_url']);
 
         return Url::create([
             'user_id'     => $userId,
-            'destination' => $request['destination'],
-            'title'       => $request['destination'],
+            'destination' => $request['long_url'],
+            'title'       => $request['long_url'],
             'keyword'     => $key,
             'is_custom'   => $request['custom_key'] ? true : false,
             'ip'          => Helper::anonymizeIp($request->ip()),
