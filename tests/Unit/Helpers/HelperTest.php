@@ -42,7 +42,7 @@ class HelperTest extends TestCase
 
         $this->assertSame(
             'example.com/abcde',
-            Helper::urlDisplay('https://example.com/abcde/', scheme: false)
+            Helper::urlDisplay('https://example.com/abcde', scheme: false)
         );
 
         $this->assertSame(
@@ -80,27 +80,6 @@ class HelperTest extends TestCase
             ['example.com', 'https://www.example.com/'],
             ['example.com/abc', 'https://www.example.com/abc'],
             ['example.com/abc', 'https://www.example.com/abc/'],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider removeTrailingSlashProvider
-     *
-     * @param mixed $expected
-     * @param mixed $actual
-     */
-    public function removeTrailingSlash($expected, $actual)
-    {
-        $this->assertSame($expected, Helper::removeTrailingSlash($actual));
-    }
-
-    public function removeTrailingSlashProvider()
-    {
-        return [
-            ['http://example.com', 'http://example.com'],
-            ['http://example.com', 'http://example.com/'],
-            ['http://example.com/foo', 'http://example.com/foo'],
         ];
     }
 

@@ -40,7 +40,7 @@ class Helper
         // Remove schemes
         if ($scheme === false) {
             // Remove http://, www., and trailing slashes from the URL
-            $url = preg_replace(['{^http(s)?://}', '{www.}'], '', self::removeTrailingSlash($url));
+            $url = preg_replace(['{^http(s)?://}', '{www.}'], '', rtrim($url, '/'));
             $hostLen = strlen($sUrl->getHost());
             $urlLen = strlen($url);
         }
@@ -65,10 +65,5 @@ class Helper
         }
 
         return $url;
-    }
-
-    public static function removeTrailingSlash(string $url): string
-    {
-        return rtrim($url, '/');
     }
 }
