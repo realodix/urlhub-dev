@@ -521,7 +521,7 @@ class UrlTest extends TestCase
      */
     public function getDomain($expected, $actutal)
     {
-        $this->assertEquals($expected, $this->url->getDomain($actutal));
+        $this->assertSame($expected, $this->url->getDomain($actutal));
     }
 
     public function getDomainProvider()

@@ -325,7 +325,7 @@ class Url extends Model
     {
         $url = SpatieUrl::fromString($url);
 
-        return Helper::urlSanitize($url->getHost());
+        return Helper::urlDisplay($url->getHost(), scheme: false);
     }
 
     /**
