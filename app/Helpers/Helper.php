@@ -50,7 +50,7 @@ class Helper
         // If it's only the host and has the trailing slash at the end, then remove the
         // trailing slash.
         if ($pathLen === 1) {
-            $url = rtrim($url, '/\\');
+            $url = rtrim($url, '/');
         }
 
         if ($urlLen > $limit) {
@@ -69,6 +69,6 @@ class Helper
 
     public static function removeTrailingSlash(string $url): string
     {
-        return preg_replace('{/$}', '', $url) ?? $url;
+        return rtrim($url, '/');
     }
 }
