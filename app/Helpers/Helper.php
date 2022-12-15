@@ -27,10 +27,10 @@ class Helper
      * Display the link according to what You need.
      *
      * @param string $url    URL or Link
-     * @param bool   $scheme Show or remove URL schemes.
-     * @param int    $limit  Length string will be truncated to, including suffix.
+     * @param int    $limit  Length string will be truncated to, including suffix
+     * @param bool   $scheme Show or remove URL schemes
      */
-    public static function urlDisplay(string $url, bool $scheme = true, int $limit = null): string|Stringable
+    public static function urlDisplay(string $url, int $limit = null, bool $scheme = true): string|Stringable
     {
         $sUrl = SpatieUrl::fromString($url);
         $hostLen = strlen($sUrl->getScheme().'://'.$sUrl->getHost());
@@ -38,7 +38,7 @@ class Helper
         $limit = $limit ?? $urlLen;
 
         // Remove URL schemes
-        if (! $scheme) {
+        if ($scheme === false) {
             $url = self::urlSanitize($url);
             $hostLen = strlen($sUrl->getHost());
             $urlLen = strlen($url);

@@ -42,7 +42,7 @@ class HelperTest extends TestCase
 
         $this->assertSame(
             'example.com/abcde',
-            Helper::urlDisplay('https://example.com/abcde/', false)
+            Helper::urlDisplay('https://example.com/abcde/', scheme: false)
         );
 
         $this->assertSame(
