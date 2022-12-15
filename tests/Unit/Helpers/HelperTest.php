@@ -58,7 +58,7 @@ class HelperTest extends TestCase
 
     /**
      * @test
-     * @dataProvider sanitizeProvider
+     * @dataProvider urlDisplayWithoutSchemeProvider
      *
      * @param mixed $expected
      * @param mixed $actual
@@ -68,7 +68,7 @@ class HelperTest extends TestCase
         $this->assertSame($expected, Helper::urlDisplay($actual, scheme: false));
     }
 
-    public function sanitizeProvider()
+    public function urlDisplayWithoutSchemeProvider()
     {
         return [
             ['example.com', 'example.com'],
