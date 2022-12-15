@@ -38,17 +38,20 @@
                 >
                     @svg('icon-clone') {{__('Copy')}}
                 </button>
+
                 @auth
                     @if (Auth::user()->hasRole('admin') || (Auth::user()->id === $url->user_id))
-                        <a href="{{route('dashboard.su_edit', $url->keyword)}}" title="{{__('Edit')}}"
-                            class="btn-icon-detail">
-                            @svg('icon-edit') {{__('Edit')}}
-                        </a>
+                        <button class="btn-clipboard btn-icon-detail">
+                            <a href="{{route('dashboard.su_edit', $url->keyword)}}" title="{{__('Edit')}}">
+                                @svg('icon-edit') {{__('Edit')}}
+                            </a>
+                        </button>
 
-                        <a href="{{route('su_delete', $url->getRouteKey())}}" title="{{__('Delete')}}"
-                            class="btn-icon-detail hover:text-red-700 active:text-red-600">
-                            @svg('icon-trash') {{__('Delete')}}
-                        </a>
+                        <button class="btn-clipboard btn-icon-detail hover:text-red-600 active:text-red-700">
+                            <a href="{{route('su_delete', $url->getRouteKey())}}" title="{{__('Delete')}}">
+                                @svg('icon-trash') {{__('Delete')}}
+                            </a>
+                        </button>
                     @endif
                 @endauth
 
