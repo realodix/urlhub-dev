@@ -4,17 +4,22 @@
 
 @section('content')
     <div class="max-w-7xl mx-auto mb-12">
-        <div class="flex flex-wrap mt-6 lg:mt-12 px-4 sm:p-6">
+        <div class="flex flex-wrap mt-6 lg:mt-8 px-4 sm:p-6">
             <div class="md:w-9/12">
 
                 @include('partials/messages')
 
-                <div class="text-xl sm:text-2xl lg:text-3xl font-bold mb-4">{!! $url->title !!}</div>
+                <div class="text-xl sm:text-2xl lg:text-2xl font-bold mb-4">{!! $url->title !!}</div>
 
-                <ul>
+                <ul class="mb-4">
                     <li class="inline-block pr-4">
                         @svg('icon-calendar')
                         <i>{{$url->created_at->toDayDateTimeString()}}</i>
+                    </li>
+                    <li class="inline-block pr-4 mt-4 lg:mt-0">
+                        @svg('icon-bar-chart')
+                        <i><span title="{{number_format($url->click)}}">{{compactNumber($url->click)}}</span></i>
+                        {{__('Total engagements')}}
                     </li>
                     @auth
                         @if (Auth::user()->hasRole('admin') || (Auth::user()->id === $url->user_id))
@@ -33,9 +38,6 @@
                         @endif
                     @endauth
                 </ul>
-
-                @svg('icon-bar-chart')
-                <span title="{{number_format($url->click)}}">{{compactNumber($url->click)}}</span> {{__('Total engagements')}}
             </div>
         </div>
 
