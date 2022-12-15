@@ -55,7 +55,7 @@
                     @endif
                 @endauth
 
-                <br> <br> <br>
+                <br> <br>
 
                 <span class="font-bold text-indigo-700 text-xl sm:text-2xl">
                     <a href="{{ $url->short_url }}" target="_blank" id="copy">
