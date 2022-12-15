@@ -63,9 +63,9 @@ class HelperTest extends TestCase
      * @param mixed $expected
      * @param mixed $actual
      */
-    public function sanitize($expected, $actual)
+    public function urlDisplayWithoutScheme($expected, $actual)
     {
-        $this->assertSame($expected, Helper::urlSanitize($actual));
+        $this->assertSame($expected, Helper::urlDisplay($actual, scheme: false));
     }
 
     public function sanitizeProvider()
