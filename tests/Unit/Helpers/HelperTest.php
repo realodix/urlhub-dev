@@ -98,9 +98,9 @@ class HelperTest extends TestCase
     public function removeTrailingSlashProvider()
     {
         return [
-            ['http://laravel.com', 'http://laravel.com'],
-            ['http://laravel.com', 'http://laravel.com/'],
-            ['http://laravel.com/foo', 'http://laravel.com/foo'],
+            ['http://example.com', 'http://example.com'],
+            ['http://example.com', 'http://example.com/'],
+            ['http://example.com/foo', 'http://example.com/foo'],
         ];
     }
 
