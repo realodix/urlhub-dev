@@ -72,14 +72,14 @@ class HelperTest extends TestCase
     {
         return [
             ['example.com', 'example.com'],
-            ['example.com', 'www.example.com'],
+            ['www.example.com', 'www.example.com'],
             ['example.com', 'http://example.com'],
-            ['example.com', 'http://www.example.com'],
+            ['www.example.com', 'http://www.example.com'],
             ['example.com', 'https://example.com'],
-            ['example.com', 'https://www.example.com'],
-            ['example.com', 'https://www.example.com/'],
-            ['example.com/abc', 'https://www.example.com/abc'],
-            ['example.com/abc', 'https://www.example.com/abc/'],
+            ['www.example.com', 'https://www.example.com'],
+            ['www.example.com', 'https://www.example.com/'],
+            ['www.example.com/abc', 'https://www.example.com/abc'],
+            ['www.example.com/abc', 'https://www.example.com/abc/'],
         ];
     }
 

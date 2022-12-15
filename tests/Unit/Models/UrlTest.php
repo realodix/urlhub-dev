@@ -527,14 +527,14 @@ class UrlTest extends TestCase
     public function getDomainProvider()
     {
         return [
-            ['foo.com', 'http://foo.com/foo/bar?name=taylor'],
-            ['foo.com', 'https://foo.com/foo/bar?name=taylor'],
-            ['foo.com', 'http://www.foo.com/foo/bar?name=taylor'],
-            ['foo.com', 'https://www.foo.com/foo/bar?name=taylor'],
-            ['bar.foo.com', 'http://bar.foo.com/foo/bar?name=taylor'],
-            ['bar.foo.com', 'https://bar.foo.com/foo/bar?name=taylor'],
-            ['bar.foo.com', 'http://www.bar.foo.com/foo/bar?name=taylor'],
-            ['bar.foo.com', 'https://www.bar.foo.com/foo/bar?name=taylor'],
+            ['example.com', 'http://example.com/foo/bar?name=taylor'],
+            ['example.com', 'https://example.com/foo/bar?name=taylor'],
+            ['www.example.com', 'http://www.example.com/foo/bar?name=taylor'],
+            ['www.example.com', 'https://www.example.com/foo/bar?name=taylor'],
+            ['foo.example.com', 'http://foo.example.com/bar/baz?name=taylor'],
+            ['foo.example.com', 'https://foo.example.com/bar/baz?name=taylor'],
+            ['www.foo.example.com', 'http://www.foo.example.com/bar/baz?name=taylor'],
+            ['www.foo.example.com', 'https://www.foo.example.com/bar/baz?name=taylor'],
         ];
     }
 

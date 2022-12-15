@@ -40,7 +40,7 @@ class Helper
         // Remove schemes
         if ($scheme === false) {
             // Remove http://, www., and trailing slashes from the URL
-            $url = preg_replace(['{^http(s)?://}', '{www.}'], '', rtrim($url, '/'));
+            $url = preg_replace('{^http(s)?://}', '', rtrim($url, '/'));
             $hostLen = strlen($sUrl->getHost());
             $urlLen = strlen($url);
         }
