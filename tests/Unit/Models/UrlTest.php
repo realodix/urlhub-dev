@@ -514,39 +514,15 @@ class UrlTest extends TestCase
     /**
      * @test
      * @group u-model
-     * @dataProvider getDomainProvider
-     *
-     * @param mixed $expected
-     * @param mixed $actutal
-     */
-    public function getDomain($expected, $actutal)
-    {
-        $this->assertSame($expected, $this->url->getDomain($actutal));
-    }
-
-    public function getDomainProvider()
-    {
-        return [
-            ['example.com', 'http://example.com/foo/bar?name=taylor'],
-            ['example.com', 'https://example.com/foo/bar?name=taylor'],
-            ['www.example.com', 'http://www.example.com/foo/bar?name=taylor'],
-            ['www.example.com', 'https://www.example.com/foo/bar?name=taylor'],
-            ['foo.example.com', 'http://foo.example.com/bar/baz?name=taylor'],
-            ['foo.example.com', 'https://foo.example.com/bar/baz?name=taylor'],
-            ['www.foo.example.com', 'http://www.foo.example.com/bar/baz?name=taylor'],
-            ['www.foo.example.com', 'https://www.foo.example.com/bar/baz?name=taylor'],
-        ];
-    }
-
-    /**
-     * @test
-     * @group u-model
      */
     public function getWebTitle()
     {
-        $expected = 'github123456789.com - Untitled';
-        $actual = $this->url->getWebTitle('https://github123456789.com');
+        $expected = 'example123456789.com - Untitled';
+        $actual = $this->url->getWebTitle('https://example123456789.com');
+        $this->assertSame($expected, $actual);
 
+        $expected = 'www.example123456789.com - Untitled';
+        $actual = $this->url->getWebTitle('https://www.example123456789.com');
         $this->assertSame($expected, $actual);
     }
 }
