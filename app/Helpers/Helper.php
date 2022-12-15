@@ -37,7 +37,7 @@ class Helper
         $urlLen = strlen($url);
         $limit = $limit ?? $urlLen;
 
-        // Remove URL schemes
+        // Remove schemes
         if ($scheme === false) {
             // Remove http://, www., and trailing slashes from the URL
             $url = preg_replace(['{^http(s)?://}', '{www.}'], '', self::removeTrailingSlash($url));
