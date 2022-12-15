@@ -18,7 +18,7 @@
                     </li>
                     <li class="inline-block pr-4 mt-4 lg:mt-0">
                         @svg('icon-bar-chart')
-                        <i><span title="{{number_format($url->click)}}">{{compactNumber($url->click)}}</span></i>
+                        <i><span title="{{number_format($url->click)}}" class="font-bold">{{compactNumber($url->click)}}</span></i>
                         {{__('Total engagements')}}
                     </li>
                 </ul>
@@ -55,7 +55,7 @@
                     @endif
                 @endauth
 
-                <br> <br>
+                <br> <br> <br>
 
                 <span class="font-bold text-indigo-700 text-xl sm:text-2xl">
                     <a href="{{ $url->short_url }}" target="_blank" id="copy">
