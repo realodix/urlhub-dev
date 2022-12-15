@@ -9,14 +9,12 @@
 
                 @include('partials/messages')
 
+                <div class="text-xl sm:text-2xl lg:text-3xl font-bold mb-4">{!! $url->title !!}</div>
+
                 <ul>
                     <li class="inline-block pr-4">
                         @svg('icon-calendar')
                         <i>{{$url->created_at->toDayDateTimeString()}}</i>
-                    </li>
-                    <li class="inline-block pr-4">
-                        @svg('icon-bar-chart')
-                        <i><span title="{{number_format($url->click)}}">{{compactNumber($url->click)}}</span></i>
                     </li>
                     @auth
                         @if (Auth::user()->hasRole('admin') || (Auth::user()->id === $url->user_id))
@@ -35,7 +33,9 @@
                         @endif
                     @endauth
                 </ul>
-                <div class="text-xl sm:text-2xl lg:text-3xl mt-2 font-light">{!! $url->title !!}</div>
+
+                @svg('icon-bar-chart')
+                <span title="{{number_format($url->click)}}">{{compactNumber($url->click)}}</span> {{__('Total engagements')}}
             </div>
         </div>
 
