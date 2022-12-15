@@ -110,8 +110,8 @@ class UrlBeTest extends TestCase
         $response = $this->actingAs($this->admin())
             ->from(route('dashboard.su_edit', $url->keyword))
             ->post(route('dashboard.su_edit.post', $hashids->encode($url->id)), [
-                'title'       => $url->title,
-                'destination' => $newDestination,
+                'title'    => $url->title,
+                'long_url' => $newDestination,
             ]);
 
         $response

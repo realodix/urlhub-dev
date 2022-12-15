@@ -19,7 +19,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         ]);
 
         $response = $this->post(route('su_create'), [
-            'destination' => $url->destination,
+            'long_url' => $url->destination,
         ]);
 
         $response
@@ -40,12 +40,12 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $longUrl_2 = 'https://example.com';
 
         $url = Url::factory()->create([
-            'user_id' => null,
+            'user_id'     => null,
             'destination' => $longUrl_1,
         ]);
 
         $response = $this->post(route('su_create'), [
-            'destination' => $longUrl_2,
+            'long_url' => $longUrl_2,
         ]);
 
         $response
@@ -70,7 +70,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->post(route('su_create'), [
-                'destination' => $url->destination,
+                'long_url' => $url->destination,
             ]);
 
         $response
@@ -178,8 +178,8 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $customKey = 'laravel';
 
         $response = $this->post(route('su_create'), [
-            'destination' => $url->destination,
-            'custom_key'  => $customKey,
+            'long_url'   => $url->destination,
+            'custom_key' => $customKey,
         ]);
         $response->assertRedirectToRoute('su_detail', $url->keyword);
 

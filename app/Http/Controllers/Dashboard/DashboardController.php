@@ -49,7 +49,7 @@ class DashboardController extends Controller
      */
     public function update(Request $request, $url)
     {
-        $url->destination = $request->destination;
+        $url->destination = $request->long_url;
         $url->title = $request->title;
         $url->save();
 
