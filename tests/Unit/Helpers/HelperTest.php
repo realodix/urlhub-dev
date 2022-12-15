@@ -100,7 +100,7 @@ class HelperTest extends TestCase
         return [
             ['http://laravel.com', 'http://laravel.com'],
             ['http://laravel.com', 'http://laravel.com/'],
-            ['http://laravel.com/foo', 'http://laravel.com/a'],
+            ['http://laravel.com/foo', 'http://laravel.com/foo'],
         ];
     }
 
