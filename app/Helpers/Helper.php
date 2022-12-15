@@ -71,6 +71,13 @@ class Helper
      */
     public static function urlSanitize(string $url): string
     {
+        $url = self::removeTrailingSlash($url);
+
         return preg_replace(['{^http(s)?://}', '{www.}', '{/$}'], '', $url) ?? $url;
+    }
+
+    public static function removeTrailingSlash(string $url): string
+    {
+        return preg_replace('{/$}', '', $url) ?? $url;
     }
 }

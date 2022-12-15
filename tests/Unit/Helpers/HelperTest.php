@@ -85,6 +85,27 @@ class HelperTest extends TestCase
 
     /**
      * @test
+     * @dataProvider removeTrailingSlashProvider
+     *
+     * @param mixed $expected
+     * @param mixed $actual
+     */
+    public function removeTrailingSlash($expected, $actual)
+    {
+        $this->assertSame($expected, Helper::removeTrailingSlash($actual));
+    }
+
+    public function removeTrailingSlashProvider()
+    {
+        return [
+            ['http://laravel.com', 'http://laravel.com'],
+            ['http://laravel.com', 'http://laravel.com/'],
+            ['http://laravel.com/foo', 'http://laravel.com/a'],
+        ];
+    }
+
+    /**
+     * @test
      * @group u-helper
      * @dataProvider toAmountShortProvider
      *
