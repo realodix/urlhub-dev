@@ -89,7 +89,7 @@ class Url extends Model
         );
     }
 
-    protected function longUrl(): Attribute
+    protected function destination(): Attribute
     {
         return Attribute::make(
             set: fn ($value) => rtrim($value, '/'),
