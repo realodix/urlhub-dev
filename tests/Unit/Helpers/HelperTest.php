@@ -71,15 +71,15 @@ class HelperTest extends TestCase
     public function sanitizeProvider()
     {
         return [
-            ['laravel.com', 'laravel.com'],
-            ['laravel.com', 'www.laravel.com'],
-            ['laravel.com', 'http://laravel.com'],
-            ['laravel.com', 'http://www.laravel.com'],
-            ['laravel.com', 'https://laravel.com'],
-            ['laravel.com', 'https://www.laravel.com'],
-            ['laravel.com', 'https://www.laravel.com/'],
-            ['laravel.com/abc', 'https://www.laravel.com/abc'],
-            ['laravel.com/abc', 'https://www.laravel.com/abc/'],
+            ['example.com', 'example.com'],
+            ['example.com', 'www.example.com'],
+            ['example.com', 'http://example.com'],
+            ['example.com', 'http://www.example.com'],
+            ['example.com', 'https://example.com'],
+            ['example.com', 'https://www.example.com'],
+            ['example.com', 'https://www.example.com/'],
+            ['example.com/abc', 'https://www.example.com/abc'],
+            ['example.com/abc', 'https://www.example.com/abc/'],
         ];
     }
 
