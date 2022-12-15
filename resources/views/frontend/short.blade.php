@@ -9,7 +9,7 @@
 
                 @include('partials/messages')
 
-                <div class="text-xl sm:text-2xl lg:text-2xl font-bold mb-4">{!! $url->title !!}</div>
+                <div class="text-xl sm:text-2xl lg:text-3xl font-bold mb-4">{!! $url->title !!}</div>
 
                 <ul class="mb-4">
                     <li class="inline-block pr-4">
