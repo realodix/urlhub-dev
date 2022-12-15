@@ -35,9 +35,9 @@ class UrlController extends Controller
         $url = (new Url)->shortenUrl($request, Auth::id());
 
         return response([
-            'id'        => $url->id,
-            'long_url'  => $url->long_url,
-            'short_url' => url($url->keyword),
+            'id'          => $url->id,
+            'destination' => $url->destination,
+            'short_url'   => url($url->keyword),
         ], Response::HTTP_CREATED);
     }
 }

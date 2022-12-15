@@ -19,7 +19,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         ]);
 
         $response = $this->post(route('su_create'), [
-            'long_url' => $url->long_url,
+            'destination' => $url->destination,
         ]);
 
         $response
@@ -41,11 +41,11 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $url = Url::factory()->create([
             'user_id' => null,
-            'long_url' => $longUrl_1,
+            'destination' => $longUrl_1,
         ]);
 
         $response = $this->post(route('su_create'), [
-            'long_url' => $longUrl_2,
+            'destination' => $longUrl_2,
         ]);
 
         $response
@@ -70,7 +70,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->post(route('su_create'), [
-                'long_url' => $url->long_url,
+                'destination' => $url->destination,
             ]);
 
         $response
@@ -90,7 +90,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $url = Url::factory()->create();
 
         $response = $this->post(route('su_create'), [
-            'long_url' => $url->long_url,
+            'destination' => $url->destination,
         ]);
 
         $url = Url::whereUserId(null)->first();
@@ -115,7 +115,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->post(route('su_create'), [
-                'long_url' => $url->long_url,
+                'destination' => $url->destination,
             ]);
 
         $url = Url::whereUserId($user->id)->first();
@@ -139,7 +139,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->post(route('su_create'), [
-                'long_url' => $url->long_url,
+                'destination' => $url->destination,
             ]);
 
         $url = Url::whereUserId($user->id)->first();
@@ -152,12 +152,12 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
     public function createShortUrlWithWrongUrlFormat()
     {
         $response = $this->post(route('su_create'), [
-            'long_url' => 'wrong-url-format',
+            'destination' => 'wrong-url-format',
         ]);
 
         $response
             ->assertRedirectToRoute('home')
-            ->assertSessionHasErrors('long_url');
+            ->assertSessionHasErrors('destination');
     }
 
     /*
@@ -178,7 +178,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $customKey = 'laravel';
 
         $response = $this->post(route('su_create'), [
-            'long_url'   => $url->long_url,
+            'destination'   => $url->destination,
             'custom_key' => $customKey,
         ]);
         $response->assertRedirectToRoute('su_detail', $url->keyword);
@@ -198,14 +198,14 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->nonAdmin())
             ->post(route('su_create'), [
-                'long_url'   => $url->long_url,
+                'destination'   => $url->destination,
                 'custom_key' => $customKey,
             ]);
 
         $response->assertRedirectToRoute('su_detail', $customKey);
 
         $response2 = $this->get(route('home').'/'.$customKey);
-        $response2->assertRedirect($url->long_url);
+        $response2->assertRedirect($url->destination);
 
         $this->assertCount(2, Url::all());
     }
@@ -216,7 +216,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $url = Url::factory()->create();
 
         $response = $this->post(route('su_create'), [
-            'long_url'   => 'https://laravel-news.com',
+            'destination'   => 'https://laravel-news.com',
             'custom_key' => $url->keyword,
         ]);
 
@@ -238,7 +238,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->nonAdmin())
             ->post(route('su_create'), [
-                'long_url'   => 'https://laravel-news.com',
+                'destination'   => 'https://laravel-news.com',
                 'custom_key' => $url->keyword,
             ]);
 

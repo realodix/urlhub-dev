@@ -98,7 +98,7 @@ class UrlTest extends TestCase
         $longUrl = 'https://example.com';
 
         $this->post(route('su_create'), [
-            'long_url' => $longUrl,
+            'destination' => $longUrl,
         ]);
 
         $url = Url::whereLongUrl($longUrl)->first();
@@ -126,10 +126,10 @@ class UrlTest extends TestCase
     public function setLongUrlAttribute()
     {
         $url = Url::factory()->create([
-            'long_url' => 'http://example.com/',
+            'destination' => 'http://example.com/',
         ]);
 
-        $expected = $url->long_url;
+        $expected = $url->destination;
         $actual = 'http://example.com';
         $this->assertSame($expected, $actual);
     }
@@ -156,7 +156,7 @@ class UrlTest extends TestCase
         config()->set('urlhub.web_title', false);
 
         $url = Url::factory()->create([
-            'long_url' => 'http://example.com/',
+            'destination' => 'http://example.com/',
         ]);
 
         $this->assertSame('No Title', $url->title);
