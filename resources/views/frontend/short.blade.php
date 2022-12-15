@@ -21,22 +21,6 @@
                         <i><span title="{{number_format($url->click)}}">{{compactNumber($url->click)}}</span></i>
                         {{__('Total engagements')}}
                     </li>
-                    @auth
-                        @if (Auth::user()->hasRole('admin') || (Auth::user()->id === $url->user_id))
-                            <li class="inline-block pr-2">
-                                <a href="{{route('dashboard.su_edit', $url->keyword)}}" title="{{__('Edit')}}"
-                                    class="btn-icon text-xs">
-                                    @svg('icon-edit')
-                                </a>
-                            </li>
-                            <li class="inline-block">
-                                <a href="{{route('su_delete', $url->getRouteKey())}}" title="{{__('Delete')}}"
-                                    class="btn-icon text-xs hover:text-red-700 active:text-red-600">
-                                    @svg('icon-trash')
-                                </a>
-                            </li>
-                        @endif
-                    @endauth
                 </ul>
             </div>
         </div>
@@ -50,11 +34,25 @@
             <div class="w-full md:w-3/4 mt-8 sm:mt-0">
                 <button title="{{__('Copy the shortened URL to clipboard')}}"
                     data-clipboard-text="{{$url->short_url}}"
-                    class="btn-clipboard btn-icon text-xs ml-4">
+                    class="btn-clipboard btn-icon-detail"
+                >
                     @svg('icon-clone') {{__('Copy')}}
                 </button>
+                @auth
+                    @if (Auth::user()->hasRole('admin') || (Auth::user()->id === $url->user_id))
+                        <a href="{{route('dashboard.su_edit', $url->keyword)}}" title="{{__('Edit')}}"
+                            class="btn-icon-detail">
+                            @svg('icon-edit') {{__('Edit')}}
+                        </a>
 
-                <br>
+                        <a href="{{route('su_delete', $url->getRouteKey())}}" title="{{__('Delete')}}"
+                            class="btn-icon-detail hover:text-red-700 active:text-red-600">
+                            @svg('icon-trash') {{__('Delete')}}
+                        </a>
+                    @endif
+                @endauth
+
+                <br> <br>
 
                 <span class="font-bold text-indigo-700 text-xl sm:text-2xl">
                     <a href="{{ $url->short_url }}" target="_blank" id="copy">
