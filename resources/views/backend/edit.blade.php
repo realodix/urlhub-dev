@@ -38,7 +38,7 @@
 
                         <div class="col-span-6">
                             <label for="long-url" class="block font-medium text-sm text-slate-700">{{__('DestinationURL')}}</label>
-                            <input id="long-url" type="text" name="long_url" placeholder="{{__('Enter your long url')}}"
+                            <input id="long-url" type="text" name="long_url" placeholder="http://www.my_long_url.com"
                                 required value="{{$url->destination}}" class="form-input">
                         </div>
                     </div>

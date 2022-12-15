@@ -30,7 +30,7 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
     }
 
     /**
-     * Memastikan long url dengan atau tanpa trailing slashes adalah sama.
+     * Memastikan long URL dengan atau tanpa trailing slashes adalah sama.
      *
      * @test
      */

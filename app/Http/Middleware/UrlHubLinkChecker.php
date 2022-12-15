@@ -82,7 +82,7 @@ class UrlHubLinkChecker
     }
 
     /**
-     * Check if a long URL already exists in the database.
+     * Check if a destination URL already exists in the database.
      *
      * @param \Illuminate\Http\Request $request
      */

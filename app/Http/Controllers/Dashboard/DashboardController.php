@@ -24,7 +24,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Show the long url edit page.
+     * Shows the shortened url detail page
      *
      * @param mixed $key
      * @return \Illuminate\View\View
@@ -39,7 +39,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Update the long url that was previously set to the new long url.
+     * Update the previous destination URL to the new destination URL.
      *
      * @param Request $request \Illuminate\Http\Request
      * @param mixed   $url
