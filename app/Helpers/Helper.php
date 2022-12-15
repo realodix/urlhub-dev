@@ -30,8 +30,9 @@ class Helper
      * @param int    $limit  Length string will be truncated to, including suffix
      * @param bool   $scheme Show or remove URL schemes
      */
-    public static function urlDisplay(string $url, int $limit = null, bool $scheme = true): string|Stringable
-    {
+    public static function urlDisplay(
+        string $url, int $limit = null, bool $scheme = true, bool $trailingSlash = true
+    ): string|Stringable {
         $sUrl = SpatieUrl::fromString($url);
         $hostLen = strlen($sUrl->getScheme().'://'.$sUrl->getHost());
         $urlLen = strlen($url);
@@ -40,18 +41,16 @@ class Helper
         // Remove schemes
         if ($scheme === false) {
             // Remove http://, www., and trailing slashes from the URL
-            $url = preg_replace('{^http(s)?://}', '', rtrim($url, '/'));
+            $url = preg_replace('{^http(s)?://}', '', $url);
             $hostLen = strlen($sUrl->getHost());
             $urlLen = strlen($url);
         }
 
-        $pathLen = $limit - $hostLen;
-
-        // If it's only the host and has the trailing slash at the end, then remove the
-        // trailing slash.
-        if ($pathLen === 1) {
+        if ($trailingSlash === false) {
             $url = rtrim($url, '/');
         }
+
+        $pathLen = $limit - $hostLen;
 
         if ($urlLen > $limit) {
             // The length of the string returned by str()->limit() does not include the suffix, so

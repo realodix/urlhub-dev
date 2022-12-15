@@ -41,13 +41,8 @@ class HelperTest extends TestCase
         );
 
         $this->assertSame(
-            'example.com/abcde',
-            Helper::urlDisplay('https://example.com/abcde', scheme: false)
-        );
-
-        $this->assertSame(
             'https://example.com',
-            Helper::urlDisplay('https://example.com/')
+            Helper::urlDisplay('https://example.com/', trailingSlash: false)
         );
 
         $this->assertSame(
@@ -77,9 +72,7 @@ class HelperTest extends TestCase
             ['www.example.com', 'http://www.example.com'],
             ['example.com', 'https://example.com'],
             ['www.example.com', 'https://www.example.com'],
-            ['www.example.com', 'https://www.example.com/'],
             ['www.example.com/abc', 'https://www.example.com/abc'],
-            ['www.example.com/abc', 'https://www.example.com/abc/'],
         ];
     }
 
