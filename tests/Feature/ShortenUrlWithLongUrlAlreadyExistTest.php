@@ -178,8 +178,8 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $customKey = 'laravel';
 
         $response = $this->post(route('su_create'), [
-            'destination'   => $url->destination,
-            'custom_key' => $customKey,
+            'destination' => $url->destination,
+            'custom_key'  => $customKey,
         ]);
         $response->assertRedirectToRoute('su_detail', $url->keyword);
 
