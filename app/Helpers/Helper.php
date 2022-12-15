@@ -39,7 +39,8 @@ class Helper
 
         // Remove URL schemes
         if ($scheme === false) {
-            $url = self::urlSanitize($url);
+            // Remove http://, www., and trailing slashes from the URL
+            $url = preg_replace(['{^http(s)?://}', '{www.}'], '', self::removeTrailingSlash($url));
             $hostLen = strlen($sUrl->getHost());
             $urlLen = strlen($url);
         }
@@ -64,16 +65,6 @@ class Helper
         }
 
         return $url;
-    }
-
-    /**
-     * Remove http://, www., and slashes from the URL.
-     */
-    public static function urlSanitize(string $url): string
-    {
-        $url = self::removeTrailingSlash($url);
-
-        return preg_replace(['{^http(s)?://}', '{www.}', '{/$}'], '', $url) ?? $url;
     }
 
     public static function removeTrailingSlash(string $url): string
