@@ -55,22 +55,14 @@
 
                 <br>
 
-                <span class="font-light">
+                <span class="font-bold text-indigo-700 text-xl sm:text-2xl">
                     <a href="{{ $url->short_url }}" target="_blank" id="copy">
                         {{urlDisplay($url->short_url, scheme: false)}}
                     </a>
                 </span>
 
-                <br> <br>
-
-                <b class="text-indigo-700">{{__('Destination URL')}}</b>
-                <button title="{{__('Copy the destination URL to clipboard')}}" data-clipboard-text="{{ $url->long_url }}"
-                    class="btn-clipboard btn-icon text-xs ml-4">
-                    @svg('icon-clone') {{__('Copy')}}
-                </button>
-
-                <div class="font-light break-all max-w-2xl">
-                    <a href="{{ $url->long_url }}" target="_blank" rel="noopener noreferrer" class="redirect-anchor">{{ urlDisplay($url->long_url, limit: 80) }}</a>
+                <div class="break-all max-w-2xl mt-2">
+                    @svg('arrow-turn-right') <a href="{{ $url->long_url }}" target="_blank" rel="noopener noreferrer" class="redirect-anchor">{{ urlDisplay($url->long_url, limit: 80) }}</a>
                 </div>
             </div>
         </div>
