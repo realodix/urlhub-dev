@@ -50,7 +50,7 @@
                 <button title="{{__('Copy the shortened URL to clipboard')}}"
                     data-clipboard-text="{{$url->short_url}}"
                     class="btn-clipboard btn-icon text-xs ml-4">
-                    @svg('icon-clone')
+                    @svg('icon-clone') {{__('Copy')}}
                 </button>
 
                 <br>
@@ -66,11 +66,11 @@
                 <b class="text-indigo-700">{{__('Destination URL')}}</b>
                 <button title="{{__('Copy the destination URL to clipboard')}}" data-clipboard-text="{{ $url->long_url }}"
                     class="btn-clipboard btn-icon text-xs ml-4">
-                    @svg('icon-clone')
+                    @svg('icon-clone') {{__('Copy')}}
                 </button>
 
                 <div class="font-light break-all max-w-2xl">
-                    {{ $url->long_url }}
+                    <a href="{{ $url->long_url }}" target="_blank" rel="noopener noreferrer" class="redirect-anchor">{{ urlDisplay($url->long_url, limit: 80) }}</a>
                 </div>
             </div>
         </div>
