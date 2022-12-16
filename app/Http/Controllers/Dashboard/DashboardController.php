@@ -24,7 +24,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Shows the shortened url detail page
+     * Show shortened url details page
      *
      * @param mixed $key
      * @return \Illuminate\View\View
@@ -39,7 +39,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Update the previous destination URL to the new destination URL.
+     * Update the destination URL
      *
      * @param Request $request \Illuminate\Http\Request
      * @param mixed   $url
@@ -58,7 +58,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Delete a shortened URL on user request.
+     * Delete shortened URLs
      *
      * @param mixed $url
      * @return \Illuminate\Http\RedirectResponse
@@ -76,10 +76,6 @@ class DashboardController extends Controller
     }
 
     /**
-     * UrlHub only allows users (registered & unregistered) to have a unique
-     * link. You can duplicate it and it will generated a new unique random
-     * key.
-     *
      * @param mixed $key
      * @return \Illuminate\Http\RedirectResponse
      */
