@@ -19,14 +19,17 @@ class UrlRedirectionService
      */
     public function handleHttpRedirect(Url $url)
     {
+        $statusCode = (int) config('urlhub.redirect_status_code');
+        $maxAge = (int) config('urlhub.redirect_cache_max_age');
+
         $url->increment('click');
         $this->storeVisitStat($url);
 
         $headers = [
-            'Cache-Control' => sprintf('private,max-age=%s', (int) config('urlhub.redirect_cache_lifetime')),
+            'Cache-Control' => sprintf('private,max-age=%s', $maxAge),
         ];
 
-        return redirect()->away($url->destination, (int) config('urlhub.redirect_status_code'), $headers);
+        return redirect()->away($url->destination, $statusCode, $headers);
     }
 
     /**
