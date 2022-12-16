@@ -216,8 +216,8 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $url = Url::factory()->create();
 
         $response = $this->post(route('su_create'), [
-            'long_url' => 'https://laravel-news.com',
-            'custom_key'  => $url->keyword,
+            'long_url'   => 'https://laravel-news.com',
+            'custom_key' => $url->keyword,
         ]);
 
         $response
@@ -238,8 +238,8 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->nonAdmin())
             ->post(route('su_create'), [
-                'long_url' => 'https://laravel-news.com',
-                'custom_key'  => $url->keyword,
+                'long_url'   => 'https://laravel-news.com',
+                'custom_key' => $url->keyword,
             ]);
 
         $response
