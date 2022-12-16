@@ -29,7 +29,7 @@
                 </div>
             @endif
             <div class="w-full md:w-3/4 mt-8 sm:mt-0">
-                <div class="mb-8">
+                <div @class(['mb-8' => session('msgLinkAlreadyExists')])>
                     @include('partials/messages')
                 </div>
 
