@@ -105,20 +105,20 @@ class UrlBeTest extends TestCase
             'user_id' => $this->admin()->id,
         ]);
 
-        $newDestination = 'https://phpunit.readthedocs.io/en/9.1';
+        $newLongUrl = 'https://phpunit.readthedocs.io/en/9.1';
 
         $response = $this->actingAs($this->admin())
             ->from(route('dashboard.su_edit', $url->keyword))
             ->post(route('dashboard.su_edit.post', $hashids->encode($url->id)), [
                 'title'    => $url->title,
-                'long_url' => $newDestination,
+                'long_url' => $newLongUrl,
             ]);
 
         $response
             ->assertRedirectToRoute('dashboard')
             ->assertSessionHas('flash_success');
 
-        $this->assertSame($newDestination, $url->fresh()->destination);
+        $this->assertSame($newLongUrl, $url->fresh()->destination);
     }
 
     /*
