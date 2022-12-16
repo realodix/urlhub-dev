@@ -19,11 +19,37 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         ]);
 
         $response = $this->post(route('su_create'), [
-            'long_url' => $url->long_url,
+            'long_url' => $url->destination,
         ]);
 
         $response
-            ->assertRedirectToRoute('su_stat', $url->keyword)
+            ->assertRedirectToRoute('su_detail', $url->keyword)
+            ->assertSessionHas('msgLinkAlreadyExists');
+
+        $this->assertCount(1, Url::all());
+    }
+
+    /**
+     * Memastikan long URL dengan atau tanpa trailing slashes adalah sama.
+     *
+     * @test
+     */
+    public function ensuresLongUrlsWithOrWithoutSlashesAreTheSameUrl()
+    {
+        $longUrl_1 = 'https://example.com/';
+        $longUrl_2 = 'https://example.com';
+
+        $url = Url::factory()->create([
+            'user_id'     => null,
+            'destination' => $longUrl_1,
+        ]);
+
+        $response = $this->post(route('su_create'), [
+            'long_url' => $longUrl_2,
+        ]);
+
+        $response
+            ->assertRedirectToRoute('su_detail', $url->keyword)
             ->assertSessionHas('msgLinkAlreadyExists');
 
         $this->assertCount(1, Url::all());
@@ -44,11 +70,11 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->post(route('su_create'), [
-                'long_url' => $url->long_url,
+                'long_url' => $url->destination,
             ]);
 
         $response
-            ->assertRedirectToRoute('su_stat', $url->keyword)
+            ->assertRedirectToRoute('su_detail', $url->keyword)
             ->assertSessionHas('msgLinkAlreadyExists');
 
         $this->assertCount(1, Url::all());
@@ -64,12 +90,12 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $url = Url::factory()->create();
 
         $response = $this->post(route('su_create'), [
-            'long_url' => $url->long_url,
+            'long_url' => $url->destination,
         ]);
 
         $url = Url::whereUserId(null)->first();
 
-        $response->assertRedirectToRoute('su_stat', $url->keyword);
+        $response->assertRedirectToRoute('su_detail', $url->keyword);
         $this->assertCount(2, Url::all());
     }
 
@@ -89,12 +115,12 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->post(route('su_create'), [
-                'long_url' => $url->long_url,
+                'long_url' => $url->destination,
             ]);
 
         $url = Url::whereUserId($user->id)->first();
 
-        $response->assertRedirectToRoute('su_stat', $url->keyword);
+        $response->assertRedirectToRoute('su_detail', $url->keyword);
         $this->assertCount(2, Url::all());
     }
 
@@ -113,12 +139,12 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->post(route('su_create'), [
-                'long_url' => $url->long_url,
+                'long_url' => $url->destination,
             ]);
 
         $url = Url::whereUserId($user->id)->first();
 
-        $response->assertRedirectToRoute('su_stat', $url->keyword);
+        $response->assertRedirectToRoute('su_detail', $url->keyword);
         $this->assertCount(2, Url::all());
     }
 
@@ -152,10 +178,10 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $customKey = 'laravel';
 
         $response = $this->post(route('su_create'), [
-            'long_url'   => $url->long_url,
+            'long_url'   => $url->destination,
             'custom_key' => $customKey,
         ]);
-        $response->assertRedirectToRoute('su_stat', $url->keyword);
+        $response->assertRedirectToRoute('su_detail', $url->keyword);
 
         $response2 = $this->get(route('home').'/'.$customKey);
         $response2->assertNotFound();
@@ -172,14 +198,14 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
 
         $response = $this->actingAs($this->nonAdmin())
             ->post(route('su_create'), [
-                'long_url'   => $url->long_url,
+                'long_url'   => $url->destination,
                 'custom_key' => $customKey,
             ]);
 
-        $response->assertRedirectToRoute('su_stat', $customKey);
+        $response->assertRedirectToRoute('su_detail', $customKey);
 
         $response2 = $this->get(route('home').'/'.$customKey);
-        $response2->assertRedirect($url->long_url);
+        $response2->assertRedirect($url->destination);
 
         $this->assertCount(2, Url::all());
     }

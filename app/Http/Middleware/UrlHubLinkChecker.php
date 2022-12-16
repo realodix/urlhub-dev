@@ -33,7 +33,7 @@ class UrlHubLinkChecker
         if ($destUrlExisting) {
             $s_url = $destUrlExisting;
 
-            return redirect()->route('su_stat', $s_url->keyword)
+            return redirect()->route('su_detail', $s_url->keyword)
                 ->with('msgLinkAlreadyExists', __('Link already exists.'));
         }
 
@@ -82,20 +82,20 @@ class UrlHubLinkChecker
     }
 
     /**
-     * Check if a long URL already exists in the database.
+     * Check if a destination URL already exists in the database.
      *
      * @param \Illuminate\Http\Request $request
      */
     private function destinationUrlAlreadyExists($request): Url|null
     {
-        $longUrl = rtrim($request->long_url, '/');
+        $longUrl = rtrim($request->long_url, '/'); // Remove trailing slash
 
         if (Auth::check()) {
             $s_url = Url::whereUserId(Auth::id())
-                ->whereLongUrl($longUrl)
+                ->whereDestination($longUrl)
                 ->first();
         } else {
-            $s_url = Url::whereLongUrl($longUrl)
+            $s_url = Url::whereDestination($longUrl)
                 ->whereNull('user_id')
                 ->first();
         }

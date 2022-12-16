@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\QrCode;
 use App\Http\Requests\StoreUrl;
 use App\Models\Url;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class UrlController extends Controller
     {
         $url = (new Url)->shortenUrl($request, Auth::id());
 
-        return redirect()->route('su_stat', $url->keyword);
+        return redirect()->route('su_detail', $url->keyword);
     }
 
     /**
@@ -37,19 +38,12 @@ class UrlController extends Controller
      * @param string $key
      * @return \Illuminate\View\View
      */
-    public function showShortenedUrlDetails($key)
+    public function showDetail($key)
     {
         $url = Url::with('visit')->whereKeyword($key)->firstOrFail();
 
         if (config('urlhub.qrcode')) {
-            $qrCode = \Endroid\QrCode\Builder\Builder::create()
-                ->data($url->short_url)
-                ->size(170)
-                ->labelText('Scan QR Code')
-                ->errorCorrectionLevel(
-                    new \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh
-                )
-                ->build();
+            $qrCode = (new QrCode)->process($url->short_url);
 
             return view('frontend.short', compact(['qrCode']), ['url' => $url]);
         }
@@ -87,7 +81,7 @@ class UrlController extends Controller
         $randomKey = $url->randomString();
         $url->duplicate($key, Auth::id(), $randomKey);
 
-        return redirect()->route('su_stat', $randomKey)
+        return redirect()->route('su_detail', $randomKey)
             ->withFlashSuccess(__('Link was successfully duplicated.'));
     }
 }

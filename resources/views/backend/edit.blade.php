@@ -27,7 +27,7 @@
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 lg:col-span-4">
                             <label for="short-url" class="block font-medium text-sm text-slate-700">{{__('Short URL')}}</label>
-                            <span class="short-url">{{urlDisplay($url->short_url, false)}}</span>
+                            <span class="short-url">{{urlDisplay($url->short_url, scheme: false)}}</span>
                         </div>
 
                         <div class="col-span-6">
@@ -37,9 +37,9 @@
                         </div>
 
                         <div class="col-span-6">
-                            <label for="long-url" class="block font-medium text-sm text-slate-700">{{__('DestinationURL')}}</label>
-                            <input id="long-url" type="text" name="long_url" placeholder="{{__('Enter your long url')}}"
-                                required value="{{$url->long_url}}" class="form-input">
+                            <label for="long-url" class="block font-medium text-sm text-slate-700">{{__('Destination URL')}}</label>
+                            <input id="long-url" type="text" name="long_url" placeholder="http://www.my_long_url.com"
+                                required value="{{$url->destination}}" class="form-input">
                         </div>
                     </div>
                 </div>

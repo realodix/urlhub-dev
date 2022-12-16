@@ -90,14 +90,14 @@ final class MyUrlTable extends PowerGridComponent
                     '<a href="'.$url->short_url.'" target="_blank" class="font-light text-indigo-700">'.$url->keyword.'</a>'
                     .Blade::render('@svg(\'icon-open-in-new\', \'!h-[0.7em] ml-1\')');
             })
-            ->addColumn('long_url', function (Url $url) {
+            ->addColumn('destination', function (Url $url) {
                 return
                     '<span title="'.$url->title.'">'
                         .Str::limit($url->title, self::STR_LIMIT).
                     '</span>
                     <br>
-                    <a href="'.$url->long_url.'" target="_blank" title="'.$url->long_url.'" rel="noopener noreferrer" class="text-slate-500">'
-                        .Helper::urlDisplay($url->long_url, false, self::STR_LIMIT)
+                    <a href="'.$url->destination.'" target="_blank" title="'.$url->destination.'" rel="noopener noreferrer" class="text-slate-500">'
+                        .Helper::urlDisplay($url->destination, self::STR_LIMIT)
                         .Blade::render('@svg(\'icon-open-in-new\', \'!h-[0.7em] ml-1\')').
                     '</a>';
             })
@@ -113,7 +113,7 @@ final class MyUrlTable extends PowerGridComponent
             })
             ->addColumn('action', function (Url $url) {
                 return
-                    '<a role="button" href="'.route('su_stat', $url->keyword).'" target="_blank" title="'.__('Go to front page').'"
+                    '<a role="button" href="'.route('su_detail', $url->keyword).'" target="_blank" title="'.__('Go to front page').'"
                         class="btn-icon btn-icon-table"
                     >'
                         .Blade::render('@svg(\'icon-open-in-new\')').
@@ -161,7 +161,7 @@ final class MyUrlTable extends PowerGridComponent
 
             Column::add()
                 ->title('Destination URL')
-                ->field('long_url')
+                ->field('destination')
                 ->sortable()
                 ->searchable(),
 
