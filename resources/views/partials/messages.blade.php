@@ -16,7 +16,7 @@
         </button>
     </div>
 @elseif (session('msgLinkAlreadyExists'))
-    <div class="block mb-4 pl-3 pr-4 py-2 font-medium text-base text-orange-700 bg-orange-50 border-l-4 border-orange-400">
+    <div class="block pl-3 pr-4 py-4 font-medium text-base text-orange-700 bg-orange-50 border-l-4 border-orange-400">
         {{ session('msgLinkAlreadyExists') }}
 
         {{__('Do you want to duplicate this link?')}}

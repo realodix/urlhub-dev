@@ -29,7 +29,9 @@
                 </div>
             @endif
             <div class="w-full md:w-3/4 mt-8 sm:mt-0">
-                @include('partials/messages')
+                <div class="mb-8">
+                    @include('partials/messages')
+                </div>
 
                 <button title="{{__('Copy the shortened URL to clipboard')}}"
                     data-clipboard-text="{{$url->short_url}}"
