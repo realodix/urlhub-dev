@@ -102,7 +102,9 @@ final class MyUrlTable extends PowerGridComponent
                         .Blade::render('@svg(\'icon-open-in-new\', \'!h-[0.7em] ml-1\')').
                     '</a>';
             })
-            ->addColumn('clicks', fn (Url $url) => ' / '.compactNumber($url->click).Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')'))
+            ->addColumn('click', function (Url $url) {
+                return $url->click.Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
+            })
             ->addColumn('created_at_formatted', function (Url $url) {
                 /** @var \Carbon\Carbon */
                 $urlCreatedAt = $url->created_at;
