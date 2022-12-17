@@ -108,7 +108,7 @@ final class MyUrlTable extends PowerGridComponent
                 $tClick = $url->click;
                 $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
 
-                return $uClick.' / '.$tClick.$icon;
+                return '<div title="Unique Clicks / Total Clicks">'.$uClick.' / '.$tClick.$icon.'</div>';
             })
             ->addColumn('created_at_formatted', function (Url $url) {
                 /** @var \Carbon\Carbon */
