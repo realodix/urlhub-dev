@@ -44,15 +44,4 @@ class Visit extends Model
     {
         return $this->belongsTo(Url::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Other Functions
-    |--------------------------------------------------------------------------
-    */
-
-    public function uniqueClicks()
-    {
-        $uClick = self::whereIsFirstClick('$url')->first();
-    }
 }
