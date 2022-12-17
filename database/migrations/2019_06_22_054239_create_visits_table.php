@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('url_id');
             $table->string('visitor_id');
             $table->boolean('is_first_click');
-            $table->unsignedBigInteger('url_id');
             $table->string('referer', 300)->nullable()->default(0);
             $table->ipAddress('ip');
             $table->timestamps();
