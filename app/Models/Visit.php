@@ -18,6 +18,11 @@ class Visit extends Model
         'url_id',
         'referer',
         'ip',
+        'browser',
+        'browser_version',
+        'device',
+        'os',
+        'os_version',
     ];
 
     /*
