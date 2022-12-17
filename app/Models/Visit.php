@@ -51,7 +51,8 @@ class Visit extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function uniqueClicks() {
+    public function uniqueClicks()
+    {
         $uClick = self::whereIsFirstClick('$url')->first();
     }
 }
