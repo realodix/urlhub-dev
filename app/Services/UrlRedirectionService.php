@@ -39,7 +39,10 @@ class UrlRedirectionService
      */
     private function storeVisitStat(Url $url)
     {
+        $visitorId = hash('crc32', request()->header('user-agent').request()->ip());
+
         Visit::create([
+            'visitor_id' => $visitorId,
             'url_id'  => $url->id,
             'referer' => request()->headers->get('referer'),
             'ip'      => Helper::anonymizeIp(request()->ip()),

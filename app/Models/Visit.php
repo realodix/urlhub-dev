@@ -15,6 +15,7 @@ class Visit extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'visitor_id',
         'url_id',
         'referer',
         'ip',
