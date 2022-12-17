@@ -44,9 +44,9 @@ class UrlRedirectionService
         $isFirstClick = $hasVisitorId ? false : true;
 
         Visit::create([
+            'url_id'     => $url->id,
             'visitor_id' => $visitorId,
             'is_first_click' => $isFirstClick,
-            'url_id'  => $url->id,
             'referer' => request()->headers->get('referer'),
             'ip'      => Helper::anonymizeIp(request()->ip()),
         ]);
