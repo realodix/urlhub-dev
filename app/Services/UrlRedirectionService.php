@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\Helper;
 use App\Models\Url;
 use App\Models\Visit;
+use Browser;
 
 class UrlRedirectionService
 {
@@ -43,6 +44,11 @@ class UrlRedirectionService
             'url_id'  => $url->id,
             'referer' => request()->headers->get('referer'),
             'ip'      => Helper::anonymizeIp(request()->ip()),
+            'browser' => Browser::browserFamily(),
+            'browser_version' => Browser::browserVersion(),
+            'device'     => Browser::deviceFamily(),
+            'os'         => Browser::platformFamily(),
+            'os_version' => Browser::platformVersion(),
         ]);
     }
 }

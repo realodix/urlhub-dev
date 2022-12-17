@@ -18,11 +18,11 @@ return new class extends Migration
             $table->unsignedBigInteger('url_id');
             $table->string('referer', 300)->nullable()->default(0);
             $table->ipAddress('ip');
-            $table->string('browser');
-            $table->string('browser_version');
-            $table->string('device');
-            $table->string('os');
-            $table->string('os_version');
+            $table->string('browser')->nullable();
+            $table->string('browser_version')->nullable();
+            $table->string('device')->nullable();
+            $table->string('os')->nullable();
+            $table->string('os_version')->nullable();
             $table->timestamps();
 
             $table->foreign('url_id')
