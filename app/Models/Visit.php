@@ -22,6 +22,15 @@ class Visit extends Model
         'ip',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_first_click' => 'boolean',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Eloquent: Relationships
@@ -34,5 +43,15 @@ class Visit extends Model
     public function url()
     {
         return $this->belongsTo(Url::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Other Functions
+    |--------------------------------------------------------------------------
+    */
+
+    public function uniqueClicks() {
+        $uClick = self::whereIsFirstClick('$url')->first();
     }
 }
