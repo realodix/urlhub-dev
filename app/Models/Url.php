@@ -303,19 +303,17 @@ class Url extends Model
         return self::count('keyword');
     }
 
-    /**
-     * Count the number of clicks based on user id.
-     *
-     * @param int|string|null $userId
-     */
-    public function clickCount($userId = null): int
-    {
-        return self::whereUserId($userId)->sum('click');
-    }
-
     public function totalClick(): int
     {
         return self::sum('click');
+    }
+
+    /**
+     * @param int|string|null $userId
+     */
+    public function totalClickById($userId = null): int
+    {
+        return self::whereUserId($userId)->sum('click');
     }
 
     /**
