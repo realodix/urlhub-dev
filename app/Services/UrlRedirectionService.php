@@ -41,15 +41,20 @@ class UrlRedirectionService
      */
     private function storeVisitStat(Url $url)
     {
+        $visitorId = sha1($url->id.request()->header('user-agent').request()->ip());
+        $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
+        $isFirstClick = $hasVisitorId ? false : true;
+
         // hisorange/browser-detect sudah ada matomo/device-detector
         $userAgent = $_SERVER['HTTP_USER_AGENT']; // change this to the useragent you want to parse
         $clientHints = ClientHints::factory($_SERVER); // client hints are optional
-
         $dd = new DeviceDetector($userAgent, $clientHints);
         $dd->parse();
 
         Visit::create([
-            'url_id'  => $url->id,
+            'url_id'     => $url->id,
+            'visitor_id' => $visitorId,
+            'is_first_click' => $isFirstClick,
             'referer' => request()->headers->get('referer'),
             'ip'      => Helper::anonymizeIp(request()->ip()),
             'browser' => \Browser::browserFamily(),
