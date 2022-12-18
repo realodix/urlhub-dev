@@ -43,10 +43,13 @@ class UrlRedirectionService
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
         $isFirstClick = $hasVisitorId ? false : true;
 
+        if (\Browser::isBot()) {
+            return;
+        }
+
         Visit::create([
             'url_id'     => $url->id,
             'visitor_id' => $visitorId,
-            'is_bot'     => \Browser::isBot(),
             'is_first_click' => $isFirstClick,
             'referer' => request()->headers->get('referer'),
             'ip'      => Helper::anonymizeIp(request()->ip()),
