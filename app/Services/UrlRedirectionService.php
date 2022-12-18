@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Helpers\Helper;
 use App\Models\Url;
 use App\Models\Visit;
-use DeviceDetector\ClientHints;
-use DeviceDetector\DeviceDetector;
 
 class UrlRedirectionService
 {
@@ -45,22 +43,16 @@ class UrlRedirectionService
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
         $isFirstClick = $hasVisitorId ? false : true;
 
-        // hisorange/browser-detect sudah ada matomo/device-detector
-        $userAgent = request()->server('HTTP_USER_AGENT'); // change this to the useragent you want to parse
-        $clientHints = ClientHints::factory($_SERVER); // client hints are optional
-        $dd = new DeviceDetector($userAgent, $clientHints);
-        $dd->parse();
-
         Visit::create([
             'url_id'     => $url->id,
             'visitor_id' => $visitorId,
-            'is_bot'     => $dd->isBot(),
+            'is_bot'     => \Browser::isBot(),
             'is_first_click' => $isFirstClick,
             'referer' => request()->headers->get('referer'),
             'ip'      => Helper::anonymizeIp(request()->ip()),
             'browser' => \Browser::browserFamily(),
             'browser_version' => \Browser::browserVersion(),
-            'device'     => $dd->getDeviceName(),
+            'device'     => \Browser::deviceType(),
             'os'         => \Browser::platformFamily(),
             'os_version' => \Browser::platformVersion(),
         ]);
