@@ -15,6 +15,7 @@ class VisitFactory extends Factory
      * The name of the factory's corresponding model.
      *
      * @var class-string<Visit>
+     */
     protected $model = Visit::class;
 
     /**
