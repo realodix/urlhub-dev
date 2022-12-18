@@ -492,7 +492,7 @@ class UrlTest extends TestCase
     public function totalClicksByMe()
     {
         $expected = $this->tClickWithUserId;
-        $actual = $this->url->clickCount($this->admin()->id);
+        $actual = $this->url->totalClickById($this->admin()->id);
 
         $this->assertSame($expected, $actual);
     }
@@ -506,7 +506,7 @@ class UrlTest extends TestCase
     public function totalClicksByGuest()
     {
         $expected = $this->tClickWithoutUserId;
-        $actual = $this->url->clickCount();
+        $actual = $this->url->totalClickById();
 
         $this->assertSame($expected, $actual);
     }
