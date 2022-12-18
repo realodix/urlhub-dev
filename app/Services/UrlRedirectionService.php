@@ -54,6 +54,7 @@ class UrlRedirectionService
         Visit::create([
             'url_id'     => $url->id,
             'visitor_id' => $visitorId,
+            'is_bot'     => $dd->isBot(),
             'is_first_click' => $isFirstClick,
             'referer' => request()->headers->get('referer'),
             'ip'      => Helper::anonymizeIp(request()->ip()),
