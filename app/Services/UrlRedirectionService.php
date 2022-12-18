@@ -41,7 +41,7 @@ class UrlRedirectionService
      */
     private function storeVisitStat(Url $url)
     {
-        $visitorId = sha1($url->id.request()->header('user-agent').request()->ip());
+        $visitorId = md5($url->id.request()->header('user-agent').request()->ip());
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
         $isFirstClick = $hasVisitorId ? false : true;
 
