@@ -46,7 +46,7 @@ class UrlRedirectionService
         $isFirstClick = $hasVisitorId ? false : true;
 
         // hisorange/browser-detect sudah ada matomo/device-detector
-        $userAgent = $_SERVER['HTTP_USER_AGENT']; // change this to the useragent you want to parse
+        $userAgent = request()->server('HTTP_USER_AGENT'); // change this to the useragent you want to parse
         $clientHints = ClientHints::factory($_SERVER); // client hints are optional
         $dd = new DeviceDetector($userAgent, $clientHints);
         $dd->parse();
