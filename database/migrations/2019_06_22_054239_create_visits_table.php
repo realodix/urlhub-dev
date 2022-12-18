@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('url_id');
             $table->string('visitor_id');
+            $table->boolean('is_bot');
             $table->boolean('is_first_click');
             $table->string('referer', 300)->nullable()->default(0);
             $table->ipAddress('ip');

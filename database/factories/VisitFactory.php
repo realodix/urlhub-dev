@@ -28,9 +28,15 @@ class VisitFactory extends Factory
         return [
             'url_id'     => Url::factory(),
             'visitor_id' => md5('foo'),
+            'is_bot'     => false,
             'is_first_click' => true,
             'referer'    => 'https://github.com/realodix/urlhub',
             'ip'         => $this->faker->ipv4(),
+            'browser'    => 'Firefox',
+            'browser_version' => '108',
+            'device'     => 'Desktop',
+            'os'         => 'Windows',
+            'os_version' => '11',
         ];
     }
 }
