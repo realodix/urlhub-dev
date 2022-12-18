@@ -109,8 +109,9 @@ final class AllUlrTable extends PowerGridComponent
                 $uClick = $url->totalClickPerUrl(unique: true);
                 $tClick = $url->totalClickPerUrl();
                 $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
+                $title = $uClick.' '.__('Uniques').' / '.$tClick.' '.__('Clicks');
 
-                return '<div title="Unique Clicks / Total Clicks">'.$uClick.' / '.$tClick.$icon.'</div>';
+                return '<div title="'.$title.'">'.$uClick.' / '.$tClick.$icon.'</div>';
             })
             ->addColumn('created_at_formatted', function (Url $url) {
                 /** @var \Carbon\Carbon */
