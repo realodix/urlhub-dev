@@ -15,7 +15,6 @@ class VisitFactory extends Factory
      * The name of the factory's corresponding model.
      *
      * @var class-string<Visit>
-     */
     protected $model = Visit::class;
 
     /**
@@ -26,11 +25,11 @@ class VisitFactory extends Factory
     public function definition()
     {
         return [
-            'url_id'  => Url::factory(),
-            'visitor_id'     => sha1('foo'),
+            'url_id'     => Url::factory(),
+            'visitor_id' => sha1('foo'),
             'is_first_click' => true,
-            'referer' => 'https://github.com/realodix/urlhub',
-            'ip'      => $this->faker->ipv4(),
+            'referer'    => 'https://github.com/realodix/urlhub',
+            'ip'         => $this->faker->ipv4(),
         ];
     }
 }
