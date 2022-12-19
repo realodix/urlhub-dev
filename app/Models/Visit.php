@@ -56,10 +56,11 @@ class Visit extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function totalClickPerUrl(bool $unique = false): int
+    public function totalClickPerUrl(int|null $id, bool $unique = false): int
     {
         if ($unique) {
-            return self::whereIsFirstClick(true)
+            return self::whereUrlId($id)
+                ->whereIsFirstClick(true)
                 ->count();
         }
 

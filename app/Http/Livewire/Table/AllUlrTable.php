@@ -108,9 +108,9 @@ final class AllUlrTable extends PowerGridComponent
                         .Blade::render('@svg(\'icon-open-in-new\', \'!h-[0.7em] ml-1\')').
                     '</a>';
             })
-            ->addColumn('click', function () use ($visit) {
-                $uClick = $visit->totalClickPerUrl(unique: true);
-                $tClick = $visit->totalClickPerUrl();
+            ->addColumn('click', function (Url $url) use ($visit) {
+                $uClick = $visit->totalClickPerUrl($url->id, unique: true);
+                $tClick = $visit->totalClickPerUrl($url->id);
                 $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
                 $title = $uClick.' '.__('Uniques').' / '.$tClick.' '.__('Clicks');
 
