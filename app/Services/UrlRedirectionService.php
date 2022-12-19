@@ -39,7 +39,8 @@ class UrlRedirectionService
      */
     private function storeVisitStat(Url $url)
     {
-        $visitorId = hash('sha3-256', $url->id.request()->header('user-agent').request()->ip());
+        // Visitor ID seharusnya berdasarkan user-agent dan IP address atau dari auth id-nya
+        $visitorId = hash('sha3-256', auth()->id().$url->id.request()->header('user-agent').request()->ip());
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
         $isFirstClick = $hasVisitorId ? false : true;
 
