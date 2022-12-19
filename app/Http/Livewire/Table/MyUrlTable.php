@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Table;
 
 use App\Helpers\Helper;
 use App\Models\Url;
+use App\Models\Visit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
@@ -84,6 +85,8 @@ final class MyUrlTable extends PowerGridComponent
     */
     public function addColumns(): PowerGridEloquent
     {
+        $visit = new Visit;
+
         return PowerGrid::eloquent()
             ->addColumn('keyword', function (Url $url) {
                 return
@@ -101,9 +104,9 @@ final class MyUrlTable extends PowerGridComponent
                         .Blade::render('@svg(\'icon-open-in-new\', \'!h-[0.7em] ml-1\')').
                     '</a>';
             })
-            ->addColumn('click', function (Url $url) {
-                $uClick = $url->totalClickPerUrl(unique: true);
-                $tClick = $url->totalClickPerUrl();
+            ->addColumn('click', function () use ($visit) {
+                $uClick = $visit->totalClickPerUrl(unique: true);
+                $tClick = $visit->totalClickPerUrl();
                 $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
                 $title = $uClick.' '.__('Uniques').' / '.$tClick.' '.__('Clicks');
 

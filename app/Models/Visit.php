@@ -49,4 +49,20 @@ class Visit extends Model
     {
         return $this->belongsTo(Url::class);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Other Functions
+    |--------------------------------------------------------------------------
+    */
+
+    public function totalClickPerUrl(bool $unique = false): int
+    {
+        if ($unique) {
+            return self::whereIsFirstClick(true)
+                ->count();
+        }
+
+        return self::count();
+    }
 }

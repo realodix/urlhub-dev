@@ -316,20 +316,6 @@ class Url extends Model
         return self::whereUserId($userId)->sum('click');
     }
 
-    public function totalClickPerUrl(bool $unique = false): int
-    {
-        if ($unique) {
-            return self::visit()
-                ->whereUrlId($this->id)
-                ->whereIsFirstClick(true)
-                ->count();
-        }
-
-        return self::visit()
-            ->whereUrlId($this->id)
-            ->count();
-    }
-
     /**
      * Fetch the page title from the web page URL
      *
