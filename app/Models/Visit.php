@@ -64,6 +64,6 @@ class Visit extends Model
                 ->count();
         }
 
-        return self::count();
+        return self::whereUrlId($id)->count();
     }
 }
