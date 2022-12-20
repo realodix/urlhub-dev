@@ -58,7 +58,7 @@ class Visit extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function visitorId(int $urlId):string
+    public function visitorId(int $urlId): string
     {
         $visitorId = $urlId.'_'.Request::ip().'_'.Request::header('user-agent');
 
