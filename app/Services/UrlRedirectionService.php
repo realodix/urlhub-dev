@@ -43,8 +43,10 @@ class UrlRedirectionService
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
         $isFirstClick = $hasVisitorId ? false : true;
 
-        if (\Browser::isBot()) {
-            return;
+        if (config('urlhub.bot_detector') === true) {
+            if (\Browser::isBot()) {
+                return;
+            }
         }
 
         Visit::create([
