@@ -58,6 +58,9 @@ class Visit extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Generate unique Visitor Id
+     */
     public function visitorId(int $urlId): string
     {
         $visitorId = $urlId.'_'.Request::ip().'_'.Request::header('user-agent');
