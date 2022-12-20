@@ -104,7 +104,8 @@ return [
     'redirect_cache_max_age' => env('UH_REDIRECT_CACHE_MAX_AGE', 30),
 
     /**
-     * If enabled, bots/crawlers will not be counted as visitors.
+     * If enabled, bots/crawlers will not be considered as visitors and are not
+     * counted.
      */
     'bot_detector' => env('UH_BOT_DETECTOR', true),
 
