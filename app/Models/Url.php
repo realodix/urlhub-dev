@@ -319,7 +319,8 @@ class Url extends Model
         $total = self::visit()->whereUrlId($this->id)->count();
 
         if ($unique) {
-            $total = self::visit()->whereUrlId($this->id)
+            $total = self::visit()
+                ->whereUrlId($this->id)
                 ->whereIsFirstClick(true)
                 ->count();
         }
