@@ -83,9 +83,7 @@ class Url extends Model
     protected function userId(): Attribute
     {
         return Attribute::make(
-            set: function ($value) {
-                return $value === 0 ? self::GUEST_ID : $value;
-            },
+            set: fn ($value) => $value === 0 ? self::GUEST_ID : $value,
         );
     }
 
