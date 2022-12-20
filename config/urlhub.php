@@ -107,7 +107,7 @@ return [
      * If enabled, bots/crawlers will not be considered as visitors and will not
      * be counted.
      */
-    'bot_detector' => env('UH_BOT_DETECTOR', true),
+    'bot_filter' => env('UH_BOT_FILTER', true),
 
     /*
     |--------------------------------------------------------------------------
