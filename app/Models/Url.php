@@ -303,7 +303,7 @@ class Url extends Model
 
     public function totalClick(): int
     {
-        return self::sum('click');
+        return (new Visit)->totalClick();
     }
 
     /**
@@ -311,7 +311,7 @@ class Url extends Model
      */
     public function totalClickById($userId = null): int
     {
-        return self::whereUserId($userId)->sum('click');
+        return (new Visit)->totalClickById($userId);
     }
 
     public function totalClickPerUrl(bool $unique = false): int

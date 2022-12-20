@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\Helper;
 use App\Models\Url;
 use App\Models\Visit;
+use Illuminate\Support\Facades\Auth;
 
 class UrlRedirectionService
 {
@@ -49,6 +50,7 @@ class UrlRedirectionService
 
         Visit::create([
             'url_id'     => $url->id,
+            'user_id'    => Auth::id(),
             'visitor_id' => $visitorId,
             'is_first_click' => $isFirstClick,
             'referer' => request()->headers->get('referer'),

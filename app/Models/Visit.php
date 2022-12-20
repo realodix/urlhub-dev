@@ -18,6 +18,7 @@ class Visit extends Model
      */
     protected $fillable = [
         'url_id',
+        'user_id',
         'visitor_id',
         'is_first_click',
         'referer',
@@ -35,6 +36,7 @@ class Visit extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'user_id'        => 'integer',
         'is_first_click' => 'boolean',
     ];
 
@@ -70,5 +72,15 @@ class Visit extends Model
         }
 
         return hash('sha3-256', $visitorId);
+    }
+
+    public function totalClick(): int
+    {
+        return self::count();
+    }
+
+    public function totalClickById($userId): int
+    {
+        return self::whereUserId($userId)->count();
     }
 }
