@@ -104,10 +104,10 @@ return [
     'redirect_cache_max_age' => env('UH_REDIRECT_CACHE_MAX_AGE', 30),
 
     /**
-     * If enabled, bots/crawlers will not be considered as visitors and will not
+     * If disabled, bots/crawlers will not be considered as visitors and will not
      * be counted.
      */
-    'trace_bot_visit' => env('UH_TRACE_BOT_VISIT', true),
+    'trace_bot_visit' => env('UH_TRACE_BOT_VISIT', false),
 
     /*
     |--------------------------------------------------------------------------
