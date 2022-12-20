@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 class Visit extends Model
 {
@@ -55,6 +57,17 @@ class Visit extends Model
     | Other Functions
     |--------------------------------------------------------------------------
     */
+
+    public function visitorId(int $urlId):string
+    {
+        $visitorId = $urlId.'_'.Request::ip().'_'.Request::header('user-agent');
+
+        if (Auth::check() === true) {
+            $visitorId = $urlId.'_'.Auth::id();
+        }
+
+        return hash('sha3-256', $visitorId);
+    }
 
     public function totalClickPerUrl(int|null $id, bool $unique = false): int
     {

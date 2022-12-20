@@ -40,7 +40,7 @@ class UrlRedirectionService
     private function storeVisitStat(Url $url)
     {
         // Visitor ID seharusnya berdasarkan user-agent dan IP address atau dari auth id-nya
-        $visitorId = hash('crc32', auth()->id().$url->id.request()->header('user-agent').request()->ip());
+        $visitorId = (new Visit)->visitorId($url->id);
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
         $isFirstClick = $hasVisitorId ? false : true;
 
