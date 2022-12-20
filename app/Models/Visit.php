@@ -68,17 +68,4 @@ class Visit extends Model
 
         return hash('sha3-256', $visitorId);
     }
-
-    public function totalClickPerUrl(int|null $id, bool $unique = false): int
-    {
-        $total = self::whereUrlId($id)->count();
-
-        if ($unique) {
-            $total = self::whereUrlId($id)
-                ->whereIsFirstClick(true)
-                ->count();
-        }
-
-        return $total;
-    }
 }
