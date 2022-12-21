@@ -13,16 +13,35 @@ class VisitTest extends TestCase
     /** @test */
     public function visitorHits()
     {
-        $url = Url::factory()->create();
-        $visit = Visit::factory()->create(['url_id' => $url->id]);
-        $visitor = Visit::whereVisitorId($visit->visitor_id);
+        $urlFactory = Url::factory()->create();
+        $urlFactory2 = Url::factory()->create();
+        $this->assertEquals(2, Url::all()->count());
 
-        $this->get(route('home').'/'.$url->keyword);
-        $this->assertEquals(1, $visitor->sum('hits'));
+        // URL ID 1
+        $this->get(route('home').'/'.$urlFactory->keyword); // Buat baru untuk Url ID 1
+        $this->assertEquals(1, Visit::all()->count());
+        $visitor = Visit::whereUrlId($urlFactory->id)->first();
+        $this->assertEquals(1, $visitor->hits);
 
-        $this->get(route('home').'/'.$url->keyword);
-        $this->assertEquals(1, $visitor->count());
-        $this->assertEquals(2, $visitor->sum('hits'));
+        $this->get(route('home').'/'.$urlFactory->keyword); // Penambahan +1 untuk Url ID 1
+        $this->assertEquals(1, Visit::all()->count());
+        $visitor = Visit::whereUrlId($urlFactory->id)->first();
+        $this->assertEquals(2, $visitor->hits);
+
+        // URL ID 2
+        $this->get(route('home').'/'.$urlFactory2->keyword); // Buat baru
+        $this->assertEquals(2, Visit::all()->count());
+        $visitor = Visit::whereUrlId($urlFactory->id)->first();
+        $visitor2 = Visit::whereUrlId($urlFactory2->id)->first();
+        $this->assertEquals(2, $visitor->hits);
+        $this->assertEquals(1, $visitor2->hits);
+
+        $this->get(route('home').'/'.$urlFactory2->keyword); // Penambahan +1
+        $visitor = Visit::whereUrlId($urlFactory->id)->first();
+        $visitor2 = Visit::whereUrlId($urlFactory2->id)->first();
+        $this->assertEquals(3, $visitor->hits); // Harusnya 2, tapi malah 3
+        $this->assertEquals(2, $visitor2->hits);
+        $this->assertEquals(5, Visit::all()->sum('hits')); // Harusnya 4, tapi malah 5
     }
 
     /** @test */
