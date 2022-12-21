@@ -20,7 +20,7 @@ class UrlRedirectionService
      */
     public function handleHttpRedirect(Url $url)
     {
-        $url->increment('click');
+        // $url->increment('click');
         $this->storeVisitStat($url);
 
         $statusCode = (int) config('urlhub.redirect_status_code');

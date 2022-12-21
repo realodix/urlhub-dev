@@ -37,12 +37,12 @@ class UrlTest extends TestCase
 
         Url::factory(self::N_URL_WITH_USER_ID)->create([
             'user_id' => $this->admin()->id,
-            'click'   => self::CLICKS,
+            // 'click'   => self::CLICKS,
         ]);
 
         Url::factory(self::N_URL_WITHOUT_USER_ID)->create([
             'user_id' => null,
-            'click'   => self::CLICKS,
+            // 'click'   => self::CLICKS,
         ]);
     }
 

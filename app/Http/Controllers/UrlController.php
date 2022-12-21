@@ -42,13 +42,15 @@ class UrlController extends Controller
     {
         $url = Url::with('visit')->whereKeyword($key)->firstOrFail();
 
+        $data = ['url' => $url,'visit' => new \App\Models\Visit];
+
         if (config('urlhub.qrcode')) {
             $qrCode = (new QrCode)->process($url->short_url);
 
-            return view('frontend.short', compact(['qrCode']), ['url' => $url]);
+            $data = array_merge($data, compact(['qrCode']));
         }
 
-        return view('frontend.short', ['url' => $url]);
+        return view('frontend.short', $data);
     }
 
     /**

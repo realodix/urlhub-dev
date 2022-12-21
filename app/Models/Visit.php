@@ -74,11 +74,17 @@ class Visit extends Model
         return hash('sha3-256', $visitorId);
     }
 
+    /**
+     * total visit
+     */
     public function totalClick(): int
     {
         return self::count();
     }
 
+    /**
+     * total visit by user id
+     */
     public function totalClickById($userId): int
     {
         return self::whereUserId($userId)->count();
