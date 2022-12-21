@@ -44,7 +44,8 @@ class UrlRedirectionService
         $isFirstClick = $hasVisitorId ? false : true;
 
         $logBotVisit = config('urlhub.log_bot_visit');
-        if ($logBotVisit === false && \Browser::isBot() === true) {
+        $visitorIsBot = \Browser::isBot();
+        if ($logBotVisit === false && $visitorIsBot === true) {
             return;
         }
 
