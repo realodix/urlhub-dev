@@ -104,6 +104,8 @@ return [
     'redirect_cache_max_age' => env('UH_REDIRECT_CACHE_MAX_AGE', 30),
 
     /**
+     * Determines whether the bot will be logged as a visitor or not
+     *
      * - TRUE: Logs bot visits in the visitor log
      * - FALSE: Doesn't log bot visits in visitor logs
      */
