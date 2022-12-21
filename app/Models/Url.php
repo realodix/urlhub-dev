@@ -309,7 +309,7 @@ class Url extends Model
     /**
      * @param int|string|null $userId
      */
-    public function totalClickById($userId = null): int
+    public function totalClickPerUser($userId = null): int
     {
         return self::whereUserId($userId)->sum('click');
     }
