@@ -101,7 +101,7 @@ final class MyUrlTable extends PowerGridComponent
                         .Blade::render('@svg(\'icon-open-in-new\', \'!h-[0.7em] ml-1\')').
                     '</a>';
             })
-            ->addColumn('click', function (Url $url) {
+            ->addColumn('clicka', function (Url $url) {
                 $uClick = $url->totalClickPerUrl(unique: true);
                 $tClick = $url->totalClickPerUrl();
                 $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
@@ -174,7 +174,7 @@ final class MyUrlTable extends PowerGridComponent
 
             Column::add()
                 ->title('CLICKS')
-                ->field('click'),
+                ->field('clicka'),
 
             Column::add()
                 ->title('CREATED AT')
