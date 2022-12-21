@@ -28,7 +28,7 @@ class VisitFactory extends Factory
         return [
             'url_id'     => Url::factory(),
             'visitor_id' => md5('foo'),
-            'is_first_click' => true,
+            'hits'       => 1,
             'referer'    => 'https://github.com/realodix/urlhub',
             'ip'         => $this->faker->ipv4(),
             'browser'    => 'Firefox',

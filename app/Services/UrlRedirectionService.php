@@ -39,20 +39,31 @@ class UrlRedirectionService
      */
     private function storeVisitStat(Url $url)
     {
-        $visitorId = (new Visit)->visitorId($url->id);
-        $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
-        $isFirstClick = $hasVisitorId ? false : true;
+        $visit = new Visit;
 
         $logBotVisit = config('urlhub.log_bot_visit');
-        $visitorIsBot = \Browser::isBot();
-        if ($logBotVisit === false && $visitorIsBot === true) {
+        if ($logBotVisit === false && \Browser::isBot() === true) {
             return;
         }
 
+        $visitorId = $visit->visitorId($url->id);
+        $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
+
+        if ($hasVisitorId) {
+            $visit->increment('hits');
+        } else {
+            $this->createVisitorData($url->id, $visitorId);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function createVisitorData(int $urlId, string $visitorId)
+    {
         Visit::create([
-            'url_id'     => $url->id,
+            'url_id'     => $urlId,
             'visitor_id' => $visitorId,
-            'is_first_click' => $isFirstClick,
             'referer' => request()->headers->get('referer'),
             'ip'      => Helper::anonymizeIp(request()->ip()),
             'browser' => \Browser::browserFamily(),
