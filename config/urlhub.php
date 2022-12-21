@@ -107,7 +107,7 @@ return [
      * If disabled, bots/crawlers will not be considered as visitors and will not
      * be counted.
      */
-    'trace_bot_visit' => env('UH_TRACE_BOT_VISIT', false),
+    'log_bot_visit' => env('UH_LOG_BOT_VISIT', false),
 
     /*
     |--------------------------------------------------------------------------
