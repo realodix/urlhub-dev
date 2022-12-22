@@ -19,7 +19,7 @@ class Visit extends Model
     protected $fillable = [
         'url_id',
         'visitor_id',
-        'is_first_click',
+        'hits',
         'referer',
         'ip',
         'browser',
@@ -30,12 +30,10 @@ class Visit extends Model
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array<string, string>
+     * @var array<string, mixed>
      */
-    protected $casts = [
-        'is_first_click' => 'boolean',
+    protected $attributes = [
+        'hits' => 1,
     ];
 
     /*

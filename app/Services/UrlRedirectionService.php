@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\Helper;
 use App\Models\Url;
 use App\Models\Visit;
+use Illuminate\Support\Facades\Auth;
 
 class UrlRedirectionService
 {
@@ -19,7 +20,6 @@ class UrlRedirectionService
      */
     public function handleHttpRedirect(Url $url)
     {
-        $url->increment('click');
         $this->storeVisitStat($url);
 
         $statusCode = (int) config('urlhub.redirect_status_code');
@@ -39,20 +39,30 @@ class UrlRedirectionService
      */
     private function storeVisitStat(Url $url)
     {
-        $visitorId = (new Visit)->visitorId($url->id);
-        $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
-        $isFirstClick = $hasVisitorId ? false : true;
-
         $logBotVisit = config('urlhub.log_bot_visit');
-        $visitorIsBot = \Browser::isBot();
-        if ($logBotVisit === false && $visitorIsBot === true) {
+        if ($logBotVisit === false && \Browser::isBot() === true) {
             return;
         }
 
+        $url->increment('click');
+
+        $visitorId = (new Visit)->visitorId($url->id);
+        $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
+        if ($hasVisitorId) {
+            $hasVisitorId->increment('hits');
+        } else {
+            $this->createVisitorData($url->id, $visitorId);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function createVisitorData(int $urlId, string $visitorId)
+    {
         Visit::create([
-            'url_id'     => $url->id,
+            'url_id'     => $urlId,
             'visitor_id' => $visitorId,
-            'is_first_click' => $isFirstClick,
             'referer' => request()->headers->get('referer'),
             'ip'      => Helper::anonymizeIp(request()->ip()),
             'browser' => \Browser::browserFamily(),
