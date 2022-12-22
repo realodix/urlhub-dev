@@ -4,6 +4,7 @@ namespace Tests\Unit\Models;
 
 use App\Models\Url;
 use App\Models\Visit;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class UrlTest extends TestCase
@@ -495,7 +496,7 @@ class UrlTest extends TestCase
     public function totalClicksByMe()
     {
         $expected = $this->tClickWithUserId;
-        $actual = $this->visit->totalClickPerUser();
+        $actual = $this->visit->totalClickPerUser($this->admin()->id);
 
         $this->assertSame($expected, $actual);
     }
