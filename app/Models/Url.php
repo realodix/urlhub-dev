@@ -315,13 +315,12 @@ class Url extends Model
 
     public function totalClickPerUrl(bool $unique = false): int
     {
-        $total = self::visit()->whereUrlId($this->id)->count();
+        $total = self::visit()
+            ->whereUrlId($this->id)
+            ->sum('hits');
 
         if ($unique) {
-            $total = self::visit()
-                ->whereUrlId($this->id)
-                ->whereIsFirstClick(true)
-                ->count();
+            $total = self::visit()->whereUrlId($this->id)->count();
         }
 
         return $total;

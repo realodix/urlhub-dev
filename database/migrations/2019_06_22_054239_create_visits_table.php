@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('url_id');
             $table->unsignedBigInteger('user_id')->nullable($value = true);
             $table->string('visitor_id');
-            $table->boolean('is_first_click');
+            $table->boolean('hits');
             $table->string('referer', 300)->nullable()->default(0);
             $table->ipAddress('ip');
             $table->string('browser')->nullable();
