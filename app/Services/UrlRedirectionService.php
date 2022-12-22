@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\Helper;
 use App\Models\Url;
 use App\Models\Visit;
+use Illuminate\Support\Facades\Auth;
 
 class UrlRedirectionService
 {
@@ -19,7 +20,6 @@ class UrlRedirectionService
      */
     public function handleHttpRedirect(Url $url)
     {
-        $url->increment('click');
         $this->storeVisitStat($url);
 
         $statusCode = (int) config('urlhub.redirect_status_code');
@@ -39,18 +39,17 @@ class UrlRedirectionService
      */
     private function storeVisitStat(Url $url)
     {
-        $visitor = Visit::whereUrlId($url->id)->first();
-
         $logBotVisit = config('urlhub.log_bot_visit');
         if ($logBotVisit === false && \Browser::isBot() === true) {
             return;
         }
 
+        $url->increment('click');
+
         $visitorId = (new Visit)->visitorId($url->id);
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
-
         if ($hasVisitorId) {
-            $visitor->increment('hits');
+            $hasVisitorId->increment('hits');
         } else {
             $this->createVisitorData($url->id, $visitorId);
         }
