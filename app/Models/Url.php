@@ -308,7 +308,7 @@ class Url extends Model
     /**
      * @param int|string|null $userId
      */
-    public function totalClickById($userId = null): int
+    public function totalClickPerUser($userId = null): int
     {
         return (new Visit)->totalClickById($userId);
     }
