@@ -80,19 +80,19 @@ class Url extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected function shortUrl(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value, $attributes) => url('/'.$attributes['keyword']),
-        );
-    }
-
     protected function userId(): Attribute
     {
         return Attribute::make(
             set: function ($value) {
                 return $value === 0 ? self::GUEST_ID : $value;
             },
+        );
+    }
+
+    protected function shortUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => url('/'.$attributes['keyword']),
         );
     }
 
