@@ -44,8 +44,6 @@ class UrlRedirectionService
             return;
         }
 
-        $url->increment('click');
-
         $visitorId = (new Visit)->visitorId($url->id);
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
         if ($hasVisitorId) {
@@ -61,7 +59,7 @@ class UrlRedirectionService
     private function createVisitorData(int $urlId, string $visitorId)
     {
         Visit::create([
-            'url_id'     => $url->id,
+            'url_id'     => $urlId,
             'user_id'    => Auth::id(),
             'visitor_id' => $visitorId,
             'referer' => request()->headers->get('referer'),

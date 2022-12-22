@@ -31,10 +31,10 @@ class Visit extends Model
     ];
 
     /**
-     * @var array<string, mixed>
+     * @var array<string, string>
      */
     protected $casts = [
-        'user_id'        => 'integer',
+        'user_id' => 'integer',
     ];
 
     /**
@@ -88,6 +88,8 @@ class Visit extends Model
 
     /**
      * total visit by user id
+     *
+     * @param int|string|null $userId
      */
     public function totalClickById($userId): int
     {
