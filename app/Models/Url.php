@@ -300,32 +300,6 @@ class Url extends Model
         return self::count('keyword');
     }
 
-    public function totalClick(): int
-    {
-        return (new Visit)->totalClick();
-    }
-
-    /**
-     * @param int|string|null $userId
-     */
-    public function totalClickPerUser($userId = null): int
-    {
-        return (new Visit)->totalClickById($userId);
-    }
-
-    public function totalClickPerUrl(bool $unique = false): int
-    {
-        $total = self::visit()
-            ->whereUrlId($this->id)
-            ->sum('hits');
-
-        if ($unique) {
-            $total = self::visit()->whereUrlId($this->id)->count();
-        }
-
-        return $total;
-    }
-
     /**
      * Fetch the page title from the web page URL
      *

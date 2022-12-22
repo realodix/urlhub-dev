@@ -31,13 +31,6 @@ class Visit extends Model
     ];
 
     /**
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'user_id' => 'integer',
-    ];
-
-    /**
      * @var array<string, mixed>
      */
     protected $attributes = [
@@ -83,16 +76,29 @@ class Visit extends Model
      */
     public function totalClick(): int
     {
-        return self::count();
+        return self::sum('hits');
     }
 
     /**
-     * total visit by user id
-     *
-     * @param int|string|null $userId
+     * Total visit by user id
      */
-    public function totalClickById($userId): int
+    public function totalClickPerUser(): int
     {
-        return self::whereUserId($userId)->count();
+        return self::whereUserId(Auth::id())->sum('hits');
+    }
+
+    /**
+     * Total visit by URL id
+     */
+    public function totalClickPerUrl(int $urlId, bool $unique = false): int
+    {
+        $total = self::whereUrlId($urlId)
+            ->sum('hits');
+
+        if ($unique) {
+            $total = self::whereUrlId($urlId)->count();
+        }
+
+        return $total;
     }
 }

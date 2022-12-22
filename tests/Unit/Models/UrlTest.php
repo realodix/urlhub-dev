@@ -16,6 +16,8 @@ class UrlTest extends TestCase
 
     private Url $url;
 
+    private Visit $visit;
+
     private int $totalUrl;
 
     private int $tClick;
@@ -29,6 +31,7 @@ class UrlTest extends TestCase
         parent::setUp();
 
         $this->url = new Url;
+        $this->visit = new Visit;
         $this->totalUrl = self::N_URL_WITH_USER_ID + self::N_URL_WITHOUT_USER_ID;
 
         $this->tClickWithUserId = self::CLICKS * self::N_URL_WITH_USER_ID;
@@ -480,7 +483,7 @@ class UrlTest extends TestCase
     public function totalClicks()
     {
         $expected = $this->tClick;
-        $actual = $this->url->totalClick();
+        $actual = $this->visit->totalClick();
 
         $this->assertSame($expected, $actual);
     }
@@ -492,7 +495,7 @@ class UrlTest extends TestCase
     public function totalClicksByMe()
     {
         $expected = $this->tClickWithUserId;
-        $actual = $this->url->totalClickPerUser($this->admin()->id);
+        $actual = $this->visit->totalClickPerUser();
 
         $this->assertSame($expected, $actual);
     }
@@ -506,7 +509,7 @@ class UrlTest extends TestCase
     public function totalClicksByGuest()
     {
         $expected = $this->tClickWithoutUserId;
-        $actual = $this->url->totalClickPerUser();
+        $actual = $this->visit->totalClickPerUser();
 
         $this->assertSame($expected, $actual);
     }
