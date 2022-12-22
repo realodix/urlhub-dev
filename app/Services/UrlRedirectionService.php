@@ -50,8 +50,7 @@ class UrlRedirectionService
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
 
         if ($hasVisitorId) {
-            // $visitor->increment('hits');
-            (new Visit)->increment('hits');
+            $visitor->increment('hits');
         } else {
             $this->createVisitorData($url->id, $visitorId);
         }

@@ -13,35 +13,35 @@ class VisitTest extends TestCase
     /** @test */
     public function visitorHits()
     {
-        $urlFactory = Url::factory()->create();
-        $urlFactory2 = Url::factory()->create();
+        $url_f = Url::factory()->create();
+        $url_f2 = Url::factory()->create();
         $this->assertEquals(2, Url::all()->count());
 
-        // URL ID 1
-        $this->get(route('home').'/'.$urlFactory->keyword); // Buat baru untuk Url ID 1
+        // url-id_1 - hits 1
+        $this->get(route('home').'/'.$url_f->keyword);
         $this->assertEquals(1, Visit::all()->count());
-        $visitor = Visit::whereUrlId($urlFactory->id)->first();
+        $visitor = Visit::whereUrlId($url_f->id)->first();
         $this->assertEquals(1, $visitor->hits);
 
-        $this->get(route('home').'/'.$urlFactory->keyword); // Penambahan +1 untuk Url ID 1
+        $this->get(route('home').'/'.$url_f->keyword); // url-id_1, hits +1 = 2
         $this->assertEquals(1, Visit::all()->count());
-        $visitor = Visit::whereUrlId($urlFactory->id)->first();
+        $visitor = Visit::whereUrlId($url_f->id)->first();
         $this->assertEquals(2, $visitor->hits);
 
-        // URL ID 2
-        $this->get(route('home').'/'.$urlFactory2->keyword); // Buat baru
+        // url-id_2 - hits 1
+        $this->get(route('home').'/'.$url_f2->keyword);
         $this->assertEquals(2, Visit::all()->count());
-        $visitor = Visit::whereUrlId($urlFactory->id)->first();
-        $visitor2 = Visit::whereUrlId($urlFactory2->id)->first();
+        $visitor = Visit::whereUrlId($url_f->id)->first();
+        $visitor2 = Visit::whereUrlId($url_f2->id)->first();
         $this->assertEquals(2, $visitor->hits);
         $this->assertEquals(1, $visitor2->hits);
 
-        $this->get(route('home').'/'.$urlFactory2->keyword); // Penambahan +1
-        $visitor = Visit::whereUrlId($urlFactory->id)->first();
-        $visitor2 = Visit::whereUrlId($urlFactory2->id)->first();
-        $this->assertEquals(3, $visitor->hits); // Harusnya 2, tapi malah 3
-        $this->assertEquals(2, $visitor2->hits);
-        $this->assertEquals(5, Visit::all()->sum('hits')); // Harusnya 4, tapi malah 5
+        $this->get(route('home').'/'.$url_f2->keyword); // url-id_2, hits +1 = 2
+        $visitor = Visit::whereUrlId($url_f->id)->first();
+        $visitor2 = Visit::whereUrlId($url_f2->id)->first();
+        $this->assertEquals(2, $visitor->hits); // url-id_1
+        $this->assertEquals(2, $visitor2->hits); // url-id_2
+        $this->assertEquals(4, Visit::all()->sum('hits'));
     }
 
     /** @test */
