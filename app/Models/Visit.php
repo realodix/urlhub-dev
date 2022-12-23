@@ -20,6 +20,7 @@ class Visit extends Model
         'url_id',
         'user_id',
         'visitor_id',
+        'is_first_click',
         'hits',
         'referer',
         'ip',
@@ -35,6 +36,15 @@ class Visit extends Model
      */
     protected $attributes = [
         'hits' => 1,
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_first_click' => 'boolean',
     ];
 
     /*
