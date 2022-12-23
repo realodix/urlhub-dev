@@ -21,7 +21,6 @@ class Visit extends Model
         'user_id',
         'visitor_id',
         'is_first_click',
-        'hits',
         'referer',
         'ip',
         'browser',
@@ -29,13 +28,6 @@ class Visit extends Model
         'device',
         'os',
         'os_version',
-    ];
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected $attributes = [
-        'hits' => 1,
     ];
 
     /**
@@ -86,7 +78,7 @@ class Visit extends Model
      */
     public function totalClick(): int
     {
-        return self::sum('hits');
+        return self::count();
     }
 
     /**
@@ -94,7 +86,7 @@ class Visit extends Model
      */
     public function totalClickPerUser(int $userId = null): int
     {
-        return self::whereUserId($userId)->sum('hits');
+        return self::whereUserId($userId)->count();
     }
 
     /**
@@ -102,11 +94,12 @@ class Visit extends Model
      */
     public function totalClickPerUrl(int $urlId, bool $unique = false): int
     {
-        $total = self::whereUrlId($urlId)
-            ->sum('hits');
+        $total = self::whereUrlId($urlId)->count();
 
         if ($unique) {
-            $total = self::whereUrlId($urlId)->count();
+            $total = self::whereUrlId($urlId)
+                ->whereIsFirstClick(true)
+                ->count();
         }
 
         return $total;
