@@ -62,10 +62,12 @@ class Visit extends Model
      */
     public function visitorId(int $urlId): string
     {
-        $visitorId = $urlId.'_'.Request::ip().'_'.Request::header('user-agent');
+        $ua = Request::userAgent();
+        $referer = Request::header('referer');
+        $visitorId = $urlId.'_'.Request::ip().'_'.$ua.$referer;
 
         if (Auth::check() === true) {
-            $visitorId = $urlId.'_'.Auth::id();
+            $visitorId = $urlId.'_'.Auth::id().'_'.$ua.$referer;
         }
 
         return hash('sha3-256', $visitorId);
@@ -82,7 +84,7 @@ class Visit extends Model
     /**
      * Total visit by user id
      */
-    public function totalClickPerUser($userId = null): int
+    public function totalClickPerUser(int $userId = null): int
     {
         return self::whereUserId($userId)->sum('hits');
     }

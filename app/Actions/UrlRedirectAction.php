@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Models\Url;
 use App\Models\Visit;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 class UrlRedirectAction
 {
@@ -62,8 +63,8 @@ class UrlRedirectAction
             'url_id'     => $urlId,
             'user_id'    => Auth::id(),
             'visitor_id' => $visitorId,
-            'referer' => request()->headers->get('referer'),
-            'ip'      => Helper::anonymizeIp(request()->ip()),
+            'referer' => Request::header('referer'),
+            'ip'      => Helper::anonymizeIp(Request::ip()),
             'browser' => \Browser::browserFamily(),
             'browser_version' => \Browser::browserVersion(),
             'device'     => \Browser::deviceType(),
