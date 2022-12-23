@@ -36,7 +36,6 @@ class Url extends Model
         'is_custom',
         'destination',
         'title',
-        'click',
         'ip',
     ];
 
@@ -299,32 +298,6 @@ class Url extends Model
     public function totalUrl(): int
     {
         return self::count('keyword');
-    }
-
-    public function totalClick(): int
-    {
-        return self::sum('click');
-    }
-
-    /**
-     * @param int|string|null $userId
-     */
-    public function totalClickPerUser($userId = null): int
-    {
-        return self::whereUserId($userId)->sum('click');
-    }
-
-    public function totalClickPerUrl(bool $unique = false): int
-    {
-        $total = self::visit()
-            ->whereUrlId($this->id)
-            ->sum('hits');
-
-        if ($unique) {
-            $total = self::visit()->whereUrlId($this->id)->count();
-        }
-
-        return $total;
     }
 
     /**

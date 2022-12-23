@@ -18,6 +18,7 @@ class Visit extends Model
      */
     protected $fillable = [
         'url_id',
+        'user_id',
         'visitor_id',
         'hits',
         'referer',
@@ -61,12 +62,43 @@ class Visit extends Model
      */
     public function visitorId(int $urlId): string
     {
-        $visitorId = $urlId.'_'.Request::ip().'_'.Request::header('user-agent');
+        $visitorId = $urlId.'_'.Request::ip().'_'.Request::userAgent();
 
         if (Auth::check() === true) {
             $visitorId = $urlId.'_'.Auth::id();
         }
 
         return hash('sha3-256', $visitorId);
+    }
+
+    /**
+     * total visit
+     */
+    public function totalClick(): int
+    {
+        return self::sum('hits');
+    }
+
+    /**
+     * Total visit by user id
+     */
+    public function totalClickPerUser(int $userId = null): int
+    {
+        return self::whereUserId($userId)->sum('hits');
+    }
+
+    /**
+     * Total visit by URL id
+     */
+    public function totalClickPerUrl(int $urlId, bool $unique = false): int
+    {
+        $total = self::whereUrlId($urlId)
+            ->sum('hits');
+
+        if ($unique) {
+            $total = self::whereUrlId($urlId)->count();
+        }
+
+        return $total;
     }
 }

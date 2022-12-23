@@ -18,6 +18,10 @@ return new class extends Migration
             $table->foreignId('url_id')
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained()
+                ->cascadeOnDelete();
             $table->string('visitor_id');
             $table->boolean('hits');
             $table->string('referer', 300)->nullable()->default(0);
