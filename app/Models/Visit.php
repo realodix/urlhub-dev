@@ -62,11 +62,10 @@ class Visit extends Model
      */
     public function visitorId(int $urlId): string
     {
-        $referer = Request::header('referer');
-        $visitorId = $urlId.'_'.Request::ip().'_'.Request::userAgent().$referer;
+        $visitorId = $urlId.'_'.Request::ip().'_'.Request::userAgent();
 
         if (Auth::check() === true) {
-            $visitorId = $urlId.'_'.Auth::id().'_'.$referer;
+            $visitorId = $urlId.'_'.Auth::id();
         }
 
         return hash('sha3-256', $visitorId);
