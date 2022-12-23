@@ -4,7 +4,6 @@ namespace Tests\Unit\Models;
 
 use App\Models\Url;
 use App\Models\Visit;
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class UrlTest extends TestCase
@@ -13,40 +12,24 @@ class UrlTest extends TestCase
 
     private const N_URL_WITHOUT_USER_ID = 2;
 
-    private const CLICKS = 0;
-
     private Url $url;
 
-    private Visit $visit;
-
     private int $totalUrl;
-
-    private int $tClick;
-
-    private int $tClickWithUserId;
-
-    private int $tClickWithoutUserId;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->url = new Url;
-        $this->visit = new Visit;
-        $this->totalUrl = self::N_URL_WITH_USER_ID + self::N_URL_WITHOUT_USER_ID;
 
-        $this->tClickWithUserId = self::CLICKS * self::N_URL_WITH_USER_ID;
-        $this->tClickWithoutUserId = self::CLICKS * self::N_URL_WITHOUT_USER_ID;
-        $this->tClick = $this->tClickWithUserId + $this->tClickWithoutUserId;
+        $this->totalUrl = self::N_URL_WITH_USER_ID + self::N_URL_WITHOUT_USER_ID;
 
         Url::factory(self::N_URL_WITH_USER_ID)->create([
             'user_id' => $this->admin()->id,
-            // 'click'   => self::CLICKS,
         ]);
 
         Url::factory(self::N_URL_WITHOUT_USER_ID)->create([
             'user_id' => null,
-            // 'click'   => self::CLICKS,
         ]);
     }
 
@@ -473,44 +456,6 @@ class UrlTest extends TestCase
     {
         $expected = self::N_URL_WITHOUT_USER_ID;
         $actual = $this->url->urlCount();
-
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
-     * @test
-     * @group u-model
-     */
-    public function totalClicks()
-    {
-        $expected = $this->tClick;
-        $actual = $this->visit->totalClick();
-
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
-     * @test
-     * @group u-model
-     */
-    public function totalClicksByMe()
-    {
-        $expected = $this->tClickWithUserId;
-        $actual = $this->visit->totalClickPerUser($this->admin()->id);
-
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
-     * The number of guests is calculated based on a unique IP.
-     *
-     * @test
-     * @group u-model
-     */
-    public function totalClicksByGuest()
-    {
-        $expected = $this->tClickWithoutUserId;
-        $actual = $this->visit->totalClickPerUser();
 
         $this->assertSame($expected, $actual);
     }
