@@ -10,45 +10,6 @@ class VisitTest extends TestCase
 {
     const BOT_UA = 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)';
 
-    /**
-     * @test
-     * Bug yang pernah ditemukan adalah ketika hits dinaikkan, semua hits dari
-     * semua URL dari ID yang berbeda akan ikut naik. Test ini memastikan bahwa
-     * hal seperti itu tidak terjadi lagi.
-     */
-    public function visitorHits()
-    {
-        $url_f = Url::factory()->create();
-        $url_f2 = Url::factory()->create();
-        $this->assertEquals(2, Url::count());
-
-        // url-id_1 - hits 1
-        $this->get(route('home').'/'.$url_f->keyword);
-        $this->assertEquals(1, Visit::count());
-        $visitor = Visit::whereUrlId($url_f->id)->first();
-        $this->assertEquals(1, $visitor->hits);
-
-        $this->get(route('home').'/'.$url_f->keyword); // url-id_1, hits +1 = 2
-        $this->assertEquals(1, Visit::count());
-        $visitor = Visit::whereUrlId($url_f->id)->first();
-        $this->assertEquals(2, $visitor->hits);
-
-        // url-id_2 - hits 1
-        $this->get(route('home').'/'.$url_f2->keyword);
-        $this->assertEquals(2, Visit::count());
-        $visitor = Visit::whereUrlId($url_f->id)->first();
-        $visitor2 = Visit::whereUrlId($url_f2->id)->first();
-        $this->assertEquals(2, $visitor->hits);
-        $this->assertEquals(1, $visitor2->hits);
-
-        $this->get(route('home').'/'.$url_f2->keyword); // url-id_2, hits +1 = 2
-        $visitor = Visit::whereUrlId($url_f->id)->first();
-        $visitor2 = Visit::whereUrlId($url_f2->id)->first();
-        $this->assertEquals(2, $visitor->hits); // url-id_1
-        $this->assertEquals(2, $visitor2->hits); // url-id_2
-        $this->assertEquals(4, Visit::sum('hits'));
-    }
-
     /** @test */
     public function logBotVisits()
     {

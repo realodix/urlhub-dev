@@ -47,22 +47,12 @@ class UrlRedirectAction
 
         $visitorId = (new Visit)->visitorId($url->id);
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
-        if ($hasVisitorId) {
-            $hasVisitorId->increment('hits');
-        } else {
-            $this->createVisitorData($url->id, $visitorId);
-        }
-    }
 
-    /**
-     * @return void
-     */
-    private function createVisitorData(int $urlId, string $visitorId)
-    {
         Visit::create([
-            'url_id'     => $urlId,
-            'user_id'    => Auth::id(),
+            'url_id'     => $url->id,
+            'user_id'    => $url->user->id,
             'visitor_id' => $visitorId,
+            'is_first_click' => $hasVisitorId ? false : true,
             'referer' => Request::header('referer'),
             'ip'      => Helper::anonymizeIp(Request::ip()),
             'browser' => \Browser::browserFamily(),

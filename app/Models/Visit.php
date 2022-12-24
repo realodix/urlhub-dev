@@ -20,7 +20,7 @@ class Visit extends Model
         'url_id',
         'user_id',
         'visitor_id',
-        'hits',
+        'is_first_click',
         'referer',
         'ip',
         'browser',
@@ -31,10 +31,12 @@ class Visit extends Model
     ];
 
     /**
-     * @var array<string, mixed>
+     * The attributes that should be cast to native types.
+     *
+     * @var array<string, string>
      */
-    protected $attributes = [
-        'hits' => 1,
+    protected $casts = [
+        'is_first_click' => 'boolean',
     ];
 
     /*
@@ -76,7 +78,7 @@ class Visit extends Model
      */
     public function totalClick(): int
     {
-        return self::sum('hits');
+        return self::count();
     }
 
     /**
@@ -84,7 +86,7 @@ class Visit extends Model
      */
     public function totalClickPerUser(int $userId = null): int
     {
-        return self::whereUserId($userId)->sum('hits');
+        return self::whereUserId($userId)->count();
     }
 
     /**
@@ -92,11 +94,12 @@ class Visit extends Model
      */
     public function totalClickPerUrl(int $urlId, bool $unique = false): int
     {
-        $total = self::whereUrlId($urlId)
-            ->sum('hits');
+        $total = self::whereUrlId($urlId)->count();
 
         if ($unique) {
-            $total = self::whereUrlId($urlId)->count();
+            $total = self::whereUrlId($urlId)
+                ->whereIsFirstClick(true)
+                ->count();
         }
 
         return $total;
