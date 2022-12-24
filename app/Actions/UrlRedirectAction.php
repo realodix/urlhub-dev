@@ -5,7 +5,6 @@ namespace App\Actions;
 use App\Helpers\Helper;
 use App\Models\Url;
 use App\Models\Visit;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class UrlRedirectAction

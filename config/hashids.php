@@ -38,6 +38,10 @@ return [
     */
 
     'connections' => [
+        'main' => [
+            'salt' => env('APP_KEY'),
+            'length' => 1,
+        ],
 
         \App\Models\User::class => [
             'salt'   => \App\Models\User::class.env('APP_KEY'),
