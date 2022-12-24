@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
-use Vinkla\Hashids\Facades\Hashids;
 
 class Visit extends Model
 {
@@ -71,7 +70,7 @@ class Visit extends Model
             $visitorId = $urlId.'_'.Auth::id();
         }
 
-        return Hashids::encode(intval($visitorId));
+        return hash('sha3-256', $visitorId);
     }
 
     /**
