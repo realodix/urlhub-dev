@@ -30,7 +30,7 @@ class QrCodeTest extends TestCase
 
         $image = imagecreatefromstring((new QrCodeAction)->process('foo')->getString());
 
-        $this->assertNotEquals($size, (int) imagesx($image));
+        $this->assertNotSame($size, (int) imagesx($image));
         $this->assertSame(QrCodeAction::MIN_SIZE, imagesx($image));
     }
 
