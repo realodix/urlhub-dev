@@ -17,7 +17,6 @@ class QrCodeTest extends TestCase
         $QrCode = (new QrCodeAction)->process('foo');
 
         $this->assertInstanceOf(ResultInterface::class, $QrCode);
-        $this->assertIsString($QrCode->getDataUri());
     }
 
     /**
@@ -31,7 +30,7 @@ class QrCodeTest extends TestCase
 
         $image = imagecreatefromstring((new QrCodeAction)->process('foo')->getString());
 
-        $this->assertNotSame($size, (int) imagesx($image));
+        $this->assertNotEquals($size, (int) imagesx($image));
         $this->assertSame(QrCodeAction::MIN_SIZE, imagesx($image));
     }
 
