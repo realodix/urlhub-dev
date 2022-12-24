@@ -45,10 +45,12 @@ class VisitTest extends TestCase
     }
 
     /**
+     * Total klik untuk url yang dibuat oleh user tertentu
+     *
      * @test
      * @group u-model
      */
-    public function totalClicksByMe()
+    public function totalClicksForUrlCreatedByMe()
     {
         Visit::factory()->create([
             'user_id' => $this->admin()->id,
@@ -61,12 +63,12 @@ class VisitTest extends TestCase
     }
 
     /**
-     * The number of guests is calculated based on a unique IP.
+     * Total klik untuk url yang dibuat oleh Guest
      *
      * @test
      * @group u-model
      */
-    public function totalClicksByGuest()
+    public function totalClicksForUrlCreatedByGuest()
     {
         Visit::factory()->create([
             'user_id' => null,
