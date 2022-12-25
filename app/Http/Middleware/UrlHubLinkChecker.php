@@ -12,6 +12,7 @@ class UrlHubLinkChecker
         public Url $url
     ) {
     }
+
     /**
      * Handle an incoming request.
      *
