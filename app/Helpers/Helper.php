@@ -31,7 +31,10 @@ class Helper
      * @param bool   $scheme Show or remove URL schemes
      */
     public static function urlDisplay(
-        string $url, int $limit = null, bool $scheme = true, bool $trailingSlash = true
+        string $url,
+        int $limit = null,
+        bool $scheme = true,
+        bool $trailingSlash = true
     ): string|Stringable {
         $sUrl = SpatieUrl::fromString($url);
         $hostLen = strlen($sUrl->getScheme().'://'.$sUrl->getHost());
