@@ -12,8 +12,9 @@ class UrlController extends Controller
     /**
      * UrlController constructor.
      */
-    public function __construct()
-    {
+    public function __construct(
+        public Url $url
+    ) {
         $this->middleware('urlhublinkchecker')->only('create');
     }
 
@@ -25,7 +26,7 @@ class UrlController extends Controller
      */
     public function create(StoreUrl $request)
     {
-        $url = (new Url)->shortenUrl($request, Auth::id());
+        $url = $this->url->shortenUrl($request, Auth::id());
 
         return redirect()->route('su_detail', $url->keyword);
     }
