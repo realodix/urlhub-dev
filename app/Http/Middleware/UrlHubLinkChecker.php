@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class UrlHubLinkChecker
 {
     public function __construct(
-        public Url $url
+        public Url $url,
     ) {
     }
 
