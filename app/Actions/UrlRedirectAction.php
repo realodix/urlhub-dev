@@ -53,17 +53,17 @@ class UrlRedirectAction
         $hasVisitorId = Visit::whereVisitorId($visitorId)->first();
 
         Visit::create([
-            'url_id'     => $url->id,
-            'user_id'    => $url->user->id,
-            'visitor_id' => $visitorId,
-            'is_first_click' => $hasVisitorId ? false : true,
-            'referer' => Request::header('referer'),
-            'ip'      => Helper::anonymizeIp(Request::ip()),
-            'browser' => \Browser::browserFamily(),
+            'url_id'          => $url->id,
+            'url_author_id'   => $url->user->id,
+            'visitor_id'      => $visitorId,
+            'is_first_click'  => $hasVisitorId ? false : true,
+            'referer'         => Request::header('referer'),
+            'ip'              => Helper::anonymizeIp(Request::ip()),
+            'browser'         => \Browser::browserFamily(),
             'browser_version' => \Browser::browserVersion(),
-            'device'     => \Browser::deviceType(),
-            'os'         => \Browser::platformFamily(),
-            'os_version' => \Browser::platformVersion(),
+            'device'          => \Browser::deviceType(),
+            'os'              => \Browser::platformFamily(),
+            'os_version'      => \Browser::platformVersion(),
         ]);
     }
 }

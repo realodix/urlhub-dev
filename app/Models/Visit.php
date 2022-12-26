@@ -18,7 +18,7 @@ class Visit extends Model
      */
     protected $fillable = [
         'url_id',
-        'user_id',
+        'url_author_id',
         'visitor_id',
         'is_first_click',
         'referer',
@@ -64,7 +64,7 @@ class Visit extends Model
      */
     public function visitorId(int $urlId): string
     {
-        $visitorId = hash('sha3-256', $urlId.'_'.Request::ip().'_'.Request::userAgent());
+        $visitorId = hash('sha3-256', $urlId.'-'.Request::ip().'-'.Request::userAgent());
 
         if (Auth::check() === true) {
             $visitorId = Auth::id().'-'.$urlId;
@@ -86,7 +86,7 @@ class Visit extends Model
      */
     public function totalClickPerUser(int $userId = null): int
     {
-        return self::whereUserId($userId)->count();
+        return self::whereUrlAuthorId($userId)->count();
     }
 
     /**
