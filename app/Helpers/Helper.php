@@ -70,6 +70,7 @@ class Helper
     /**
      * Convert large positive numbers in to short form like 1K+, 100K+, 199K+, 1M+, 10M+,
      * 1B+ etc.
+     *
      * Based on https://gist.github.com/RadGH/84edff0cc81e6326029c
      */
     public static function compactNumber(int $number): int|string
