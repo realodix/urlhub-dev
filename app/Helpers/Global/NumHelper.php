@@ -11,6 +11,6 @@ if (! function_exists('compactNumber')) {
      */
     function compactNumber($value)
     {
-        return NumHelper::number_shorten($value);
+        return NumHelper::compactNumber($value);
     }
 }

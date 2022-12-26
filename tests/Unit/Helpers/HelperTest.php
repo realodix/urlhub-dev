@@ -86,7 +86,7 @@ class HelperTest extends TestCase
      */
     public function compactNumber($expected, $actual)
     {
-        $this->assertSame($expected, NumHelper::number_shorten($actual));
+        $this->assertSame($expected, NumHelper::compactNumber($actual));
     }
 
     /**
