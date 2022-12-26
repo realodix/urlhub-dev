@@ -21,12 +21,12 @@ class UrlHubLinkChecker
      */
     public function handle($request, \Closure $next)
     {
-        if (! $this->customKeywordIsValid($request)) {
+        if ($this->customKeywordIsAcceptable($request) === false) {
             return redirect()->back()
                 ->withFlashError(__('Custom keyword not available.'));
         }
 
-        if (! $this->canGeneratingUniqueRandomKey()) {
+        if ($this->canGenerateUniqueRandomKeys() === false) {
             return redirect()->back()
                 ->withFlashError(
                     __('Sorry, our service is currently under maintenance.')
@@ -46,14 +46,14 @@ class UrlHubLinkChecker
     }
 
     /**
-     * Check if custom keyword is valid
+     * Check whether the custom keyword is acceptable or not
      *
      * - Prevent registered routes from being used as custom keywords.
      * - Prevent using blacklisted words or reserved keywords as custom keywords.
      *
      * @param \Illuminate\Http\Request $request
      */
-    private function customKeywordIsValid($request): bool
+    private function customKeywordIsAcceptable($request): bool
     {
         $value = $request->custom_key;
         $routes = array_map(
@@ -75,7 +75,7 @@ class UrlHubLinkChecker
      * bahwa kata kunci unik yang ada apakah telah mencapai batas maksimum atau
      * tidak. Ketika sudah mencapai batas maksimum, ini perlu dihentikan.
      */
-    private function canGeneratingUniqueRandomKey(): bool
+    private function canGenerateUniqueRandomKeys(): bool
     {
         if ($this->url->keyRemaining() === 0) {
             return false;
