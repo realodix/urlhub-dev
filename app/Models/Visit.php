@@ -84,9 +84,9 @@ class Visit extends Model
     /**
      * Total visit by user id
      */
-    public function totalClickPerUser(int $userId = null): int
+    public function totalClickPerUser(int $urlAuthorId = null): int
     {
-        return self::whereUrlAuthorId($userId)->count();
+        return self::whereUrlAuthorId($urlAuthorId)->count();
     }
 
     /**
