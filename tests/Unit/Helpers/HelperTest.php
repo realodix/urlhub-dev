@@ -93,10 +93,10 @@ class HelperTest extends TestCase
      * @test
      * @group u-helper
      */
-    public function numbPrec()
+    public function numberFormatPrecision()
     {
-        $this->assertSame(19.12, NumHelper::numbPrec(19.123456));
-        $this->assertSame(19.123, NumHelper::numbPrec(19.123456, 3));
+        $this->assertSame(19.12, NumHelper::numberFormatPrecision(19.123456));
+        $this->assertSame(19.123, NumHelper::numberFormatPrecision(19.123456, 3));
     }
 
     public function toAmountShortProvider()
