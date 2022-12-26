@@ -67,7 +67,7 @@ class Visit extends Model
         $visitorId = hash('sha3-256', $urlId.'-'.Request::ip().'-'.Request::userAgent());
 
         if (Auth::check() === true) {
-            $visitorId = Auth::id().'-'.$urlId;
+            $visitorId = Auth::id();
         }
 
         return $visitorId;
