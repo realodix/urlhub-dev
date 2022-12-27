@@ -65,7 +65,7 @@ class Visit extends Model
     public function visitorId(): string
     {
         $neighborVisitor = [
-            'ip'      => Request::ip(),
+            'ip'      => request()->ip(),
             'browser' => \Browser::browserFamily(),
             'os'      => \Browser::platformFamily(),
         ];
