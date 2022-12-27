@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class Visit extends Model
 {
@@ -70,8 +69,8 @@ class Visit extends Model
         ];
         $visitorId = hash('sha3-256', implode($neighborVisitor));
 
-        if (Auth::check() === true) {
-            $visitorId = (string) Auth::id();
+        if (auth()->check() === true) {
+            $visitorId = (string) auth()->id();
         }
 
         return $visitorId;
