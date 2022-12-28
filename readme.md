@@ -1,3 +1,5 @@
+refactor the code to make it comfortable to manage
+
 ![screenshot](https://i.imgur.com/MeZvgiz.png)
 
 [![LaravelVersion](https://img.shields.io/badge/Laravel-9-f56857.svg?style=flat-square)](https://laravel.com/docs/9.x)
