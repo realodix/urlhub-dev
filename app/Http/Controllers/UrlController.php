@@ -46,7 +46,7 @@ class UrlController extends Controller
         if (config('urlhub.qrcode')) {
             $qrCode = (new QrCodeAction)->process($url->short_url);
 
-            $data = array_merge($data, compact(['qrCode']));
+            $data = array_merge($data, ['qrCode' => $qrCode]);
         }
 
         return view('frontend.short', $data);
