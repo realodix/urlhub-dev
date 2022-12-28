@@ -42,7 +42,7 @@
                         </div>
                         <div class="block">
                             <b>@svg('icon-user', 'mr-1.5') {{__('Guests')}}:</b>
-                            <span class="font-light">{{compactNumber($user->guestCount())}}</span>
+                            <span class="font-light">{{compactNumber($user->getTotalGuestUsers())}}</span>
                         </div>
                     </div>
                 </div>
