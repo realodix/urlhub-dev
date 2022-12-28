@@ -103,8 +103,8 @@ final class MyUrlTable extends PowerGridComponent
             })
             ->addColumn('click', function (Url $url) {
                 $visit = new Visit;
-                $uClick = Helper::compactNumber($visit->totalClickPerUrl($url->id, unique: true));
-                $tClick = Helper::compactNumber($visit->totalClickPerUrl($url->id));
+                $uClick = Helper::compactNumber($url->totalClickById($url->id, unique: true));
+                $tClick = Helper::compactNumber($url->totalClickById($url->id));
                 $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
                 $title = $uClick.' '.__('Uniques').' / '.$tClick.' '.__('Clicks');
 

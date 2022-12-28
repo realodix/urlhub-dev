@@ -490,4 +490,48 @@ class UrlTest extends TestCase
 
         $this->assertSame($expected, $actual);
     }
+
+    /**
+     * @test
+     * @group u-model
+     */
+    public function totalClickPerUrl()
+    {
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => true,
+        ]);
+
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => false,
+        ]);
+
+        $expected = 2;
+        $actual = $this->url->totalClickById(1);
+
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @group u-model
+     */
+    public function totalClickPerUrlAndUnique()
+    {
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => true,
+        ]);
+
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => false,
+        ]);
+
+        $expected = 1;
+        $actual = $this->url->totalClickById(1, unique: true);
+
+        $this->assertSame($expected, $actual);
+    }
 }

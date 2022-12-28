@@ -342,4 +342,20 @@ class Url extends Model
     {
         return Visit::count();
     }
+
+    /**
+     * Total clicks on each shortened URLs
+     */
+    public function totalClickById(int $urlId, bool $unique = false): int
+    {
+        $total = self::find($urlId)->visit()->count();
+
+        if ($unique) {
+            $total = self::find($urlId)->visit()
+                ->whereIsFirstClick(true)
+                ->count();
+        }
+
+        return $total;
+    }
 }

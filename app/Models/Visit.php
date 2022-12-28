@@ -92,20 +92,4 @@ class Visit extends Model
     {
         return self::whereUrlAuthorId($authorId)->count();
     }
-
-    /**
-     * Total visit by URL id
-     */
-    public function totalClickPerUrl(int $urlId, bool $unique = false): int
-    {
-        $total = self::whereUrlId($urlId)->count();
-
-        if ($unique) {
-            $total = self::whereUrlId($urlId)
-                ->whereIsFirstClick(true)
-                ->count();
-        }
-
-        return $total;
-    }
 }

@@ -65,46 +65,4 @@ class VisitTest extends TestCase
 
         $this->assertSame($expected, $actual);
     }
-
-    /**
-     * @test
-     * @group u-model
-     */
-    public function totalClickPerUrl()
-    {
-        $url = Visit::factory()->create([
-            'is_first_click' => true,
-        ]);
-
-        Visit::factory()->create([
-            'url_id' => $url->url_id,
-            'is_first_click' => false,
-        ]);
-
-        $expected = 2;
-        $actual = $this->visit->totalClickPerUrl($url->url_id);
-
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
-     * @test
-     * @group u-model
-     */
-    public function totalClickPerUrlAndUnique()
-    {
-        $url = Visit::factory()->create([
-            'is_first_click' => true,
-        ]);
-
-        Visit::factory()->create([
-            'url_id' => $url->url_id,
-            'is_first_click' => false,
-        ]);
-
-        $expected = 1;
-        $actual = $this->visit->totalClickPerUrl($url->url_id, unique: true);
-
-        $this->assertSame($expected, $actual);
-    }
 }
