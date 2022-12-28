@@ -481,7 +481,7 @@ class UrlTest extends TestCase
      */
     public function totalClicks()
     {
-        $v = Visit::factory()->create();
+        Visit::factory()->create();
 
         $url = new Url;
 
