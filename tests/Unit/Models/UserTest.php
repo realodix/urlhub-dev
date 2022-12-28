@@ -29,8 +29,8 @@ class UserTest extends TestCase
      * @test
      * @group u-model
      */
-    public function getTotalGuestUsers()
+    public function totalGuestUsers()
     {
-        $this->assertSame(0, (new User)->getTotalGuestUsers());
+        $this->assertSame(0, (new User)->totalGuestUsers());
     }
 }

@@ -64,7 +64,7 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    public function getTotalUsers(): int
+    public function totalUsers(): int
     {
         return self::count();
     }
@@ -73,7 +73,7 @@ class User extends Authenticatable
      * Count the number of guests (URL without user id) by IP address, then
      * grouped by IP address.
      */
-    public function getTotalGuestUsers(): int
+    public function totalGuestUsers(): int
     {
         $url = Url::select('ip', DB::raw('count(*) as total'))
             ->whereNull('user_id')->groupBy('ip')

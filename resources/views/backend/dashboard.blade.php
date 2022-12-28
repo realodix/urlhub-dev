@@ -38,11 +38,11 @@
                     <div class="text-uh-1 w-full sm:w-1/4 mt-4 sm:mt-0">
                         <div class="block">
                             <b>@svg('icon-user', 'mr-1.5') {{__('Users')}}:</b>
-                            <span class="font-light">{{compactNumber($user->getTotalUsers())}}</span>
+                            <span class="font-light">{{compactNumber($user->totalUsers())}}</span>
                         </div>
                         <div class="block">
                             <b>@svg('icon-user', 'mr-1.5') {{__('Guests')}}:</b>
-                            <span class="font-light">{{compactNumber($user->getTotalGuestUsers())}}</span>
+                            <span class="font-light">{{compactNumber($user->totalGuestUsers())}}</span>
                         </div>
                     </div>
                 </div>
