@@ -43,7 +43,7 @@ class DashboardController extends Controller
 
         $this->authorize('updateUrl', $url);
 
-        return view('backend.edit', compact('url'));
+        return view('backend.edit', ['url' => $url]);
     }
 
     /**
