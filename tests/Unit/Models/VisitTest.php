@@ -31,20 +31,6 @@ class VisitTest extends TestCase
     }
 
     /**
-     * @test
-     * @group u-model
-     */
-    public function totalClicks()
-    {
-        Visit::factory()->create();
-
-        $expected = 1;
-        $actual = $this->visit->totalClick();
-
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
      * Total klik untuk url yang dibuat oleh user tertentu
      *
      * @test

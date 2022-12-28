@@ -334,4 +334,12 @@ class Url extends Model
 
         return $urlKey;
     }
+
+    /**
+     * Total clicks on all shortened URLs
+     */
+    public function totalClick(): int
+    {
+        return Visit::count();
+    }
 }

@@ -86,14 +86,6 @@ class Visit extends Model
     }
 
     /**
-     * Total visit
-     */
-    public function totalClick(): int
-    {
-        return self::count();
-    }
-
-    /**
      * Total visit by user id
      */
     public function totalClickPerUser(int $authorId = null): int

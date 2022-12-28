@@ -30,7 +30,7 @@
                         </div>
                         <div class="block">
                             <b class="text-uh-1">@svg('icon-bar-chart', 'mr-1.5') {{__('Clicks')}}:</b>
-                            <span class="text-cyan-600">{{compactNumber($visit->totalClick())}}</span> -
+                            <span class="text-cyan-600">{{compactNumber($url->totalClick())}}</span> -
                             <span class="text-teal-600">{{compactNumber($visit->totalClickPerUser(auth()->id()))}}</span> -
                             <span class="text-orange-600">{{compactNumber($visit->totalClickPerUser())}}</span>
                         </div>
