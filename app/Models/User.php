@@ -64,6 +64,11 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
+    public function getTotalUsers(): int
+    {
+        return self::count();
+    }
+
     /*
      * Count the number of guests (URL without user id) by IP address, then
      * grouped by IP address.
