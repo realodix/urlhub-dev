@@ -86,7 +86,7 @@ class Visit extends Model
     }
 
     /**
-     * total visit
+     * Total visit
      */
     public function totalClick(): int
     {
