@@ -209,7 +209,7 @@ class Url extends Model
      * The number of unique random strings that have been used as the key for
      * the long url that has been shortened
      *
-     * Calculation formula:
+     * Formula:
      * keyUsed = randomKey + customKey
      *
      * The character length of the generated for `customKey` should be similar
