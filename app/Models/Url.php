@@ -102,11 +102,6 @@ class Url extends Model
         );
     }
 
-    public function totalClickPerUser(int $authorId = null): int
-    {
-        return self::where('user_id', $authorId)->get()->sum(fn ($url) => $url->hits);
-    }
-
     protected function shortUrl(): Attribute
     {
         return Attribute::make(
@@ -353,5 +348,28 @@ class Url extends Model
         } while ($this->keyExists($urlKey));
 
         return $urlKey;
+    }
+
+    public function totalClickPerUser(int $authorId = null): int
+    {
+        $user = self::whereUserId($authorId)->get();
+
+        return $user->sum(fn ($url) => $url->totalClickById($url->id));
+    }
+
+    /**
+     * Total clicks on each shortened URLs
+     */
+    public function totalClickById(int $urlId, bool $unique = false): int
+    {
+        $total = self::find($urlId)->visit()->count();
+
+        if ($unique) {
+            $total = self::find($urlId)->visit()
+                ->whereIsFirstClick(true)
+                ->count();
+        }
+
+        return $total;
     }
 }
