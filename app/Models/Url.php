@@ -358,4 +358,14 @@ class Url extends Model
 
         return $total;
     }
+
+    /**
+     * Total clicks on each shortened URLs by user id
+     */
+    public function totalClickPerUser(int $authorId = null): int
+    {
+        $user = self::whereUserId($authorId)->first();
+
+        return $user->visit()->count();
+    }
 }

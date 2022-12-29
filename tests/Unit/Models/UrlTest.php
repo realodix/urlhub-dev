@@ -534,4 +534,27 @@ class UrlTest extends TestCase
 
         $this->assertSame($expected, $actual);
     }
+
+    /**
+     * Total klik untuk url yang dibuat oleh user tertentu
+     *
+     * @test
+     * @group u-model
+     */
+    public function totalClickPerUser()
+    {
+        $userId = $this->admin()->id;
+        $url = Url::factory()->create([
+            // 'user_id' => $userId,
+        ]);
+        Visit::factory()->create([
+            'url_id' => $url->id,
+        ]);
+
+        $expected = Visit::whereUrlId($url->id)->count();
+        $actual = $this->url->totalClickPerUser(authorId: $url->user_id);
+
+        // $this->assertSame($userId, $url->user_id);
+        $this->assertSame($expected, $actual);
+    }
 }

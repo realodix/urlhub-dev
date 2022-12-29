@@ -30,39 +30,5 @@ class VisitTest extends TestCase
         $this->assertTrue($visit->url()->exists());
     }
 
-    /**
-     * Total klik untuk url yang dibuat oleh user tertentu
-     *
-     * @test
-     * @group u-model
-     */
-    public function totalClicksForUrlCreatedByMe()
-    {
-        Visit::factory()->create([
-            'url_author_id' => $this->admin()->id,
-        ]);
 
-        $expected = 1;
-        $actual = $this->visit->totalClickPerUser($this->admin()->id);
-
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
-     * Total klik untuk url yang dibuat oleh Guest
-     *
-     * @test
-     * @group u-model
-     */
-    public function totalClicksForUrlCreatedByGuest()
-    {
-        Visit::factory()->create([
-            'url_author_id' => null,
-        ]);
-
-        $expected = 1;
-        $actual = $this->visit->totalClickPerUser(null);
-
-        $this->assertSame($expected, $actual);
-    }
 }
