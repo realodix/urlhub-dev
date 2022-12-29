@@ -125,9 +125,8 @@ class Url extends Model
 
     /**
      * @param StoreUrl        $request \App\Http\Requests\StoreUrl
-     * @param int|string|null $userId  Jika user_id tidak diisi, maka akan diisi
-     *                                 null. Ini terjadi karena guest yang membuat
-     *                                 URL. Lihat setUserIdAttribute().
+     * @param int|string|null $userId  Jika user_id tidak diisi, maka akan diisi null, ini
+     *                                 terjadi karena guest yang membuat URL. See userId().
      * @return self
      */
     public function shortenUrl(StoreUrl $request, $userId)
