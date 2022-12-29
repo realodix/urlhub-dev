@@ -125,9 +125,8 @@ class Url extends Model
 
     /**
      * @param StoreUrl        $request \App\Http\Requests\StoreUrl
-     * @param int|string|null $userId  Jika user_id tidak diisi, maka akan diisi
-     *                                 null. Ini terjadi karena guest yang membuat
-     *                                 URL. Lihat setUserIdAttribute().
+     * @param int|string|null $userId  Jika user_id tidak diisi, maka akan diisi null, ini
+     *                                 terjadi karena guest yang membuat URL. See userId().
      * @return self
      */
     public function shortenUrl(StoreUrl $request, $userId)
@@ -210,7 +209,7 @@ class Url extends Model
      * The number of unique random strings that have been used as the key for
      * the long url that has been shortened
      *
-     * Calculation formula:
+     * Formula:
      * keyUsed = randomKey + customKey
      *
      * The character length of the generated for `customKey` should be similar
