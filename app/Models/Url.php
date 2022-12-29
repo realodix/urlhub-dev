@@ -86,6 +86,27 @@ class Url extends Model
         );
     }
 
+    protected function hits(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $this->find($attributes['id'])->visit()->count(),
+        );
+    }
+
+    protected function uniqueHits(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value, $attributes) {
+                return $this->find($attributes['id'])->visit()->whereIsFirstClick(true)->count();
+            },
+        );
+    }
+
+    public function totalClickPerUser(int $authorId = null): int
+    {
+        return self::where('user_id', $authorId)->get()->sum(fn ($url) => $url->hits);
+    }
+
     protected function shortUrl(): Attribute
     {
         return Attribute::make(
