@@ -361,7 +361,7 @@ class Url extends Model
     /**
      * Total clicks on each shortened URLs
      */
-    public function totalClickById(int $urlId, bool $unique = false): int
+    public function totalClickPerUrl(int $urlId, bool $unique = false): int
     {
         $total = self::find($urlId)->visit()->count();
 
@@ -378,6 +378,6 @@ class Url extends Model
     {
         $user = self::whereUserId($authorId)->get();
 
-        return $user->sum(fn ($url) => $url->totalClickById($url->id));
+        return $user->sum(fn ($url) => $url->totalClickPerUrl($url->id));
     }
 }
