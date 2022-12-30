@@ -140,6 +140,74 @@ class Url extends Model
     */
 
     /**
+     * The number of shortened URLs that have been created by each User
+     */
+    public function numberOfUrls(int $userId): int
+    {
+        return self::whereUserId($userId)->count('keyword');
+    }
+
+    /**
+     * The total number of shortened URLs that have been created by guests
+     */
+    public function numberOfUrlsByGuests(): int
+    {
+        return self::whereUserId(null)->count('keyword');
+    }
+
+    /**
+     * Total shortened URLs created
+     */
+    public function totalUrl(): int
+    {
+        return self::count('keyword');
+    }
+
+    /**
+     * Total clicks on each shortened URLs
+     */
+    public function numberOfClicks(int $urlId, bool $unique = false): int
+    {
+        $total = self::find($urlId)->visit()->count();
+
+        if ($unique) {
+            $total = self::find($urlId)->visit()
+                ->whereIsFirstClick(true)
+                ->count();
+        }
+
+        return $total;
+    }
+
+    /**
+     * Total clicks on all short URLs on each user
+     */
+    public function numberOfClicksPerUser(int $userId = null): int
+    {
+        $url = self::whereUserId($userId)->get();
+
+        return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
+    }
+
+    /**
+     * Total clicks on all short URLs from guest users
+     */
+    public function numberOfClicksFromGuests(): int
+    {
+        $url = self::whereUserId(null)->get();
+
+        return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
+    }
+
+    /**
+     * Total clicks on all shortened URLs
+     */
+    public function totalClick(): int
+    {
+        return Visit::count();
+    }
+
+    /**
      * @param StoreUrl        $request \App\Http\Requests\StoreUrl
      * @param int|string|null $userId  Jika user_id tidak diisi, maka akan diisi null, ini
      *                                 terjadi karena guest yang membuat URL. See userId().
@@ -295,74 +363,6 @@ class Url extends Model
         }
 
         return $result.'%';
-    }
-
-    /**
-     * The number of shortened URLs that have been created by each User
-     */
-    public function numberOfUrls(int $userId): int
-    {
-        return self::whereUserId($userId)->count('keyword');
-    }
-
-    /**
-     * The total number of shortened URLs that have been created by guests
-     */
-    public function numberOfUrlsByGuests(): int
-    {
-        return self::whereUserId(null)->count('keyword');
-    }
-
-    /**
-     * Total shortened URLs created
-     */
-    public function totalUrl(): int
-    {
-        return self::count('keyword');
-    }
-
-    /**
-     * Total clicks on each shortened URLs
-     */
-    public function numberOfClicks(int $urlId, bool $unique = false): int
-    {
-        $total = self::find($urlId)->visit()->count();
-
-        if ($unique) {
-            $total = self::find($urlId)->visit()
-                ->whereIsFirstClick(true)
-                ->count();
-        }
-
-        return $total;
-    }
-
-    /**
-     * Total clicks on all short URLs on each user
-     */
-    public function numberOfClicksPerUser(int $userId = null): int
-    {
-        $url = self::whereUserId($userId)->get();
-
-        return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
-    }
-
-    /**
-     * Total clicks on all short URLs from guest users
-     */
-    public function numberOfClicksFromGuests(): int
-    {
-        $url = self::whereUserId(null)->get();
-
-        return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
-    }
-
-    /**
-     * Total clicks on all shortened URLs
-     */
-    public function totalClick(): int
-    {
-        return Visit::count();
     }
 
     /**
