@@ -559,7 +559,7 @@ class UrlTest extends TestCase
     }
 
     /**
-     * Total klik untuk url yang dibuat oleh user tertentu
+     * Total klik url yang dibuat oleh guest user
      *
      * @test
      * @group u-model
