@@ -17,6 +17,8 @@ use Spatie\Url\Url as SpatieUrl;
  * @property string   $short_url
  * @property string   $destination
  * @property string   $title
+ * @property int      $clicks
+ * @property int      $uniqueClicks
  */
 class Url extends Model
 {
@@ -114,6 +116,20 @@ class Url extends Model
 
                 return 'No Title';
             },
+        );
+    }
+
+    protected function clicks(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $this->totalClickById($attributes['id']),
+        );
+    }
+
+    protected function uniqueClicks(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $this->totalClickById($attributes['id'], unique: true),
         );
     }
 

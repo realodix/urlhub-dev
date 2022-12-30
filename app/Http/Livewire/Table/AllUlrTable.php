@@ -106,8 +106,8 @@ final class AllUlrTable extends PowerGridComponent
                     '</a>';
             })
             ->addColumn('click', function (Url $url) {
-                $uClick = Helper::compactNumber($url->totalClickById($url->id, unique: true));
-                $tClick = Helper::compactNumber($url->totalClickById($url->id));
+                $uClick = Helper::compactNumber($url->uniqueClicks);
+                $tClick = Helper::compactNumber($url->clicks);
                 $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
                 $title = $uClick.' '.__('Uniques').' / '.$tClick.' '.__('Clicks');
 
