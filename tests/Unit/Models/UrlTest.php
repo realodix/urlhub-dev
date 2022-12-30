@@ -536,7 +536,7 @@ class UrlTest extends TestCase
     }
 
     /**
-     * Total klik untuk url yang dibuat oleh user tertentu
+     * Total klik dari setiap shortened URLs yang dibuat oleh user tertentu
      *
      * @test
      * @group u-model
@@ -559,7 +559,7 @@ class UrlTest extends TestCase
     }
 
     /**
-     * Total klik url yang dibuat oleh guest user
+     * Total klik dari setiap shortened URLs yang dibuat oleh guest user
      *
      * @test
      * @group u-model
