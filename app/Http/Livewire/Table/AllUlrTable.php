@@ -105,7 +105,7 @@ final class AllUlrTable extends PowerGridComponent
                         .Blade::render('@svg(\'icon-open-in-new\', \'!h-[0.7em] ml-1\')').
                     '</a>';
             })
-            ->addColumn('click', function (Url $url) {
+            ->addColumn('t_clicks', function (Url $url) {
                 $uClick = Helper::compactNumber($url->uniqueClicks);
                 $tClick = Helper::compactNumber($url->clicks);
                 $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
@@ -184,7 +184,7 @@ final class AllUlrTable extends PowerGridComponent
 
             Column::add()
                 ->title('CLICKS')
-                ->field('click'),
+                ->field('t_clicks'),
 
             Column::add()
                 ->title('CREATED AT')
