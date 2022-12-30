@@ -495,7 +495,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function totalClickPerUrl()
+    public function numberOfClicks()
     {
         Visit::factory()->create([
             'url_id' => 1,
@@ -508,7 +508,7 @@ class UrlTest extends TestCase
         ]);
 
         $expected = 2;
-        $actual = $this->url->totalClickPerUrl(1);
+        $actual = $this->url->numberOfClicks(1);
 
         $this->assertSame($expected, $actual);
     }
@@ -517,7 +517,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function totalClickPerUrlAndUnique()
+    public function numberOfClicksAndUnique()
     {
         Visit::factory()->create([
             'url_id' => 1,
@@ -530,7 +530,7 @@ class UrlTest extends TestCase
         ]);
 
         $expected = 1;
-        $actual = $this->url->totalClickPerUrl(1, unique: true);
+        $actual = $this->url->numberOfClicks(1, unique: true);
 
         $this->assertSame($expected, $actual);
     }
@@ -541,7 +541,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function totalClickPerUser()
+    public function numberOfClicksPerUser()
     {
         $userId = $this->admin()->id;
         $url = Url::factory()->create([
@@ -552,7 +552,30 @@ class UrlTest extends TestCase
         ]);
 
         $expected = Visit::whereUrlId($url->id)->count();
-        $actual = $this->url->totalClickPerUser(authorId: $url->user_id);
+        $actual = $this->url->numberOfClicksPerUser(authorId: $url->user_id);
+
+        $this->assertSame($userId, $url->user_id);
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * Total klik untuk url yang dibuat oleh user tertentu
+     *
+     * @test
+     * @group u-model
+     */
+    public function numberOfClicksFromGuests()
+    {
+        $userId = null;
+        $url = Url::factory()->create([
+            'user_id' => $userId,
+        ]);
+        Visit::factory()->create([
+            'url_id' => $url->id,
+        ]);
+
+        $expected = Visit::whereUrlId($url->id)->count();
+        $actual = $this->url->numberOfClicksFromGuests();
 
         $this->assertSame($userId, $url->user_id);
         $this->assertSame($expected, $actual);

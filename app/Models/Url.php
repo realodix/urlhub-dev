@@ -122,14 +122,14 @@ class Url extends Model
     protected function clicks(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attr) => $this->totalClickPerUrl($attr['id']),
+            get: fn ($value, $attr) => $this->numberOfClicks($attr['id']),
         );
     }
 
     protected function uniqueClicks(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attr) => $this->totalClickPerUrl($attr['id'], unique: true),
+            get: fn ($value, $attr) => $this->numberOfClicks($attr['id'], unique: true),
         );
     }
 
@@ -322,6 +322,34 @@ class Url extends Model
     }
 
     /**
+     * Total clicks on all short URLs on each user
+     */
+    public function numberOfClicksPerUser(int $authorId = null): int
+    {
+        $user = self::whereUserId($authorId)->get();
+
+        return $user->sum(fn ($url) => $url->numberOfClicks($url->id));
+    }
+
+    /**
+     * Total clicks on all short URLs from guest users
+     */
+    public function numberOfClicksFromGuests(): int
+    {
+        $user = self::whereUserId(null)->get();
+
+        return $user->sum(fn ($url) => $url->numberOfClicks($url->id));
+    }
+
+    /**
+     * Total clicks on all shortened URLs
+     */
+    public function totalClick(): int
+    {
+        return Visit::count();
+    }
+
+    /**
      * Fetch the page title from the web page URL
      *
      * @throws \Exception
@@ -360,17 +388,9 @@ class Url extends Model
     }
 
     /**
-     * Total clicks on all shortened URLs
-     */
-    public function totalClick(): int
-    {
-        return Visit::count();
-    }
-
-    /**
      * Total clicks on each shortened URLs
      */
-    public function totalClickPerUrl(int $urlId, bool $unique = false): int
+    public function numberOfClicks(int $urlId, bool $unique = false): int
     {
         $total = self::find($urlId)->visit()->count();
 
@@ -383,13 +403,5 @@ class Url extends Model
         return $total;
     }
 
-    /**
-     * Total clicks on all short URLs on each user
-     */
-    public function totalClickPerUser(int $authorId = null): int
-    {
-        $user = self::whereUserId($authorId)->get();
 
-        return $user->sum(fn ($url) => $url->totalClickPerUrl($url->id));
-    }
 }
