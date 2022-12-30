@@ -47,7 +47,6 @@ class Url extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'user_id'   => 'integer',
         'is_custom' => 'boolean',
     ];
 
