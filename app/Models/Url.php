@@ -377,8 +377,11 @@ class Url extends Model
     /**
      * Total clicks on all short URLs on each user
      */
-    public function totalClickPerUser(int $authorId = null): int
+    public function totalClickPerUser(int $authorId = null, $guest = false): int
     {
+        if ($guest === true) {
+            $authorId = null;
+        }
         $user = self::whereUserId($authorId)->get();
 
         return $user->sum(fn ($url) => $url->totalClickPerUrl($url->id));
