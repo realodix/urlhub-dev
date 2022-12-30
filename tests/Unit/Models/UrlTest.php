@@ -552,7 +552,7 @@ class UrlTest extends TestCase
         ]);
 
         $expected = Visit::whereUrlId($url->id)->count();
-        $actual = $this->url->numberOfClicksPerUser(authorId: $url->user_id);
+        $actual = $this->url->numberOfClicksPerUser(userId: $url->user_id);
 
         $this->assertSame($userId, $url->user_id);
         $this->assertSame($expected, $actual);
