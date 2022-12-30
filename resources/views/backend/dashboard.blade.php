@@ -54,7 +54,7 @@
                     </div>
                     <div class="w-full sm:w-1/4">
                         <span class="font-semibold text-lg sm:text-2xl">@svg('icon-eye', 'mr-1.5') {{__('Clicks')}}:</span>
-                        <span class="font-light text-lg sm:text-2xl">{{compactNumber($url->totalClickPerUser(auth()->id()))}}</span>
+                        <span class="font-light text-lg sm:text-2xl">{{compactNumber($url->totalClickPerUser())}}</span>
                     </div>
                 </div>
             @endrole
