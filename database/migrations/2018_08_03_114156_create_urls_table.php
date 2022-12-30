@@ -19,7 +19,7 @@ return new class extends Migration
                 ->nullable()
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->string('keyword')->unique();
+            $table->string('url_key')->unique();
             $table->boolean('is_custom');
             $table->longText('destination');
             $table->string('title');
