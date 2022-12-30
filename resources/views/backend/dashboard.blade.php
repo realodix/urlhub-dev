@@ -31,8 +31,8 @@
                         <div class="block">
                             <b class="text-uh-1">@svg('icon-bar-chart', 'mr-1.5') {{__('Clicks')}}:</b>
                             <span class="text-cyan-600">{{compactNumber($url->totalClick())}}</span> -
-                            <span class="text-teal-600">{{compactNumber($url->totalClickPerUser(auth()->id()))}}</span> -
-                            <span class="text-orange-600">{{compactNumber($url->totalClickPerUser())}}</span>
+                            <span class="text-teal-600">{{compactNumber($url->totalClickPerUser())}}</span> -
+                            <span class="text-orange-600">{{compactNumber($url->totalClickPerUser(guest: true))}}</span>
                         </div>
                     </div>
                     <div class="text-uh-1 w-full sm:w-1/4 mt-4 sm:mt-0">
