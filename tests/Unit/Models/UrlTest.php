@@ -551,8 +551,10 @@ class UrlTest extends TestCase
             'url_id' => $url->id,
         ]);
 
+        $this->actingAs($this->admin());
+
         $expected = Visit::whereUrlId($url->id)->count();
-        $actual = $this->url->totalClickPerUser(authorId: $url->user_id);
+        $actual = $url->totalClickPerUser();
 
         $this->assertSame($userId, $url->user_id);
         $this->assertSame($expected, $actual);
