@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('visits', function (Blueprint $table) {
+        Schema::create('url_stats', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('url_id')
                 ->constrained()
@@ -42,6 +42,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('visits');
+        Schema::dropIfExists('url_stats');
     }
 };
