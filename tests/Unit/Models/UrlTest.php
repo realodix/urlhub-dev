@@ -508,7 +508,7 @@ class UrlTest extends TestCase
         ]);
 
         $expected = 2;
-        $actual = $this->url->totalClickById(1);
+        $actual = $this->url->totalClickPerUrl(1);
 
         $this->assertSame($expected, $actual);
     }
@@ -530,7 +530,7 @@ class UrlTest extends TestCase
         ]);
 
         $expected = 1;
-        $actual = $this->url->totalClickById(1, unique: true);
+        $actual = $this->url->totalClickPerUrl(1, unique: true);
 
         $this->assertSame($expected, $actual);
     }
