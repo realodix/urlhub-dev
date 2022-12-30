@@ -443,7 +443,7 @@ class UrlTest extends TestCase
     public function totalShortUrlByMe()
     {
         $expected = self::N_URL_WITH_USER_ID;
-        $actual = $this->url->urlCount($this->admin()->id);
+        $actual = $this->url->numberOfUrls($this->admin()->id);
 
         $this->assertSame($expected, $actual);
     }
@@ -455,7 +455,7 @@ class UrlTest extends TestCase
     public function totalShortUrlByGuest()
     {
         $expected = self::N_URL_WITHOUT_USER_ID;
-        $actual = $this->url->urlCount();
+        $actual = $this->url->numberOfUrlsByGuests();
 
         $this->assertSame($expected, $actual);
     }
@@ -472,6 +472,112 @@ class UrlTest extends TestCase
 
         $expected = 'www.example123456789.com - Untitled';
         $actual = $this->url->getWebTitle('https://www.example123456789.com');
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @group u-model
+     */
+    public function totalClicks()
+    {
+        Visit::factory()->create();
+
+        $url = new Url;
+
+        $expected = 1;
+        $actual = $url->totalClick();
+
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @group u-model
+     */
+    public function numberOfClicks()
+    {
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => true,
+        ]);
+
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => false,
+        ]);
+
+        $expected = 2;
+        $actual = $this->url->numberOfClicks(1);
+
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @group u-model
+     */
+    public function numberOfClicksAndUnique()
+    {
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => true,
+        ]);
+
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => false,
+        ]);
+
+        $expected = 1;
+        $actual = $this->url->numberOfClicks(1, unique: true);
+
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * Total klik untuk url yang dibuat oleh user tertentu
+     *
+     * @test
+     * @group u-model
+     */
+    public function numberOfClicksPerUser()
+    {
+        $userId = $this->admin()->id;
+        $url = Url::factory()->create([
+            'user_id' => $userId,
+        ]);
+        Visit::factory()->create([
+            'url_id' => $url->id,
+        ]);
+
+        $expected = Visit::whereUrlId($url->id)->count();
+        $actual = $this->url->numberOfClicksPerUser(userId: $url->user_id);
+
+        $this->assertSame($userId, $url->user_id);
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * Total klik url yang dibuat oleh guest user
+     *
+     * @test
+     * @group u-model
+     */
+    public function numberOfClicksFromGuests()
+    {
+        $userId = null;
+        $url = Url::factory()->create([
+            'user_id' => $userId,
+        ]);
+        Visit::factory()->create([
+            'url_id' => $url->id,
+        ]);
+
+        $expected = Visit::whereUrlId($url->id)->count();
+        $actual = $this->url->numberOfClicksFromGuests();
+
+        $this->assertSame($userId, $url->user_id);
         $this->assertSame($expected, $actual);
     }
 }
