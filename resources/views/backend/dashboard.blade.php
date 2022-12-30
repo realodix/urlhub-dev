@@ -25,8 +25,8 @@
                         <div class="block">
                             <b class="text-uh-1">@svg('icon-link', 'mr-1.5') {{__('URLs')}}:</b>
                             <span class="text-cyan-600">{{compactNumber($url->totalUrl())}}</span> -
-                            <span class="text-teal-600">{{compactNumber($url->urlCount(auth()->id()))}}</span> -
-                            <span class="text-orange-600">{{compactNumber($url->urlCount())}}</span>
+                            <span class="text-teal-600">{{compactNumber($url->numberOfUrls(auth()->id()))}}</span> -
+                            <span class="text-orange-600">{{compactNumber($url->numberOfUrlsByGuests())}}</span>
                         </div>
                         <div class="block">
                             <b class="text-uh-1">@svg('icon-bar-chart', 'mr-1.5') {{__('Clicks')}}:</b>
@@ -50,7 +50,7 @@
                 <div class="flex flex-wrap">
                     <div class="w-full sm:w-1/4">
                         <span class="font-semibold text-md sm:text-2xl">@svg('icon-link', 'mr-1.5') {{__('URLs')}}:</span>
-                        <span class="font-light text-lg sm:text-2xl">{{compactNumber($url->urlCount(auth()->id()))}}</span>
+                        <span class="font-light text-lg sm:text-2xl">{{compactNumber($url->numberOfUrls(auth()->id()))}}</span>
                     </div>
                     <div class="w-full sm:w-1/4">
                         <span class="font-semibold text-lg sm:text-2xl">@svg('icon-eye', 'mr-1.5') {{__('Clicks')}}:</span>

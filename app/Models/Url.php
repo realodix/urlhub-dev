@@ -298,15 +298,24 @@ class Url extends Model
     }
 
     /**
-     * Count the number of URLs based on user id.
-     *
-     * @param int|string|null $userId
+     * The number of shortened URLs that have been created by each User
      */
-    public function urlCount($userId = null): int
+    public function numberOfUrls(int $userId): int
     {
         return self::whereUserId($userId)->count('keyword');
     }
 
+    /**
+     * The total number of shortened URLs that have been created by guests
+     */
+    public function numberOfUrlsByGuests(): int
+    {
+        return self::whereUserId(null)->count('keyword');
+    }
+
+    /**
+     * Total shortened URLs created
+     */
     public function totalUrl(): int
     {
         return self::count('keyword');

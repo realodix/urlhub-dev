@@ -443,7 +443,7 @@ class UrlTest extends TestCase
     public function totalShortUrlByMe()
     {
         $expected = self::N_URL_WITH_USER_ID;
-        $actual = $this->url->urlCount($this->admin()->id);
+        $actual = $this->url->numberOfUrls($this->admin()->id);
 
         $this->assertSame($expected, $actual);
     }
@@ -455,7 +455,7 @@ class UrlTest extends TestCase
     public function totalShortUrlByGuest()
     {
         $expected = self::N_URL_WITHOUT_USER_ID;
-        $actual = $this->url->urlCount();
+        $actual = $this->url->numberOfUrlsByGuests();
 
         $this->assertSame($expected, $actual);
     }
