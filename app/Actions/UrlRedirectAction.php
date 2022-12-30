@@ -50,7 +50,6 @@ class UrlRedirectAction
 
         Visit::create([
             'url_id'          => $url->id,
-            'url_author_id'   => $url->user->id,
             'visitor_id'      => $this->visit->visitorId(),
             'is_first_click'  => $this->visit->isFirstClick($url),
             'referer'         => request()->header('referer'),
