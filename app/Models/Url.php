@@ -144,7 +144,7 @@ class Url extends Model
      */
     public function numberOfUrls(int $userId): int
     {
-        return self::whereUserId($userId)->count('keyword');
+        return self::whereUserId($userId)->count();
     }
 
     /**
@@ -152,7 +152,7 @@ class Url extends Model
      */
     public function numberOfUrlsByGuests(): int
     {
-        return self::whereUserId(null)->count('keyword');
+        return self::whereNull('user_id')->count();
     }
 
     /**
@@ -160,7 +160,7 @@ class Url extends Model
      */
     public function totalUrl(): int
     {
-        return self::count('keyword');
+        return self::count();
     }
 
     /**
@@ -194,7 +194,7 @@ class Url extends Model
      */
     public function numberOfClicksFromGuests(): int
     {
-        $url = self::whereUserId(null)->get();
+        $url = self::whereNull('user_id')->get();
 
         return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
     }
