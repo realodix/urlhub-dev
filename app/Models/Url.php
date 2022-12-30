@@ -122,14 +122,14 @@ class Url extends Model
     protected function clicks(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attributes) => $this->totalClickById($attributes['id']),
+            get: fn ($value, $attr) => $this->totalClickById($attr['id']),
         );
     }
 
     protected function uniqueClicks(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attributes) => $this->totalClickById($attributes['id'], unique: true),
+            get: fn ($value, $attr) => $this->totalClickById($attr['id'], unique: true),
         );
     }
 
