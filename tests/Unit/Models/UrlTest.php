@@ -474,4 +474,87 @@ class UrlTest extends TestCase
         $actual = $this->url->getWebTitle('https://www.example123456789.com');
         $this->assertSame($expected, $actual);
     }
+
+    /**
+     * @test
+     * @group u-model
+     */
+    public function totalClicks()
+    {
+        Visit::factory()->create();
+
+        $url = new Url;
+
+        $expected = 1;
+        $actual = $url->totalClick();
+
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @group u-model
+     */
+    public function totalClickPerUrl()
+    {
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => true,
+        ]);
+
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => false,
+        ]);
+
+        $expected = 2;
+        $actual = $this->url->totalClickById(1);
+
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @group u-model
+     */
+    public function totalClickPerUrlAndUnique()
+    {
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => true,
+        ]);
+
+        Visit::factory()->create([
+            'url_id' => 1,
+            'is_first_click' => false,
+        ]);
+
+        $expected = 1;
+        $actual = $this->url->totalClickById(1, unique: true);
+
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * Total klik untuk url yang dibuat oleh user tertentu
+     *
+     * @test
+     * @group u-model
+     */
+    public function totalClickPerUser()
+    {
+        $userId = $this->admin()->id;
+        $url = Url::factory()->create([
+            'user_id' => $userId,
+        ]);
+        Visit::factory()->create([
+            'url_id' => $url->id,
+        ]);
+
+        $expected = Visit::whereUrlId($url->id)->count();
+        $actual = $this->url->totalClickPerUser(authorId: $url->user_id);
+
+        $this->assertSame($userId, $url->user_id);
+        $this->assertSame($expected, $actual);
+    }
 }

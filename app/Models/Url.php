@@ -333,4 +333,35 @@ class Url extends Model
 
         return $urlKey;
     }
+
+    /**
+     * Total clicks on all shortened URLs
+     */
+    public function totalClick(): int
+    {
+        return Visit::count();
+    }
+
+    /**
+     * Total clicks on each shortened URLs
+     */
+    public function totalClickById(int $urlId, bool $unique = false): int
+    {
+        $total = self::find($urlId)->visit()->count();
+
+        if ($unique) {
+            $total = self::find($urlId)->visit()
+                ->whereIsFirstClick(true)
+                ->count();
+        }
+
+        return $total;
+    }
+
+    public function totalClickPerUser(int $authorId = null): int
+    {
+        $user = self::whereUserId($authorId)->get();
+
+        return $user->sum(fn ($url) => $url->totalClickById($url->id));
+    }
 }
