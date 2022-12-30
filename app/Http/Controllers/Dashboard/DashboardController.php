@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Url;
 use App\Models\User;
-use App\Models\Visit;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -13,7 +12,6 @@ class DashboardController extends Controller
     public function __construct(
         public Url $url,
         public User $user,
-        public Visit $visit
     ) {
     }
 
@@ -27,7 +25,6 @@ class DashboardController extends Controller
         return view('backend.dashboard', [
             'url'  => $this->url,
             'user' => $this->user,
-            'visit' => $this->visit,
         ]);
     }
 
@@ -43,7 +40,7 @@ class DashboardController extends Controller
 
         $this->authorize('updateUrl', $url);
 
-        return view('backend.edit', compact('url'));
+        return view('backend.edit', ['url' => $url]);
     }
 
     /**
