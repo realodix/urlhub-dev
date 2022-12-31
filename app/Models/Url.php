@@ -233,7 +233,7 @@ class Url extends Model
      * - Tidak ada di daftar config('urlhub.reserved_keyword')
      * - Tidak digunakan oleh sistem sebagai rute
      */
-    private function keyExists(string $url): bool
+    public function keyExists(string $url): bool
     {
         $route = \Illuminate\Routing\Route::class;
         $routeCollection = \Illuminate\Support\Facades\Route::getRoutes()->get();
@@ -248,24 +248,6 @@ class Url extends Model
         }
 
         return false;
-    }
-
-    /**
-     * @return string
-     */
-    public function randomString()
-    {
-        $factory = new \RandomLib\Factory;
-        $generator = $factory->getMediumStrengthGenerator();
-
-        $character = config('urlhub.hash_char');
-        $length = config('urlhub.hash_length');
-
-        do {
-            $urlKey = $generator->generateString($length, $character);
-        } while ($this->keyExists($urlKey));
-
-        return $urlKey;
     }
 
     /**
@@ -394,5 +376,15 @@ class Url extends Model
         $action = new \App\Actions\Url\DuplicateUrl($this);
 
         return $action->handle($key, $userId, $randomKey);
+    }
+
+    /**
+     * @return string
+     */
+    public function randomString()
+    {
+        $action = new \App\Actions\UrlKey\GenerateString($this);
+
+        return $action->handle();
     }
 }
