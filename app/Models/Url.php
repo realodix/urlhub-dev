@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\Helper;
 use App\Http\Requests\StoreUrl;
 use App\Models\Traits\Hashidable;
 use Embed\Embed;
@@ -208,26 +207,6 @@ class Url extends Model
     }
 
     /**
-     * @param StoreUrl        $request \App\Http\Requests\StoreUrl
-     * @param int|string|null $userId  Jika user_id tidak diisi, maka akan diisi null, ini
-     *                                 terjadi karena guest yang membuat URL. See userId().
-     * @return self
-     */
-    public function shortenUrl(StoreUrl $request, $userId)
-    {
-        $key = $request->custom_key ?? $this->urlKey($request->long_url);
-
-        return Url::create([
-            'user_id'     => $userId,
-            'destination' => $request->long_url,
-            'title'       => $request->long_url,
-            'keyword'     => $key,
-            'is_custom'   => $request->custom_key ? true : false,
-            'ip'          => Helper::anonymizeIp($request->ip()),
-        ]);
-    }
-
-    /**
      * @param int|string|null $userId \Illuminate\Contracts\Auth\Guard::id()
      * @return bool \Illuminate\Database\Eloquent\Model::save()
      */
@@ -401,5 +380,26 @@ class Url extends Model
         } while ($this->keyExists($urlKey));
 
         return $urlKey;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ada di Action class, tapi belum benerin di Tests
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * \tests\Feature\ShortenUrlTest
+     *
+     * @param StoreUrl        $request \App\Http\Requests\StoreUrl
+     * @param int|string|null $userId  Jika user_id tidak diisi, maka akan diisi null, ini
+     *                                 terjadi karena guest yang membuat URL. See userId().
+     * @return self
+     */
+    public function shortenUrl(StoreUrl $request, $userId)
+    {
+        $action = new \App\Actions\UrlShorteningAction($this);
+
+        return $action->handle($request, $userId);
     }
 }
