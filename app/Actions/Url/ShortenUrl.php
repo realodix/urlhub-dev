@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Url;
 
 use App\Helpers\Helper;
 use App\Http\Requests\StoreUrl;
 use App\Models\Url;
 
-class UrlShorteningAction
+class ShortenUrl
 {
     public function __construct(
         public Url $url,

@@ -398,7 +398,7 @@ class Url extends Model
      */
     public function shortenUrl(StoreUrl $request, $userId)
     {
-        $action = new \App\Actions\UrlShorteningAction($this);
+        $action = new \App\Actions\Url\ShortenUrl($this);
 
         return $action->handle($request, $userId);
     }
