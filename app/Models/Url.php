@@ -206,24 +206,6 @@ class Url extends Model
         return Visit::count();
     }
 
-    /**
-     * @param int|string|null $userId \Illuminate\Contracts\Auth\Guard::id()
-     * @return bool \Illuminate\Database\Eloquent\Model::save()
-     */
-    public function duplicate(string $key, $userId, string $randomKey = null)
-    {
-        $randomKey = $randomKey ?? $this->randomString();
-        $shortenedUrl = self::whereKeyword($key)->firstOrFail();
-
-        $replicate = $shortenedUrl->replicate()->fill([
-            'user_id'   => $userId,
-            'keyword'   => $randomKey,
-            'is_custom' => false,
-        ]);
-
-        return $replicate->save();
-    }
-
     public function urlKey(string $url): string
     {
         $length = config('urlhub.hash_length') * -1;
@@ -401,5 +383,16 @@ class Url extends Model
         $action = new \App\Actions\Url\ShortenUrl($this);
 
         return $action->handle($request, $userId);
+    }
+
+    /**
+     * @param int|string|null $userId \Illuminate\Contracts\Auth\Guard::id()
+     * @return bool \Illuminate\Database\Eloquent\Model::save()
+     */
+    public function duplicate(string $key, $userId, string $randomKey = null)
+    {
+        $action = new \App\Actions\Url\DuplicateUrl($this);
+
+        return $action->handle($key, $userId, $randomKey);
     }
 }
