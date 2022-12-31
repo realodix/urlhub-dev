@@ -251,6 +251,24 @@ class Url extends Model
     }
 
     /**
+     * @return string
+     */
+    public function randomString()
+    {
+        $factory = new \RandomLib\Factory;
+        $generator = $factory->getMediumStrengthGenerator();
+
+        $character = config('urlhub.hash_char');
+        $length = config('urlhub.hash_length');
+
+        do {
+            $urlKey = $generator->generateString($length, $character);
+        } while ($this->keyExists($urlKey));
+
+        return $urlKey;
+    }
+
+    /**
      * The number of unique random strings that have been used as the key for
      * the long url that has been shortened
      *
@@ -344,24 +362,6 @@ class Url extends Model
         }
 
         return $webTitle;
-    }
-
-    /**
-     * @return string
-     */
-    public function randomString()
-    {
-        $factory = new \RandomLib\Factory;
-        $generator = $factory->getMediumStrengthGenerator();
-
-        $character = config('urlhub.hash_char');
-        $length = config('urlhub.hash_length');
-
-        do {
-            $urlKey = $generator->generateString($length, $character);
-        } while ($this->keyExists($urlKey));
-
-        return $urlKey;
     }
 
     /*
