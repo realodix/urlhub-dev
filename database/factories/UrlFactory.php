@@ -31,7 +31,7 @@ class UrlFactory extends Factory
             'title'       => 'No Title',
             'keyword'     => (new Url)->randomString(),
             'is_custom'   => false,
-            'ip'          => $this->faker->ipv4(),
+            'ip'          => fake()->ipv4(),
         ];
     }
 }
