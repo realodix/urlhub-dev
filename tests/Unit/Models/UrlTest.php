@@ -5,7 +5,7 @@ namespace Tests\Unit\Models;
 use App\Models\Url;
 use App\Models\Visit;
 use Tests\TestCase;
-use App\Actions\UrlKey\GenerateString;
+
 class UrlTest extends TestCase
 {
     private const N_URL_WITH_USER_ID = 1;
@@ -16,15 +16,11 @@ class UrlTest extends TestCase
 
     private int $totalUrl;
 
-    private GenerateString $generateString;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->url = new Url;
-
-        $this->generateString = new GenerateString($this->url);
 
         $this->totalUrl = self::N_URL_WITH_USER_ID + self::N_URL_WITHOUT_USER_ID;
 

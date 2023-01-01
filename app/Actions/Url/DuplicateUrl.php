@@ -2,14 +2,12 @@
 
 namespace App\Actions\Url;
 
-use App\Actions\UrlKey\GenerateString;
 use App\Models\Url;
 
 class DuplicateUrl
 {
     public function __construct(
         public Url $url,
-        public GenerateString $generateString,
     ) {
     }
 
@@ -21,7 +19,7 @@ class DuplicateUrl
      */
     public function handle(string $key, $userId, string $randomKey = null)
     {
-        $randomKey = $randomKey ?? $this->generateString->handle();
+        $randomKey = $randomKey ?? $this->url->randomString();
         $shortenedUrl = $this->url->whereKeyword($key)->firstOrFail();
 
         $replicate = $shortenedUrl->replicate()->fill([

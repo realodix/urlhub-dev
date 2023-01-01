@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Actions\QrCodeAction;
 use App\Actions\Url\DuplicateUrl;
 use App\Actions\Url\ShortenUrl;
-use App\Actions\UrlKey\GenerateString;
 use App\Http\Requests\StoreUrl;
 use App\Models\Url;
 
@@ -18,7 +17,6 @@ class UrlController extends Controller
         public Url $url,
         public ShortenUrl $shortenUrl,
         public DuplicateUrl $duplicateUrl,
-        public GenerateString $generateString,
     ) {
         $this->middleware('urlhublinkchecker')->only('create');
     }
@@ -84,7 +82,7 @@ class UrlController extends Controller
      */
     public function duplicate(string $key)
     {
-        $randomKey = $this->generateString->handle();
+        $randomKey = $this->url->randomString();
         $this->duplicateUrl->handle($key, auth()->id(), $randomKey);
 
         return to_route('su_detail', $randomKey)
