@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Http\Requests\StoreUrl;
 use App\Models\Traits\Hashidable;
 use Embed\Embed;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -353,29 +352,13 @@ class Url extends Model
     */
 
     /**
-     * \tests\Feature\ShortenUrlTest
-     *
-     * @param StoreUrl        $request \App\Http\Requests\StoreUrl
-     * @param int|string|null $userId  Jika user_id tidak diisi, maka akan diisi null, ini
-     *                                 terjadi karena guest yang membuat URL. See userId().
-     * @return self
+     * @return string
      */
-    public function shortenUrl(StoreUrl $request, $userId)
+    public function randomString()
     {
-        $action = new \App\Actions\Url\ShortenUrl($this);
+        $action = new \App\Actions\UrlKey\GenerateString($this);
 
-        return $action->handle($request, $userId);
-    }
-
-    /**
-     * @param int|string|null $userId \Illuminate\Contracts\Auth\Guard::id()
-     * @return bool \Illuminate\Database\Eloquent\Model::save()
-     */
-    public function duplicate(string $key, $userId, string $randomKey = null)
-    {
-        $action = new \App\Actions\Url\DuplicateUrl($this);
-
-        return $action->handle($key, $userId, $randomKey);
+        return $action->handle();
     }
 
     /**
