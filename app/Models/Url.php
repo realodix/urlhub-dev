@@ -360,14 +360,4 @@ class Url extends Model
 
         return $action->handle();
     }
-
-    /**
-     * @return string
-     */
-    public function randomString()
-    {
-        $action = new \App\Actions\UrlKey\GenerateString($this);
-
-        return $action->handle();
-    }
 }
