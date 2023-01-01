@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Actions\Url\DuplicateUrl;
 use App\Http\Controllers\Controller;
 use App\Models\Url;
 use App\Models\User;
@@ -12,6 +13,7 @@ class DashboardController extends Controller
     public function __construct(
         public Url $url,
         public User $user,
+        public DuplicateUrl $duplicateUrl,
     ) {
     }
 
@@ -86,7 +88,7 @@ class DashboardController extends Controller
      */
     public function duplicate($key)
     {
-        $this->url->duplicate($key, auth()->id());
+        $this->duplicateUrl->handle($key, auth()->id());
 
         return redirect()->back()
             ->withFlashSuccess(__('The link has successfully duplicated.'));
