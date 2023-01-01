@@ -205,25 +205,6 @@ class Url extends Model
         return Visit::count();
     }
 
-    public function urlKey(string $url): string
-    {
-        $length = config('urlhub.hash_length') * -1;
-
-        // Step 1
-        // Take a few characters at the end of the string to use as a unique key
-        $pattern = '/[^'.config('urlhub.hash_char').']/i';
-        $urlKey = substr(preg_replace($pattern, '', $url), $length);
-
-        // Step 2
-        // If step 1 fails (the already used or cannot be used), then the generator
-        // must generate a unique random string
-        if ($this->keyExists($urlKey)) {
-            $urlKey = $this->randomString();
-        }
-
-        return $urlKey;
-    }
-
     /**
      * Periksa apakah keyword tersedia atau tidak?
      *
@@ -274,6 +255,47 @@ class Url extends Model
             ->count();
 
         return $randomKey + $customKey;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ada di Action class, tapi belum benerin di Tests
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * @return string
+     */
+    public function randomString()
+    {
+        $action = new \App\Actions\UrlKey\GenerateString($this);
+
+        return $action->handle();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | application logic
+    |--------------------------------------------------------------------------
+    */
+
+    public function urlKey(string $url): string
+    {
+        $length = config('urlhub.hash_length') * -1;
+
+        // Step 1
+        // Take a few characters at the end of the string to use as a unique key
+        $pattern = '/[^'.config('urlhub.hash_char').']/i';
+        $urlKey = substr(preg_replace($pattern, '', $url), $length);
+
+        // Step 2
+        // If step 1 fails (the already used or cannot be used), then the generator
+        // must generate a unique random string
+        if ($this->keyExists($urlKey)) {
+            $urlKey = $this->randomString();
+        }
+
+        return $urlKey;
     }
 
     /**
@@ -343,21 +365,5 @@ class Url extends Model
         }
 
         return $webTitle;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Ada di Action class, tapi belum benerin di Tests
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * @return string
-     */
-    public function randomString()
-    {
-        $action = new \App\Actions\UrlKey\GenerateString($this);
-
-        return $action->handle();
     }
 }
