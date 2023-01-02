@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Actions;
+namespace App\Services;
 
 use App\Helpers\Helper;
 use App\Models\Url;
 use App\Models\Visit;
 
-class UrlRedirectAction
+class UrlRedirectionService
 {
     public function __construct(
         public Visit $visit,
