@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\QrCodeAction;
 use App\Http\Requests\StoreUrl;
 use App\Models\Url;
+use App\Services\QrCodeService;
 
 class UrlController extends Controller
 {
@@ -12,7 +12,8 @@ class UrlController extends Controller
      * UrlController constructor.
      */
     public function __construct(
-        public Url $url
+        public Url $url,
+        public QrCodeService $qrCodeService
     ) {
         $this->middleware('urlhublinkchecker')->only('create');
     }
@@ -44,7 +45,7 @@ class UrlController extends Controller
         $data = ['url' => $url, 'visit' => new \App\Models\Visit];
 
         if (config('urlhub.qrcode')) {
-            $qrCode = (new QrCodeAction)->process($url->short_url);
+            $qrCode = $this->qrCodeService->execute($url->short_url);
 
             $data = array_merge($data, ['qrCode' => $qrCode]);
         }
