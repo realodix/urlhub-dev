@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Url;
 use App\Models\User;
+use App\Services\UrlKeyService;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -12,6 +13,7 @@ class DashboardController extends Controller
     public function __construct(
         public Url $url,
         public User $user,
+        public UrlKeyService $urlKeyService,
     ) {
     }
 
@@ -25,6 +27,7 @@ class DashboardController extends Controller
         return view('backend.dashboard', [
             'url'  => $this->url,
             'user' => $this->user,
+            'urlKeyService' => $this->urlKeyService,
         ]);
     }
 

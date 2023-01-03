@@ -14,8 +14,8 @@
                     </div>
                     <div class="mt-8 sm:mt-0 text-uh-1 ">
                         <b>@svg('icon-storage', 'mr-1.5') {{__('Free Space')}}:</b>
-                        <span class="font-light">{{compactNumber($url->keyRemaining())}} {{__('of')}}
-                            {{compactNumber($url->keyCapacity())}} ({{$url->keyRemainingInPercent()}})
+                        <span class="font-light">{{compactNumber($urlKeyService->keyRemaining())}} {{__('of')}}
+                            {{compactNumber($urlKeyService->keyCapacity())}} ({{$urlKeyService->keyRemainingInPercent()}})
                         </span>
                     </div>
                 </div>
