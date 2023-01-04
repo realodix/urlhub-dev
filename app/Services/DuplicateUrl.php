@@ -7,23 +7,12 @@ use App\Models\Url;
 class DuplicateUrl
 {
     /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct(
-        public UrlKeyService $urlKeyService,
-    ) {
-        //
-    }
-
-    /**
      * @param int|string|null $userId \Illuminate\Contracts\Auth\Guard::id()
      * @return bool \Illuminate\Database\Eloquent\Model::save()
      */
     public function execute(string $key, $userId, string $randomKey = null)
     {
-        $randomKey = $randomKey ?? $this->urlKeyService->randomString();
+        $randomKey = $randomKey ?? app(UrlKeyService::class)->randomString();
         $shortenedUrl = Url::whereKeyword($key)->firstOrFail();
 
         $replicate = $shortenedUrl->replicate()->fill([

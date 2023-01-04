@@ -8,11 +8,6 @@ use Illuminate\Routing\Route;
 
 class UrlHubLinkChecker
 {
-    public function __construct(
-        public UrlKeyService $urlKeyService,
-    ) {
-    }
-
     /**
      * Handle an incoming request.
      *
@@ -75,7 +70,7 @@ class UrlHubLinkChecker
      */
     private function canGenerateUniqueRandomKeys(): bool
     {
-        if ($this->urlKeyService->keyRemaining() === 0) {
+        if (app(UrlKeyService::class)->keyRemaining() === 0) {
             return false;
         }
 

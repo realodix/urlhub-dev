@@ -17,9 +17,6 @@ class UrlController extends Controller
      */
     public function __construct(
         public Url $url,
-        public QrCodeService $qrCodeService,
-        public ShortenUrl $shortenUrl,
-        public DuplicateUrl $duplicateUrl,
         public UrlKeyService $urlKeyService,
     ) {
         $this->middleware('urlhublinkchecker')->only('create');
@@ -42,7 +39,7 @@ class UrlController extends Controller
             'ip'          => Helper::anonymizeIp($request->ip()),
         ];
 
-        $url = $this->shortenUrl->handle($data);
+        $url = app(ShortenUrl::class)->handle($data);
 
         return to_route('su_detail', $url->keyword);
     }
@@ -61,7 +58,7 @@ class UrlController extends Controller
         $data = ['url' => $url, 'visit' => new \App\Models\Visit];
 
         if (config('urlhub.qrcode')) {
-            $qrCode = $this->qrCodeService->execute($url->short_url);
+            $qrCode = app(QrCodeService::class)->execute($url->short_url);
 
             $data = array_merge($data, ['qrCode' => $qrCode]);
         }
@@ -96,7 +93,7 @@ class UrlController extends Controller
     public function duplicate(string $key)
     {
         $randomKey = $this->urlKeyService->randomString();
-        $this->duplicateUrl->execute($key, auth()->id(), $randomKey);
+        app(DuplicateUrl::class)->execute($key, auth()->id(), $randomKey);
 
         return to_route('su_detail', $randomKey)
             ->withFlashSuccess(__('The link has successfully duplicated.'));

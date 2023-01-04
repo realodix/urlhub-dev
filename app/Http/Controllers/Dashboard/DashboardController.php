@@ -14,8 +14,6 @@ class DashboardController extends Controller
     public function __construct(
         public Url $url,
         public User $user,
-        public UrlKeyService $urlKeyService,
-        public DuplicateUrl $duplicateUrl,
     ) {
     }
 
@@ -29,7 +27,7 @@ class DashboardController extends Controller
         return view('backend.dashboard', [
             'url'  => $this->url,
             'user' => $this->user,
-            'urlKeyService' => $this->urlKeyService,
+            'urlKeyService' => app(UrlKeyService::class),
         ]);
     }
 
@@ -91,7 +89,7 @@ class DashboardController extends Controller
      */
     public function duplicate($key)
     {
-        $this->duplicateUrl->execute($key, auth()->id());
+        app(DuplicateUrl::class)->execute($key, auth()->id());
 
         return redirect()->back()
             ->withFlashSuccess(__('The link has successfully duplicated.'));

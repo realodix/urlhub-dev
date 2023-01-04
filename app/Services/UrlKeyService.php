@@ -6,12 +6,6 @@ use App\Models\Url;
 
 class UrlKeyService
 {
-    public function __construct(
-        public Url $url,
-    ) {
-        //
-    }
-
     public function urlKey(string $url): string
     {
         $length = config('urlhub.hash_length') * -1;
