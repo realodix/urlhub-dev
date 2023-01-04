@@ -10,7 +10,7 @@ class QrCodeTest extends TestCase
 {
     private function getQrCode(): QrCodeService
     {
-        return new QrCodeService;
+        return app(QrCodeService::class);
     }
 
     /**
