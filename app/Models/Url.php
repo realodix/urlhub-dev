@@ -206,24 +206,6 @@ class Url extends Model
     }
 
     /**
-     * @param int|string|null $userId \Illuminate\Contracts\Auth\Guard::id()
-     * @return bool \Illuminate\Database\Eloquent\Model::save()
-     */
-    public function duplicate(string $key, $userId, string $randomKey = null)
-    {
-        $randomKey = $randomKey ?? $this->randomString();
-        $shortenedUrl = self::whereKeyword($key)->firstOrFail();
-
-        $replicate = $shortenedUrl->replicate()->fill([
-            'user_id'   => $userId,
-            'keyword'   => $randomKey,
-            'is_custom' => false,
-        ]);
-
-        return $replicate->save();
-    }
-
-    /**
      * Periksa apakah keyword tersedia atau tidak?
      *
      * Syarat keyword tersedia:
