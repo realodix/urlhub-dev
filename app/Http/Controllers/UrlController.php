@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Http\Requests\StoreUrl;
 use App\Jobs\ShortenUrl;
 use App\Jobs\UrlDuplication;
@@ -32,7 +33,16 @@ class UrlController extends Controller
      */
     public function create(StoreUrl $request)
     {
-        $url = $this->shortenUrl->handle($request, auth()->id());
+        $data = [
+            'user_id'     => auth()->id(),
+            'destination' => $request->long_url,
+            'title'       => $request->long_url,
+            'keyword'     => $request->custom_key ?? $this->urlKeyService->urlKey($request->long_url),
+            'is_custom'   => $request->custom_key ? true : false,
+            'ip'          => Helper::anonymizeIp($request->ip()),
+        ];
+
+        $url = $this->shortenUrl->handle($data);
 
         return to_route('su_detail', $url->keyword);
     }

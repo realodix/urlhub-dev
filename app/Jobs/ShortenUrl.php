@@ -2,8 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Helpers\Helper;
-use App\Http\Requests\StoreUrl;
 use App\Models\Url;
 use App\Services\UrlKeyService;
 use Illuminate\Bus\Queueable;
@@ -28,22 +26,17 @@ class ShortenUrl implements ShouldQueue
     }
 
     /**
-     * @param StoreUrl        $request \App\Http\Requests\StoreUrl
-     * @param int|string|null $userId  Jika user_id tidak diisi, maka akan diisi null, ini
-     *                                 terjadi karena guest yang membuat URL. See userId().
      * @return \App\Models\Url
      */
-    public function handle(StoreUrl $request, $userId)
+    public function handle(array $data)
     {
-        $key = $request->custom_key ?? $this->urlKeyService->urlKey($request->long_url);
-
         return Url::create([
-            'user_id'     => $userId,
-            'destination' => $request->long_url,
-            'title'       => $request->long_url,
-            'keyword'     => $key,
-            'is_custom'   => $request->custom_key ? true : false,
-            'ip'          => Helper::anonymizeIp($request->ip()),
+            'user_id'     => $data['user_id'],
+            'destination' => $data['destination'],
+            'title'       => $data['title'],
+            'keyword'     => $data['keyword'],
+            'is_custom'   => $data['is_custom'],
+            'ip'          => $data['ip'],
         ]);
     }
 }

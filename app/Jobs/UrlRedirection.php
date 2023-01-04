@@ -2,9 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Helpers\Helper;
 use App\Models\Url;
-use App\Models\Visit;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,17 +12,6 @@ use Illuminate\Queue\SerializesModels;
 class UrlRedirection implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct(
-        public Visit $visit,
-    ) {
-        //
-    }
 
     /**
      * Handle the HTTP redirect and return the redirect response.
@@ -37,8 +24,6 @@ class UrlRedirection implements ShouldQueue
      */
     public function handle(Url $url)
     {
-        $this->storeVisitStat($url);
-
         $statusCode = (int) config('urlhub.redirect_status_code');
         $maxAge = (int) config('urlhub.redirect_cache_max_age');
         $headers = [
@@ -46,32 +31,5 @@ class UrlRedirection implements ShouldQueue
         ];
 
         return redirect()->away($url->destination, $statusCode, $headers);
-    }
-
-    /**
-     * Create visit statistics and store it in the database.
-     *
-     * @param Url $url \App\Models\Url
-     * @return void
-     */
-    private function storeVisitStat(Url $url)
-    {
-        $logBotVisit = config('urlhub.track_bot_visits');
-        if ($logBotVisit === false && \Browser::isBot() === true) {
-            return;
-        }
-
-        Visit::create([
-            'url_id'          => $url->id,
-            'visitor_id'      => $this->visit->visitorId(),
-            'is_first_click'  => $this->visit->isFirstClick($url),
-            'referer'         => request()->header('referer'),
-            'ip'              => Helper::anonymizeIp(request()->ip()),
-            'browser'         => \Browser::browserFamily(),
-            'browser_version' => \Browser::browserVersion(),
-            'device'          => \Browser::deviceType(),
-            'os'              => \Browser::platformFamily(),
-            'os_version'      => \Browser::platformVersion(),
-        ]);
     }
 }
