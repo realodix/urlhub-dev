@@ -1,19 +1,11 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Services;
 
 use App\Models\Url;
-use App\Services\UrlKeyService;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
-class UrlDuplication implements ShouldQueue
+class DuplicateUrl
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     /**
      * Create a new job instance.
      *
@@ -29,7 +21,7 @@ class UrlDuplication implements ShouldQueue
      * @param int|string|null $userId \Illuminate\Contracts\Auth\Guard::id()
      * @return bool \Illuminate\Database\Eloquent\Model::save()
      */
-    public function handle(string $key, $userId, string $randomKey = null)
+    public function execute(string $key, $userId, string $randomKey = null)
     {
         $randomKey = $randomKey ?? $this->urlKeyService->randomString();
         $shortenedUrl = Url::whereKeyword($key)->firstOrFail();
