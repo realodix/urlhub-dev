@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
 use App\Http\Requests\StoreUrl;
-use App\Jobs\ShortenUrl;
 use App\Models\Url;
+use App\Services\CreateShortenedUrl;
 use App\Services\DuplicateUrl;
 use App\Services\QrCodeService;
 use App\Services\UrlKeyService;
@@ -30,16 +30,19 @@ class UrlController extends Controller
      */
     public function create(StoreUrl $request)
     {
+        $keyword = $request->custom_key ?? $this->urlKeyService->urlKey($request->long_url);
+        $isCustom = $request->custom_key ? true : false;
+
         $data = [
             'user_id'     => auth()->id(),
             'destination' => $request->long_url,
             'title'       => $request->long_url,
-            'keyword'     => $request->custom_key ?? $this->urlKeyService->urlKey($request->long_url),
-            'is_custom'   => $request->custom_key ? true : false,
+            'keyword'     => $keyword,
+            'is_custom'   => $isCustom,
             'ip'          => Helper::anonymizeIp($request->ip()),
         ];
 
-        $url = app(ShortenUrl::class)->handle($data);
+        $url = app(CreateShortenedUrl::class)->execute($data);
 
         return to_route('su_detail', $url->keyword);
     }
