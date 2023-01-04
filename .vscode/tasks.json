@@ -30,7 +30,7 @@
         {
             "label": "[SA] PHPStan (baseline)",
             "type": "shell",
-            "command": "./vendor/bin/phpstan analyse --generate-baseline",
+            "command": "./vendor/bin/phpstan analyse --generate-baseline -vv",
             "problemMatcher": []
         },
         {
