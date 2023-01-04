@@ -1,16 +1,29 @@
 <?php
 
-namespace App\Services;
+namespace App\Jobs;
 
 use App\Helpers\Helper;
 use App\Models\Url;
 use App\Models\Visit;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
-class UrlRedirectionService
+class UrlRedirection implements ShouldQueue
 {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
     public function __construct(
         public Visit $visit,
     ) {
+        //
     }
 
     /**
@@ -22,7 +35,7 @@ class UrlRedirectionService
      * @param Url $url \App\Models\Url
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function handleHttpRedirect(Url $url)
+    public function handle(Url $url)
     {
         $this->storeVisitStat($url);
 
