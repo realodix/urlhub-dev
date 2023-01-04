@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
-use App\Jobs\UrlRedirection;
 use App\Models\Url;
 use App\Models\Visit;
+use App\Services\UrlRedirection;
 use App\Services\Visitor\CreateVisitorData;
 use Illuminate\Support\Facades\DB;
 
@@ -13,14 +13,13 @@ class UrlRedirectController extends Controller
 {
     public function __construct(
         public Visit $visit,
-        public CreateVisitorData $createVisitorData,
     ) {
         //
     }
 
     /**
-     * Handle the logging of the URL and redirect the user to the intended
-     * long URL.
+     * Redirect the client to the intended long URL (no checks are performed)
+     * and executes the create visitor data task.
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -42,9 +41,9 @@ class UrlRedirectController extends Controller
                 'os_version'      => \Browser::platformVersion(),
             ];
 
-            $this->createVisitorData->execute($data);
+            app(CreateVisitorData::class)->execute($data);
 
-            return $urlRedirection->handle($url);
+            return $urlRedirection->execute($url);
         });
     }
 }
