@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUrl;
+use App\Jobs\ShortenUrl;
 use App\Models\Url;
 use App\Services\QrCodeService;
 
@@ -13,7 +14,8 @@ class UrlController extends Controller
      */
     public function __construct(
         public Url $url,
-        public QrCodeService $qrCodeService
+        public QrCodeService $qrCodeService,
+        public ShortenUrl $shortenUrl,
     ) {
         $this->middleware('urlhublinkchecker')->only('create');
     }
@@ -26,7 +28,7 @@ class UrlController extends Controller
      */
     public function create(StoreUrl $request)
     {
-        $url = $this->url->shortenUrl($request, auth()->id());
+        $url = $this->shortenUrl->handle($request, auth()->id());
 
         return to_route('su_detail', $url->keyword);
     }

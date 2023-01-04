@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUrl;
-use App\Models\Url;
+use App\Jobs\ShortenUrl;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,7 +14,7 @@ class UrlController extends Controller
      * UrlController constructor.
      */
     public function __construct(
-        public Url $url
+        public ShortenUrl $shortenUrl,
     ) {
         $this->middleware('urlhublinkchecker')->only('create');
     }
@@ -32,7 +32,7 @@ class UrlController extends Controller
             return response()->json(['errors' => $v->errors()->all()]);
         }
 
-        $url = $this->url->shortenUrl($request, auth()->id());
+        $url = $this->shortenUrl->handle($request, auth()->id());
 
         return response([
             'id'        => $url->id,
