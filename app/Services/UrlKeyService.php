@@ -24,7 +24,7 @@ class UrlKeyService
         // Step 2
         // If step 1 fails (the already used or cannot be used), then the generator
         // must generate a unique random string
-        if ($this->url->keyExists($urlKey)) {
+        if ($this->keyExists($urlKey)) {
             $urlKey = $this->randomString();
         }
 
@@ -120,8 +120,33 @@ class UrlKeyService
 
         do {
             $urlKey = $generator->generateString($length, $character);
-        } while ($this->url->keyExists($urlKey));
+        } while ($this->keyExists($urlKey));
 
         return $urlKey;
+    }
+
+    /**
+     * Periksa apakah keyword tersedia atau tidak?
+     *
+     * Syarat keyword tersedia:
+     * - Tidak ada di database
+     * - Tidak ada di daftar config('urlhub.reserved_keyword')
+     * - Tidak digunakan oleh sistem sebagai rute
+     */
+    public function keyExists(string $url): bool
+    {
+        $route = \Illuminate\Routing\Route::class;
+        $routeCollection = \Illuminate\Support\Facades\Route::getRoutes()->get();
+        $routePath = array_map(fn ($route) => $route->uri, $routeCollection);
+
+        $isExistsInDb = Url::whereKeyword($url)->first();
+        $isReservedKeyword = in_array($url, config('urlhub.reserved_keyword'));
+        $isRegisteredRoutePath = in_array($url, $routePath);
+
+        if ($isExistsInDb || $isReservedKeyword || $isRegisteredRoutePath) {
+            return true;
+        }
+
+        return false;
     }
 }

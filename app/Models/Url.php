@@ -206,31 +206,6 @@ class Url extends Model
     }
 
     /**
-     * Periksa apakah keyword tersedia atau tidak?
-     *
-     * Syarat keyword tersedia:
-     * - Tidak ada di database
-     * - Tidak ada di daftar config('urlhub.reserved_keyword')
-     * - Tidak digunakan oleh sistem sebagai rute
-     */
-    public function keyExists(string $url): bool
-    {
-        $route = \Illuminate\Routing\Route::class;
-        $routeCollection = \Illuminate\Support\Facades\Route::getRoutes()->get();
-        $routePath = array_map(fn ($route) => $route->uri, $routeCollection);
-
-        $isExistsInDb = Url::whereKeyword($url)->first();
-        $isReservedKeyword = in_array($url, config('urlhub.reserved_keyword'));
-        $isRegisteredRoutePath = in_array($url, $routePath);
-
-        if ($isExistsInDb || $isReservedKeyword || $isRegisteredRoutePath) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Fetch the page title from the web page URL
      *
      * @throws \Exception
