@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Helpers\Helper;
 use App\Http\Requests\StoreUrl;
 use App\Models\Url;
+use App\Services\UrlKeyService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -21,7 +22,7 @@ class ShortenUrl implements ShouldQueue
      * @return void
      */
     public function __construct(
-        public Url $url,
+        public UrlKeyService $urlKeyService,
     ) {
         //
     }
@@ -34,7 +35,7 @@ class ShortenUrl implements ShouldQueue
      */
     public function handle(StoreUrl $request, $userId)
     {
-        $key = $request->custom_key ?? $this->url->urlKey($request->long_url);
+        $key = $request->custom_key ?? $this->urlKeyService->urlKey($request->long_url);
 
         return Url::create([
             'user_id'     => $userId,

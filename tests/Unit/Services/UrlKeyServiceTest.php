@@ -24,9 +24,131 @@ class UrlKeyServiceTest extends TestCase
 
         $this->url = new Url;
 
-        $this->urlKeyService = new UrlKeyService;
+        $this->urlKeyService = new UrlKeyService(new Url);
 
         $this->totalUrl = self::N_URL_WITH_USER_ID + self::N_URL_WITHOUT_USER_ID;
+    }
+
+    /**
+     * String yang dihasilkan dengan memotong string url dari belakang sepanjang
+     * panjang karakter yang telah ditentukan.
+     *
+     * @test
+     * @group u-model
+     */
+    public function urlKey_default_value()
+    {
+        $length = 3;
+        config(['urlhub.hash_length' => $length]);
+
+        $longUrl = 'https://github.com/realodix';
+        $urlKey = $this->urlKeyService->urlKey($longUrl);
+
+        $this->assertSame(substr($longUrl, -$length), $urlKey);
+    }
+
+    /**
+     * Karena kunci sudah ada, maka generator akan terus diulangi hingga
+     * menghasilkan kunci yang unik atau tidak ada yang sama.
+     *
+     * @test
+     * @group u-model
+     */
+    public function urlKey_generated_string()
+    {
+        $length = 3;
+        config(['urlhub.hash_length' => $length]);
+
+        $longUrl = 'https://github.com/realodix';
+        Url::factory()->create([
+            'keyword'  => $this->urlKeyService->urlKey($longUrl),
+        ]);
+
+        $this->assertNotSame(substr($longUrl, -$length), $this->urlKeyService->urlKey($longUrl));
+    }
+
+    /**
+     * Panjang dari karakter kunci yang dihasilkan harus sama dengan panjang
+     * karakter yang telah ditentukan.
+     *
+     * @test
+     * @group u-model
+     */
+    public function urlKey_specified_hash_length()
+    {
+        config(['urlhub.hash_length' => 6]);
+        $actual = 'https://github.com/realodix';
+        $expected = 'alodix';
+        $this->assertSame($expected, $this->urlKeyService->urlKey($actual));
+
+        config(['urlhub.hash_length' => 9]);
+        $actual = 'https://github.com/realodix';
+        $expected = 'mrealodix';
+        $this->assertSame($expected, $this->urlKeyService->urlKey($actual));
+
+        config(['urlhub.hash_length' => 12]);
+        $actual = 'https://github.com/realodix';
+        $expected = 'bcomrealodix';
+        $this->assertSame($expected, $this->urlKeyService->urlKey($actual));
+    }
+
+    /**
+     * Karakter yang dihasilkan harus benar-benar mengikuti karakter yang telah
+     * ditentukan.
+     *
+     * @test
+     * @group u-model
+     */
+    public function urlKey_specified_character()
+    {
+        $url = 'https://example.com/abc';
+        config(['urlhub.hash_length' => 3]);
+
+        $this->assertSame('abc', $this->urlKeyService->urlKey($url));
+
+        config(['urlhub.hash_char' => 'xyz']);
+        $this->assertMatchesRegularExpression('/[xyz]/', $this->urlKeyService->urlKey($url));
+        $this->assertDoesNotMatchRegularExpression('/[abc]/', $this->urlKeyService->urlKey($url));
+
+        config(['urlhub.hash_length' => 4]);
+        config(['urlhub.hash_char' => 'abcm']);
+        $this->assertSame('mabc', $this->urlKeyService->urlKey($url));
+    }
+
+    /**
+     * String yang dihasilkan tidak boleh sama dengan string yang telah ada di
+     * config('urlhub.reserved_keyword')
+     *
+     * @test
+     * @group u-model
+     */
+    public function urlKey_prevent_reserved_keyword()
+    {
+        $actual = 'https://example.com/css';
+        $expected = 'css';
+
+        config(['urlhub.reserved_keyword' => [$expected]]);
+        config(['urlhub.hash_length' => strlen($expected)]);
+
+        $this->assertNotSame($expected, $this->urlKeyService->urlKey($actual));
+    }
+
+    /**
+     * String yang dihasilkan tidak boleh sama dengan string yang telah ada di
+     * registered route path. Di sini, string yang dihasilkan sebagai keyword
+     * adalah 'admin', dimana 'admin' sudah digunakan sebagai route path.
+     *
+     * @test
+     * @group u-model
+     */
+    public function urlKey_prevent_generating_strings_that_are_in_registered_route_path()
+    {
+        $actual = 'https://example.com/admin';
+        $expected = 'admin';
+
+        config(['urlhub.hash_length' => strlen($expected)]);
+
+        $this->assertNotSame($expected, $this->urlKeyService->urlKey($actual));
     }
 
     /**

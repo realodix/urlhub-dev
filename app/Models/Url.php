@@ -223,25 +223,6 @@ class Url extends Model
         return $replicate->save();
     }
 
-    public function urlKey(string $url): string
-    {
-        $length = config('urlhub.hash_length') * -1;
-
-        // Step 1
-        // Take a few characters at the end of the string to use as a unique key
-        $pattern = '/[^'.config('urlhub.hash_char').']/i';
-        $urlKey = substr(preg_replace($pattern, '', $url), $length);
-
-        // Step 2
-        // If step 1 fails (the already used or cannot be used), then the generator
-        // must generate a unique random string
-        if ($this->keyExists($urlKey)) {
-            $urlKey = $this->randomString();
-        }
-
-        return $urlKey;
-    }
-
     /**
      * Periksa apakah keyword tersedia atau tidak?
      *
@@ -250,13 +231,13 @@ class Url extends Model
      * - Tidak ada di daftar config('urlhub.reserved_keyword')
      * - Tidak digunakan oleh sistem sebagai rute
      */
-    private function keyExists(string $url): bool
+    public function keyExists(string $url): bool
     {
         $route = \Illuminate\Routing\Route::class;
         $routeCollection = \Illuminate\Support\Facades\Route::getRoutes()->get();
         $routePath = array_map(fn ($route) => $route->uri, $routeCollection);
 
-        $isExistsInDb = self::whereKeyword($url)->first();
+        $isExistsInDb = Url::whereKeyword($url)->first();
         $isReservedKeyword = in_array($url, config('urlhub.reserved_keyword'));
         $isRegisteredRoutePath = in_array($url, $routePath);
 

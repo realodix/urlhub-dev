@@ -6,6 +6,31 @@ use App\Models\Url;
 
 class UrlKeyService
 {
+    public function __construct(
+        public Url $url,
+    ) {
+        //
+    }
+
+    public function urlKey(string $url): string
+    {
+        $length = config('urlhub.hash_length') * -1;
+
+        // Step 1
+        // Take a few characters at the end of the string to use as a unique key
+        $pattern = '/[^'.config('urlhub.hash_char').']/i';
+        $urlKey = substr(preg_replace($pattern, '', $url), $length);
+
+        // Step 2
+        // If step 1 fails (the already used or cannot be used), then the generator
+        // must generate a unique random string
+        if ($this->url->keyExists($urlKey)) {
+            $urlKey = $this->url->randomString();
+        }
+
+        return $urlKey;
+    }
+
     /**
      * Calculate the maximum number of unique random strings that can be
      * generated
