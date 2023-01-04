@@ -249,22 +249,4 @@ class Url extends Model
 
         return $webTitle;
     }
-
-    /**
-     * @return string
-     */
-    public function randomString()
-    {
-        $factory = new \RandomLib\Factory;
-        $generator = $factory->getMediumStrengthGenerator();
-
-        $character = config('urlhub.hash_char');
-        $length = config('urlhub.hash_length');
-
-        do {
-            $urlKey = $generator->generateString($length, $character);
-        } while ($this->keyExists($urlKey));
-
-        return $urlKey;
-    }
 }

@@ -7,6 +7,7 @@ use App\Jobs\ShortenUrl;
 use App\Jobs\UrlDuplication;
 use App\Models\Url;
 use App\Services\QrCodeService;
+use App\Services\UrlKeyService;
 
 class UrlController extends Controller
 {
@@ -18,6 +19,7 @@ class UrlController extends Controller
         public QrCodeService $qrCodeService,
         public ShortenUrl $shortenUrl,
         public UrlDuplication $urlDuplication,
+        public UrlKeyService $urlKeyService,
     ) {
         $this->middleware('urlhublinkchecker')->only('create');
     }
@@ -83,7 +85,7 @@ class UrlController extends Controller
      */
     public function duplicate(string $key)
     {
-        $randomKey = $this->url->randomString();
+        $randomKey = $this->urlKeyService->randomString();
         $this->urlDuplication->handle($key, auth()->id(), $randomKey);
 
         return to_route('su_detail', $randomKey)

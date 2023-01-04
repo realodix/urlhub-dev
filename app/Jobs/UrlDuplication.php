@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Url;
+use App\Services\UrlKeyService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,7 +20,7 @@ class UrlDuplication implements ShouldQueue
      * @return void
      */
     public function __construct(
-        public Url $url,
+        public UrlKeyService $urlKeyService,
     ) {
         //
     }
@@ -30,7 +31,7 @@ class UrlDuplication implements ShouldQueue
      */
     public function handle(string $key, $userId, string $randomKey = null)
     {
-        $randomKey = $randomKey ?? $this->url->randomString();
+        $randomKey = $randomKey ?? $this->urlKeyService->randomString();
         $shortenedUrl = Url::whereKeyword($key)->firstOrFail();
 
         $replicate = $shortenedUrl->replicate()->fill([

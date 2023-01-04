@@ -25,7 +25,7 @@ class UrlKeyService
         // If step 1 fails (the already used or cannot be used), then the generator
         // must generate a unique random string
         if ($this->url->keyExists($urlKey)) {
-            $urlKey = $this->url->randomString();
+            $urlKey = $this->randomString();
         }
 
         return $urlKey;
@@ -105,5 +105,23 @@ class UrlKeyService
         }
 
         return $result.'%';
+    }
+
+    /**
+     * @return string
+     */
+    public function randomString()
+    {
+        $factory = new \RandomLib\Factory;
+        $generator = $factory->getMediumStrengthGenerator();
+
+        $character = config('urlhub.hash_char');
+        $length = config('urlhub.hash_length');
+
+        do {
+            $urlKey = $generator->generateString($length, $character);
+        } while ($this->url->keyExists($urlKey));
+
+        return $urlKey;
     }
 }

@@ -24,7 +24,7 @@ class UrlKeyServiceTest extends TestCase
 
         $this->url = new Url;
 
-        $this->urlKeyService = new UrlKeyService(new Url);
+        $this->urlKeyService = app(UrlKeyService::class);
 
         $this->totalUrl = self::N_URL_WITH_USER_ID + self::N_URL_WITHOUT_USER_ID;
     }
@@ -175,7 +175,7 @@ class UrlKeyServiceTest extends TestCase
         config(['urlhub.hash_length' => config('urlhub.hash_length') + 1]);
 
         Url::factory()->create([
-            'keyword' => $this->url->randomString(),
+            'keyword' => $this->urlKeyService->randomString(),
         ]);
         $this->assertSame(1, $this->urlKeyService->keyUsed());
 
