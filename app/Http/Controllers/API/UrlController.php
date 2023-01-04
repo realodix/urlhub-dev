@@ -27,7 +27,7 @@ class UrlController extends Controller
      */
     public function store(StoreUrl $request)
     {
-        $v = Validator::make($request->all(), (new StoreUrl)->rules());
+        $v = Validator::make($request->all(), $request->rules());
         if ($v->fails()) {
             return response()->json(['errors' => $v->errors()->all()]);
         }
