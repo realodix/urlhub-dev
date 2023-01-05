@@ -25,7 +25,7 @@ class UrlHubLinkCheckerTest extends TestCase
     }
 
     /**
-     * Shorten the url when the random string generator capacity is full.
+     * Shorten the url when the random string generator maxCapacity is full.
      * UrlHub must prevent URL shortening.
      *
      * @test

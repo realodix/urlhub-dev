@@ -10,7 +10,7 @@ class KeyCapacityService
      * Calculate the maximum number of unique random strings that can be
      * generated
      */
-    public function capacity(): int
+    public function maxCapacity(): int
     {
         $characters = strlen(config('urlhub.hash_char'));
         $length = config('urlhub.hash_length');
@@ -56,12 +56,12 @@ class KeyCapacityService
      */
     public function idleCapacity(): int
     {
-        $capacity = $this->capacity();
+        $maxCapacity = $this->maxCapacity();
         $keyUsed = $this->keyUsed();
 
         // max() is used to prevent negative values from being returned when the
-        // keyUsed() is greater than the capacity()
-        return max($capacity - $keyUsed, 0);
+        // keyUsed() is greater than the maxCapacity()
+        return max($maxCapacity - $keyUsed, 0);
     }
 
     /**
@@ -72,18 +72,18 @@ class KeyCapacityService
      */
     public function idleCapacityInPercent(int $precision = 2): string
     {
-        $capacity = $this->capacity();
+        $maxCapacity = $this->maxCapacity();
         $remaining = $this->idleCapacity();
-        $result = round(($remaining / $capacity) * 100, $precision);
+        $result = round(($remaining / $maxCapacity) * 100, $precision);
 
         $lowerBoundInPercent = 1 / (10 ** $precision);
         $upperBoundInPercent = 100 - $lowerBoundInPercent;
         $lowerBound = $lowerBoundInPercent / 100;
         $upperBound = 1 - $lowerBound;
 
-        if ($remaining > 0 && $remaining < ($capacity * $lowerBound)) {
+        if ($remaining > 0 && $remaining < ($maxCapacity * $lowerBound)) {
             $result = $lowerBoundInPercent;
-        } elseif (($remaining > ($capacity * $upperBound)) && ($remaining < $capacity)) {
+        } elseif (($remaining > ($maxCapacity * $upperBound)) && ($remaining < $maxCapacity)) {
             $result = $upperBoundInPercent;
         }
 

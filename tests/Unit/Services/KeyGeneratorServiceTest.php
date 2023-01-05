@@ -155,13 +155,13 @@ class KeyGeneratorServiceTest extends TestCase
      * @test
      * @group u-model
      */
-    public function capacity()
+    public function maxCapacity()
     {
         $hashLength = config('urlhub.hash_length');
         $hashCharLength = strlen(config('urlhub.hash_char'));
-        $capacity = pow($hashCharLength, $hashLength);
+        $maxCapacity = pow($hashCharLength, $hashLength);
 
-        $this->assertSame($capacity, $this->keyGeneratorService->capacity());
+        $this->assertSame($maxCapacity, $this->keyGeneratorService->maxCapacity());
     }
 
     /**
@@ -254,7 +254,7 @@ class KeyGeneratorServiceTest extends TestCase
     {
         $mock = \Mockery::mock(KeyGeneratorService::class)->makePartial();
         $mock->shouldReceive([
-            'capacity' => $kc,
+            'maxCapacity' => $kc,
             'keyUsed'     => $ku,
         ]);
         $actual = $mock->idleCapacity();
@@ -264,7 +264,7 @@ class KeyGeneratorServiceTest extends TestCase
 
     public function idleCapacityProvider()
     {
-        // capacity(), keyUsed(), expected_result
+        // maxCapacity(), keyUsed(), expected_result
         return [
             [1, 2, 0],
             [3, 2, 1],
@@ -288,7 +288,7 @@ class KeyGeneratorServiceTest extends TestCase
         // https://ralphjsmit.com/laravel-mock-dependencies
         $mock = \Mockery::mock(KeyGeneratorService::class)->makePartial();
         $mock->shouldReceive([
-            'capacity' => $kc,
+            'maxCapacity' => $kc,
             'keyUsed'     => $ku,
         ]);
 
@@ -298,7 +298,7 @@ class KeyGeneratorServiceTest extends TestCase
 
     public function idleCapacityInPercentProvider()
     {
-        // capacity(), keyUsed(), expected_result
+        // maxCapacity(), keyUsed(), expected_result
         return [
             [10, 10, '0%'],
             [10, 11, '0%'],
