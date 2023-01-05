@@ -8,7 +8,7 @@ use App\Models\Url;
 use App\Services\CreateShortenedUrl;
 use App\Services\DuplicateUrl;
 use App\Services\QrCodeService;
-use App\Services\UrlKeyService;
+use App\Services\RandomStringService;
 
 class UrlController extends Controller
 {
@@ -17,7 +17,7 @@ class UrlController extends Controller
      */
     public function __construct(
         public Url $url,
-        public UrlKeyService $urlKeyService,
+        public RandomStringService $randomStringService,
     ) {
         $this->middleware('urlhublinkchecker')->only('create');
     }
@@ -30,7 +30,7 @@ class UrlController extends Controller
      */
     public function create(StoreUrl $request)
     {
-        $keyword = $request->custom_key ?? $this->urlKeyService->urlKey($request->long_url);
+        $keyword = $request->custom_key ?? $this->randomStringService->urlKey($request->long_url);
         $isCustom = $request->custom_key ? true : false;
 
         $data = [
@@ -95,7 +95,7 @@ class UrlController extends Controller
      */
     public function duplicate(string $key)
     {
-        $randomKey = $this->urlKeyService->randomString();
+        $randomKey = $this->randomStringService->randomString();
         app(DuplicateUrl::class)->execute($key, auth()->id(), $randomKey);
 
         return to_route('su_detail', $randomKey)

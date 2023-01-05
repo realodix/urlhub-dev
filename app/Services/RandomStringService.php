@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Url;
 
-class UrlKeyService
+class RandomStringService
 {
     public function urlKey(string $url): string
     {
