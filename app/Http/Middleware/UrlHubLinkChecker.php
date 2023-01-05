@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Url;
-use App\Services\UrlKeyService;
+use App\Services\RandomStringService;
 use Illuminate\Routing\Route;
 
 class UrlHubLinkChecker
@@ -70,7 +70,7 @@ class UrlHubLinkChecker
      */
     private function canGenerateUniqueRandomKeys(): bool
     {
-        if (app(UrlKeyService::class)->idleCapacity() === 0) {
+        if (app(RandomStringService::class)->idleCapacity() === 0) {
             return false;
         }
 
