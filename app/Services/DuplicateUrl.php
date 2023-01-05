@@ -12,7 +12,7 @@ class DuplicateUrl
      */
     public function execute(string $key, $userId, string $randomKey = null)
     {
-        $randomKey = $randomKey ?? app(RandomStringService::class)->randomString();
+        $randomKey = $randomKey ?? app(KeyGeneratorService::class)->randomString();
         $shortenedUrl = Url::whereKeyword($key)->firstOrFail();
 
         $replicate = $shortenedUrl->replicate()->fill([

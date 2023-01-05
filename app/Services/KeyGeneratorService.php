@@ -4,8 +4,14 @@ namespace App\Services;
 
 use App\Models\Url;
 
-class RandomStringService
+class KeyGeneratorService
 {
+    /**
+     * Generate a random string of specified length. The string will only contain
+     * characters from the specified character set.
+     *
+     * @return string The generated random string
+     */
     public function urlKey(string $url): string
     {
         $length = config('urlhub.hash_length') * -1;
@@ -20,11 +26,38 @@ class RandomStringService
         // Step 2
         // If step 1 fail (the string is used or cannot be used), then the generator
         // must generate a unique random string
-        if ($this->keyExists($urlKey)) {
+        if ($this->canBeUsed($urlKey)) {
             $urlKey = $this->randomString();
         }
 
         return $urlKey;
+    }
+
+    /**
+     * Check if string can be used as a keyword.
+     *
+     * This function will check under several conditions:
+     * 1. If the string is already used in the database
+     * 2. If the string is used as a reserved keyword
+     * 3. If the string is used as a route path
+     *
+     * If any or all of the conditions are true, then the keyword cannot be used.
+     */
+    public function canBeUsed(string $value): bool
+    {
+        $route = \Illuminate\Routing\Route::class;
+        $routeCollection = \Illuminate\Support\Facades\Route::getRoutes()->get();
+        $routePath = array_map(fn ($route) => $route->uri, $routeCollection);
+
+        $isExistsInDb = Url::whereKeyword($value)->first();
+        $isReservedKeyword = in_array($value, config('urlhub.reserved_keyword'));
+        $isRegisteredRoutePath = in_array($value, $routePath);
+
+        if ($isExistsInDb || $isReservedKeyword || $isRegisteredRoutePath) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -43,30 +76,9 @@ class RandomStringService
 
         do {
             $urlKey = $generator->generateString($length, $characters);
-        } while ($this->keyExists($urlKey));
+        } while ($this->canBeUsed($urlKey));
 
         return $urlKey;
-    }
-
-    /**
-     * Check if the keyword already exists in the database or is used as a reserved
-     * keyword or is used as a route path.
-     */
-    public function keyExists(string $url): bool
-    {
-        $route = \Illuminate\Routing\Route::class;
-        $routeCollection = \Illuminate\Support\Facades\Route::getRoutes()->get();
-        $routePath = array_map(fn ($route) => $route->uri, $routeCollection);
-
-        $isExistsInDb = Url::whereKeyword($url)->first();
-        $isReservedKeyword = in_array($url, config('urlhub.reserved_keyword'));
-        $isRegisteredRoutePath = in_array($url, $routePath);
-
-        if ($isExistsInDb || $isReservedKeyword || $isRegisteredRoutePath) {
-            return true;
-        }
-
-        return false;
     }
 
     /*

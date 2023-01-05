@@ -3,14 +3,14 @@
 namespace Tests\Unit\Services;
 
 use App\Models\Url;
-use App\Services\RandomStringService;
+use App\Services\KeyGeneratorService;
 use Tests\TestCase;
 
-class RandomStringServiceTest extends TestCase
+class KeyGeneratorServiceTest extends TestCase
 {
     private Url $url;
 
-    private RandomStringService $randomStringService;
+    private KeyGeneratorService $keyGeneratorService;
 
     private const N_URL_WITH_USER_ID = 1;
 
@@ -24,7 +24,7 @@ class RandomStringServiceTest extends TestCase
 
         $this->url = new Url;
 
-        $this->randomStringService = app(RandomStringService::class);
+        $this->keyGeneratorService = app(KeyGeneratorService::class);
 
         $this->totalUrl = self::N_URL_WITH_USER_ID + self::N_URL_WITHOUT_USER_ID;
     }
@@ -42,7 +42,7 @@ class RandomStringServiceTest extends TestCase
         config(['urlhub.hash_length' => $length]);
 
         $longUrl = 'https://github.com/realodix';
-        $urlKey = $this->randomStringService->urlKey($longUrl);
+        $urlKey = $this->keyGeneratorService->urlKey($longUrl);
 
         $this->assertSame(substr($longUrl, -$length), $urlKey);
     }
@@ -61,10 +61,10 @@ class RandomStringServiceTest extends TestCase
 
         $longUrl = 'https://github.com/realodix';
         Url::factory()->create([
-            'keyword'  => $this->randomStringService->urlKey($longUrl),
+            'keyword'  => $this->keyGeneratorService->urlKey($longUrl),
         ]);
 
-        $this->assertNotSame(substr($longUrl, -$length), $this->randomStringService->urlKey($longUrl));
+        $this->assertNotSame(substr($longUrl, -$length), $this->keyGeneratorService->urlKey($longUrl));
     }
 
     /**
@@ -79,17 +79,17 @@ class RandomStringServiceTest extends TestCase
         config(['urlhub.hash_length' => 6]);
         $actual = 'https://github.com/realodix';
         $expected = 'alodix';
-        $this->assertSame($expected, $this->randomStringService->urlKey($actual));
+        $this->assertSame($expected, $this->keyGeneratorService->urlKey($actual));
 
         config(['urlhub.hash_length' => 9]);
         $actual = 'https://github.com/realodix';
         $expected = 'mrealodix';
-        $this->assertSame($expected, $this->randomStringService->urlKey($actual));
+        $this->assertSame($expected, $this->keyGeneratorService->urlKey($actual));
 
         config(['urlhub.hash_length' => 12]);
         $actual = 'https://github.com/realodix';
         $expected = 'bcomrealodix';
-        $this->assertSame($expected, $this->randomStringService->urlKey($actual));
+        $this->assertSame($expected, $this->keyGeneratorService->urlKey($actual));
     }
 
     /**
@@ -104,15 +104,15 @@ class RandomStringServiceTest extends TestCase
         $url = 'https://example.com/abc';
         config(['urlhub.hash_length' => 3]);
 
-        $this->assertSame('abc', $this->randomStringService->urlKey($url));
+        $this->assertSame('abc', $this->keyGeneratorService->urlKey($url));
 
         config(['urlhub.hash_char' => 'xyz']);
-        $this->assertMatchesRegularExpression('/[xyz]/', $this->randomStringService->urlKey($url));
-        $this->assertDoesNotMatchRegularExpression('/[abc]/', $this->randomStringService->urlKey($url));
+        $this->assertMatchesRegularExpression('/[xyz]/', $this->keyGeneratorService->urlKey($url));
+        $this->assertDoesNotMatchRegularExpression('/[abc]/', $this->keyGeneratorService->urlKey($url));
 
         config(['urlhub.hash_length' => 4]);
         config(['urlhub.hash_char' => 'abcm']);
-        $this->assertSame('mabc', $this->randomStringService->urlKey($url));
+        $this->assertSame('mabc', $this->keyGeneratorService->urlKey($url));
     }
 
     /**
@@ -130,7 +130,7 @@ class RandomStringServiceTest extends TestCase
         config(['urlhub.reserved_keyword' => [$expected]]);
         config(['urlhub.hash_length' => strlen($expected)]);
 
-        $this->assertNotSame($expected, $this->randomStringService->urlKey($actual));
+        $this->assertNotSame($expected, $this->keyGeneratorService->urlKey($actual));
     }
 
     /**
@@ -148,7 +148,7 @@ class RandomStringServiceTest extends TestCase
 
         config(['urlhub.hash_length' => strlen($expected)]);
 
-        $this->assertNotSame($expected, $this->randomStringService->urlKey($actual));
+        $this->assertNotSame($expected, $this->keyGeneratorService->urlKey($actual));
     }
 
     /**
@@ -161,7 +161,7 @@ class RandomStringServiceTest extends TestCase
         $hashCharLength = strlen(config('urlhub.hash_char'));
         $capacity = pow($hashCharLength, $hashLength);
 
-        $this->assertSame($capacity, $this->randomStringService->capacity());
+        $this->assertSame($capacity, $this->keyGeneratorService->capacity());
     }
 
     /**
@@ -175,15 +175,15 @@ class RandomStringServiceTest extends TestCase
         config(['urlhub.hash_length' => config('urlhub.hash_length') + 1]);
 
         Url::factory()->create([
-            'keyword' => $this->randomStringService->randomString(),
+            'keyword' => $this->keyGeneratorService->randomString(),
         ]);
-        $this->assertSame(1, $this->randomStringService->keyUsed());
+        $this->assertSame(1, $this->keyGeneratorService->keyUsed());
 
         Url::factory()->create([
             'keyword'   => str_repeat('a', config('urlhub.hash_length')),
             'is_custom' => true,
         ]);
-        $this->assertSame(2, $this->randomStringService->keyUsed());
+        $this->assertSame(2, $this->keyGeneratorService->keyUsed());
 
         // Karena panjang karakter 'keyword' berbeda dengan dengan 'urlhub.hash_length',
         // maka ini tidak ikut terhitung.
@@ -191,10 +191,10 @@ class RandomStringServiceTest extends TestCase
             'keyword'   => str_repeat('b', config('urlhub.hash_length') + 2),
             'is_custom' => true,
         ]);
-        $this->assertSame(2, $this->randomStringService->keyUsed());
+        $this->assertSame(2, $this->keyGeneratorService->keyUsed());
 
         config(['urlhub.hash_length' => config('urlhub.hash_length') + 3]);
-        $this->assertSame(0, $this->randomStringService->keyUsed());
+        $this->assertSame(0, $this->keyGeneratorService->keyUsed());
         $this->assertSame($this->totalUrl, $this->url->totalUrl());
     }
 
@@ -215,30 +215,30 @@ class RandomStringServiceTest extends TestCase
             'keyword'   => 'foo',
             'is_custom' => true,
         ]);
-        $this->assertSame(1, $this->randomStringService->keyUsed());
+        $this->assertSame(1, $this->keyGeneratorService->keyUsed());
 
         config(['urlhub.hash_char' => 'bar']);
         Url::factory()->create([
             'keyword'   => 'bar',
             'is_custom' => true,
         ]);
-        $this->assertSame(1, $this->randomStringService->keyUsed());
+        $this->assertSame(1, $this->keyGeneratorService->keyUsed());
 
         // Sudah ada 2 URL yang dibuat dengan keyword 'foo' dan 'bar', maka
         // seharusnya ada 2 saja.
         config(['urlhub.hash_char' => 'foobar']);
-        $this->assertSame(2, $this->randomStringService->keyUsed());
+        $this->assertSame(2, $this->keyGeneratorService->keyUsed());
 
         // Sudah ada 2 URL yang dibuat dengan keyword 'foo' dan 'bar', maka
         // seharusnya ada 1 saja karena 'bar' tidak bisa terhitung.
         config(['urlhub.hash_char' => 'fooBar']);
-        $this->assertSame(1, $this->randomStringService->keyUsed());
+        $this->assertSame(1, $this->keyGeneratorService->keyUsed());
 
         // Sudah ada 2 URL yang dibuat dengan keyword 'foo' dan 'bar', maka
         // seharusnya tidak ada sama sekali karena 'foo' dan 'bar' tidak
         // bisa terhitung.
         config(['urlhub.hash_char' => 'FooBar']);
-        $this->assertSame(0, $this->randomStringService->keyUsed());
+        $this->assertSame(0, $this->keyGeneratorService->keyUsed());
     }
 
     /**
@@ -252,7 +252,7 @@ class RandomStringServiceTest extends TestCase
      */
     public function idleCapacity($kc, $ku, $expected)
     {
-        $mock = \Mockery::mock(RandomStringService::class)->makePartial();
+        $mock = \Mockery::mock(KeyGeneratorService::class)->makePartial();
         $mock->shouldReceive([
             'capacity' => $kc,
             'keyUsed'     => $ku,
@@ -286,7 +286,7 @@ class RandomStringServiceTest extends TestCase
     public function idleCapacityInPercent($kc, $ku, $expected)
     {
         // https://ralphjsmit.com/laravel-mock-dependencies
-        $mock = \Mockery::mock(RandomStringService::class)->makePartial();
+        $mock = \Mockery::mock(KeyGeneratorService::class)->makePartial();
         $mock->shouldReceive([
             'capacity' => $kc,
             'keyUsed'     => $ku,
