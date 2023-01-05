@@ -110,12 +110,12 @@ class KeyGeneratorService
      * the long url that has been shortened
      *
      * Formula:
-     * keyUsed = randomKey + customKey
+     * usedCapacity = randomKey + customKey
      *
      * The character length and set of characters of `customKey` must be the same
      * as `randomKey`.
      */
-    public function keyUsed(): int
+    public function usedCapacity(): int
     {
         $hashLength = (int) config('urlhub.hash_length');
         $regexPattern = '['.config('urlhub.hash_char').']{'.$hashLength.'}';
@@ -138,11 +138,11 @@ class KeyGeneratorService
     public function idleCapacity(): int
     {
         $maxCapacity = $this->maxCapacity();
-        $keyUsed = $this->keyUsed();
+        $usedCapacity = $this->usedCapacity();
 
         // max() is used to prevent negative values from being returned when the
-        // keyUsed() is greater than the maxCapacity()
-        return max($maxCapacity - $keyUsed, 0);
+        // usedCapacity() is greater than the maxCapacity()
+        return max($maxCapacity - $usedCapacity, 0);
     }
 
     /**

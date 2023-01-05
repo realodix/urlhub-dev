@@ -170,20 +170,20 @@ class KeyGeneratorServiceTest extends TestCase
      * @test
      * @group u-model
      */
-    public function keyUsed()
+    public function usedCapacity()
     {
         config(['urlhub.hash_length' => config('urlhub.hash_length') + 1]);
 
         Url::factory()->create([
             'keyword' => $this->keyGeneratorService->randomString(),
         ]);
-        $this->assertSame(1, $this->keyGeneratorService->keyUsed());
+        $this->assertSame(1, $this->keyGeneratorService->usedCapacity());
 
         Url::factory()->create([
             'keyword'   => str_repeat('a', config('urlhub.hash_length')),
             'is_custom' => true,
         ]);
-        $this->assertSame(2, $this->keyGeneratorService->keyUsed());
+        $this->assertSame(2, $this->keyGeneratorService->usedCapacity());
 
         // Karena panjang karakter 'keyword' berbeda dengan dengan 'urlhub.hash_length',
         // maka ini tidak ikut terhitung.
@@ -191,10 +191,10 @@ class KeyGeneratorServiceTest extends TestCase
             'keyword'   => str_repeat('b', config('urlhub.hash_length') + 2),
             'is_custom' => true,
         ]);
-        $this->assertSame(2, $this->keyGeneratorService->keyUsed());
+        $this->assertSame(2, $this->keyGeneratorService->usedCapacity());
 
         config(['urlhub.hash_length' => config('urlhub.hash_length') + 3]);
-        $this->assertSame(0, $this->keyGeneratorService->keyUsed());
+        $this->assertSame(0, $this->keyGeneratorService->usedCapacity());
         $this->assertSame($this->totalUrl, $this->url->totalUrl());
     }
 
@@ -206,7 +206,7 @@ class KeyGeneratorServiceTest extends TestCase
      * @test
      * @group u-model
      */
-    public function keyUsed2()
+    public function usedCapacity2()
     {
         config(['urlhub.hash_length' => 3]);
 
@@ -215,30 +215,30 @@ class KeyGeneratorServiceTest extends TestCase
             'keyword'   => 'foo',
             'is_custom' => true,
         ]);
-        $this->assertSame(1, $this->keyGeneratorService->keyUsed());
+        $this->assertSame(1, $this->keyGeneratorService->usedCapacity());
 
         config(['urlhub.hash_char' => 'bar']);
         Url::factory()->create([
             'keyword'   => 'bar',
             'is_custom' => true,
         ]);
-        $this->assertSame(1, $this->keyGeneratorService->keyUsed());
+        $this->assertSame(1, $this->keyGeneratorService->usedCapacity());
 
         // Sudah ada 2 URL yang dibuat dengan keyword 'foo' dan 'bar', maka
         // seharusnya ada 2 saja.
         config(['urlhub.hash_char' => 'foobar']);
-        $this->assertSame(2, $this->keyGeneratorService->keyUsed());
+        $this->assertSame(2, $this->keyGeneratorService->usedCapacity());
 
         // Sudah ada 2 URL yang dibuat dengan keyword 'foo' dan 'bar', maka
         // seharusnya ada 1 saja karena 'bar' tidak bisa terhitung.
         config(['urlhub.hash_char' => 'fooBar']);
-        $this->assertSame(1, $this->keyGeneratorService->keyUsed());
+        $this->assertSame(1, $this->keyGeneratorService->usedCapacity());
 
         // Sudah ada 2 URL yang dibuat dengan keyword 'foo' dan 'bar', maka
         // seharusnya tidak ada sama sekali karena 'foo' dan 'bar' tidak
         // bisa terhitung.
         config(['urlhub.hash_char' => 'FooBar']);
-        $this->assertSame(0, $this->keyGeneratorService->keyUsed());
+        $this->assertSame(0, $this->keyGeneratorService->usedCapacity());
     }
 
     /**
@@ -255,7 +255,7 @@ class KeyGeneratorServiceTest extends TestCase
         $mock = \Mockery::mock(KeyGeneratorService::class)->makePartial();
         $mock->shouldReceive([
             'maxCapacity' => $kc,
-            'keyUsed'     => $ku,
+            'usedCapacity'     => $ku,
         ]);
         $actual = $mock->idleCapacity();
 
@@ -264,7 +264,7 @@ class KeyGeneratorServiceTest extends TestCase
 
     public function idleCapacityProvider()
     {
-        // maxCapacity(), keyUsed(), expected_result
+        // maxCapacity(), usedCapacity(), expected_result
         return [
             [1, 2, 0],
             [3, 2, 1],
@@ -289,7 +289,7 @@ class KeyGeneratorServiceTest extends TestCase
         $mock = \Mockery::mock(KeyGeneratorService::class)->makePartial();
         $mock->shouldReceive([
             'maxCapacity' => $kc,
-            'keyUsed'     => $ku,
+            'usedCapacity'     => $ku,
         ]);
 
         $actual = $mock->idleCapacityInPercent();
@@ -298,7 +298,7 @@ class KeyGeneratorServiceTest extends TestCase
 
     public function idleCapacityInPercentProvider()
     {
-        // maxCapacity(), keyUsed(), expected_result
+        // maxCapacity(), usedCapacity(), expected_result
         return [
             [10, 10, '0%'],
             [10, 11, '0%'],
