@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Url;
 use App\Models\User;
 use App\Services\DuplicateUrl;
-use App\Services\RandomStringService;
+use App\Services\KeyGeneratorService;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -27,7 +27,7 @@ class DashboardController extends Controller
         return view('backend.dashboard', [
             'url'  => $this->url,
             'user' => $this->user,
-            'randomStringService' => app(RandomStringService::class),
+            'keyGeneratorService' => app(KeyGeneratorService::class),
         ]);
     }
 
