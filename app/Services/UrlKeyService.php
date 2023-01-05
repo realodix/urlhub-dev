@@ -18,7 +18,7 @@ class UrlKeyService
         $urlKey = substr(preg_replace($pattern, '', $url), $length);
 
         // Step 2
-        // If step 1 fails (the already used or cannot be used), then the generator
+        // If step 1 fail (the string is used or cannot be used), then the generator
         // must generate a unique random string
         if ($this->keyExists($urlKey)) {
             $urlKey = $this->randomString();
@@ -79,7 +79,7 @@ class UrlKeyService
      * Calculate the maximum number of unique random strings that can be
      * generated
      */
-    public function keyCapacity(): int
+    public function capacity(): int
     {
         $characters = strlen(config('urlhub.hash_char'));
         $length = config('urlhub.hash_length');
@@ -123,14 +123,14 @@ class UrlKeyService
     /**
      * Calculate the number of unique random strings that can still be generated.
      */
-    public function keyRemaining(): int
+    public function idleCapacity(): int
     {
-        $keyCapacity = $this->keyCapacity();
+        $capacity = $this->capacity();
         $keyUsed = $this->keyUsed();
 
         // max() is used to prevent negative values from being returned when the
-        // keyUsed() is greater than the keyCapacity()
-        return max($keyCapacity - $keyUsed, 0);
+        // keyUsed() is greater than the capacity()
+        return max($capacity - $keyUsed, 0);
     }
 
     /**
@@ -139,10 +139,10 @@ class UrlKeyService
      * generated (in percent) with the specified precision (in decimal places)
      * and return the result as a string.
      */
-    public function keyRemainingInPercent(int $precision = 2): string
+    public function idleCapacityInPercent(int $precision = 2): string
     {
-        $capacity = $this->keyCapacity();
-        $remaining = $this->keyRemaining();
+        $capacity = $this->capacity();
+        $remaining = $this->idleCapacity();
         $result = round(($remaining / $capacity) * 100, $precision);
 
         $lowerBoundInPercent = 1 / (10 ** $precision);

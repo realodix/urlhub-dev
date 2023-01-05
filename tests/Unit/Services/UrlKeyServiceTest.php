@@ -155,13 +155,13 @@ class UrlKeyServiceTest extends TestCase
      * @test
      * @group u-model
      */
-    public function keyCapacity()
+    public function capacity()
     {
         $hashLength = config('urlhub.hash_length');
         $hashCharLength = strlen(config('urlhub.hash_char'));
-        $keyCapacity = pow($hashCharLength, $hashLength);
+        $capacity = pow($hashCharLength, $hashLength);
 
-        $this->assertSame($keyCapacity, $this->urlKeyService->keyCapacity());
+        $this->assertSame($capacity, $this->urlKeyService->capacity());
     }
 
     /**
@@ -244,27 +244,27 @@ class UrlKeyServiceTest extends TestCase
     /**
      * @test
      * @group u-model
-     * @dataProvider keyRemainingProvider
+     * @dataProvider idleCapacityProvider
      *
      * @param mixed $kc
      * @param mixed $ku
      * @param mixed $expected
      */
-    public function keyRemaining($kc, $ku, $expected)
+    public function idleCapacity($kc, $ku, $expected)
     {
         $mock = \Mockery::mock(UrlKeyService::class)->makePartial();
         $mock->shouldReceive([
-            'keyCapacity' => $kc,
+            'capacity' => $kc,
             'keyUsed'     => $ku,
         ]);
-        $actual = $mock->keyRemaining();
+        $actual = $mock->idleCapacity();
 
         $this->assertSame($expected, $actual);
     }
 
-    public function keyRemainingProvider()
+    public function idleCapacityProvider()
     {
-        // keyCapacity(), keyUsed(), expected_result
+        // capacity(), keyUsed(), expected_result
         return [
             [1, 2, 0],
             [3, 2, 1],
@@ -277,28 +277,28 @@ class UrlKeyServiceTest extends TestCase
     /**
      * @test
      * @group u-model
-     * @dataProvider keyRemainingInPercentProvider
+     * @dataProvider idleCapacityInPercentProvider
      *
      * @param mixed $kc
      * @param mixed $ku
      * @param mixed $expected
      */
-    public function keyRemainingInPercent($kc, $ku, $expected)
+    public function idleCapacityInPercent($kc, $ku, $expected)
     {
         // https://ralphjsmit.com/laravel-mock-dependencies
         $mock = \Mockery::mock(UrlKeyService::class)->makePartial();
         $mock->shouldReceive([
-            'keyCapacity' => $kc,
+            'capacity' => $kc,
             'keyUsed'     => $ku,
         ]);
 
-        $actual = $mock->keyRemainingInPercent();
+        $actual = $mock->idleCapacityInPercent();
         $this->assertSame($expected, $actual);
     }
 
-    public function keyRemainingInPercentProvider()
+    public function idleCapacityInPercentProvider()
     {
-        // keyCapacity(), keyUsed(), expected_result
+        // capacity(), keyUsed(), expected_result
         return [
             [10, 10, '0%'],
             [10, 11, '0%'],

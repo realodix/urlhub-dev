@@ -30,7 +30,7 @@ class UrlHubLinkCheckerTest extends TestCase
      *
      * @test
      */
-    public function keyRemainingZero()
+    public function idleCapacityZero()
     {
         config(['urlhub.hash_length' => 0]);
 
