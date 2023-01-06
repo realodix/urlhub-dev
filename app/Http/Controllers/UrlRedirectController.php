@@ -14,7 +14,6 @@ class UrlRedirectController extends Controller
     public function __construct(
         public Visit $visit,
     ) {
-        //
     }
 
     /**
@@ -30,7 +29,6 @@ class UrlRedirectController extends Controller
 
             $data = [
                 'url_id'          => $url->id,
-                'visitor_id'      => $this->visit->visitorId(),
                 'is_first_click'  => $this->visit->isFirstClick($url),
                 'referer'         => request()->header('referer'),
                 'ip'              => Helper::anonymizeIp(request()->ip()),

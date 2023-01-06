@@ -6,6 +6,11 @@ use App\Models\Visit;
 
 class CreateVisitorData
 {
+    public function __construct(
+        public Visit $visit,
+    ) {
+    }
+
     /**
      * Create the visitor data.
      *
@@ -20,7 +25,7 @@ class CreateVisitorData
 
         Visit::create([
             'url_id'          => $data['url_id'],
-            'visitor_id'      => $data['visitor_id'],
+            'visitor_id'      => $this->visit->visitorId(),
             'is_first_click'  => $data['is_first_click'],
             'referer'         => $data['referer'],
             'ip'              => $data['ip'],
