@@ -76,6 +76,10 @@ class Visit extends Model
         return $visitorId;
     }
 
+    /**
+     * Check if the visitor has clicked the link before. If the visitor has not
+     * clicked the link before, return true.
+     */
     public function isFirstClick(Url $url): bool
     {
         $hasVisited = self::whereUrlId($url->id)
