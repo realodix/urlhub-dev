@@ -7,30 +7,37 @@ use App\Models\Url;
 class KeyGeneratorService
 {
     /**
-     * Generate a random string of specified length. The string will only contain
-     * characters from the specified character set.
+     * Generate a short string that can be used as a unique key for shortened long
+     * urls.
      *
-     * @return string The generated random string
+     * @return string The generated unique string
      */
-    public function urlKey(string $url): string
+    public function urlKey(string $value): string
     {
-        $length = config('urlhub.hash_length') * -1;
-
         // Step 1
-        // Take some characters at the end of the string to use as a unique key
-        // for each long url to be shortened and remove all characters that are
-        // not in the specified character set.
-        $pattern = '/[^'.config('urlhub.hash_char').']/i';
-        $urlKey = substr(preg_replace($pattern, '', $url), $length);
+        $key = $this->generateSimpleString($value);
 
         // Step 2
         // If step 1 fail (the string is used or cannot be used), then the generator
-        // must generate a unique random string
-        if ($this->assertStringCanBeUsedAsKey($urlKey)) {
-            $urlKey = $this->generateRandomString();
+        // must generate a unique random string until it finds a string that can
+        // be used as a key
+        if ($this->assertStringCanBeUsedAsKey($key)) {
+            $key = $this->generateRandomString();
         }
 
-        return $urlKey;
+        return $key;
+    }
+
+    /**
+     * Take some characters at the end of the string and remove all characters that
+     * are not in the specified character set.
+     */
+    public function generateSimpleString(string $value): string
+    {
+        $length = config('urlhub.hash_length') * -1;
+        $pattern = '/[^'.config('urlhub.hash_char').']/i';
+
+        return substr(preg_replace($pattern, '', $value), $length);
     }
 
     /**
@@ -140,8 +147,7 @@ class KeyGeneratorService
         $maxCapacity = $this->maxCapacity();
         $usedCapacity = $this->usedCapacity();
 
-        // max() is used to prevent negative values from being returned when the
-        // usedCapacity() is greater than the maxCapacity()
+        // prevent negative values
         return max($maxCapacity - $usedCapacity, 0);
     }
 
