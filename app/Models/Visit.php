@@ -66,7 +66,7 @@ class Visit extends Model
             'browser' => \Browser::browserFamily(),
             'os'      => \Browser::platformFamily(),
         ];
-        $visitorId = sha1(implode($neighborVisitor));
+        $visitorId = hash('sha3-256', implode($neighborVisitor));
 
         if (auth()->check() === true) {
             $visitorId = (string) auth()->id();
