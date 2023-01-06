@@ -61,15 +61,16 @@ class Visit extends Model
      */
     public function visitorId(): string
     {
-        $neighborVisitor = [
-            'ip'      => request()->ip(),
-            'browser' => \Browser::browserFamily(),
-            'os'      => \Browser::platformFamily(),
-        ];
-        $visitorId = sha1(implode($neighborVisitor));
+        $visitorId = (string) auth()->id();
 
-        if (auth()->check() === true) {
-            $visitorId = (string) auth()->id();
+        if (auth()->check() === false) {
+            $neighborVisitor = [
+                'ip'      => request()->ip(),
+                'browser' => \Browser::browserFamily(),
+                'os'      => \Browser::platformFamily(),
+            ];
+
+            $visitorId = sha1(implode($neighborVisitor));
         }
 
         return $visitorId;
