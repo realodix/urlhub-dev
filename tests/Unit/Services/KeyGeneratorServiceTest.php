@@ -155,6 +155,18 @@ class KeyGeneratorServiceTest extends TestCase
      * @test
      * @group u-model
      */
+    public function generateSimpleString()
+    {
+        config(['urlhub.hash_length' => 3]);
+
+        $this->assertSame('bar', $this->keyGeneratorService->generateSimpleString('foobar'));
+        $this->assertSame('bar', $this->keyGeneratorService->generateSimpleString('foob/ar'));
+    }
+
+    /**
+     * @test
+     * @group u-model
+     */
     public function assertStringCanBeUsedAsKey()
     {
         $this->assertTrue($this->keyGeneratorService->assertStringCanBeUsedAsKey('foo'));
