@@ -61,24 +61,29 @@ class Visit extends Model
      */
     public function visitorId(): string
     {
-        $neighborVisitor = [
-            'ip'      => request()->ip(),
-            'browser' => \Browser::browserFamily(),
-            'os'      => \Browser::platformFamily(),
-        ];
-        $visitorId = sha1(implode($neighborVisitor));
+        $visitorId = (string) auth()->id();
 
-        if (auth()->check() === true) {
-            $visitorId = (string) auth()->id();
+        if (auth()->check() === false) {
+            $neighborVisitor = [
+                'ip'      => request()->ip(),
+                'browser' => \Browser::browserFamily(),
+                'os'      => \Browser::platformFamily(),
+            ];
+
+            $visitorId = sha1(implode($neighborVisitor));
         }
 
         return $visitorId;
     }
 
+    /**
+     * Check if the visitor has clicked the link before. If the visitor has not
+     * clicked the link before, return true.
+     */
     public function isFirstClick(Url $url): bool
     {
-        $hasVisited = Visit::whereVisitorId($this->visitorId())
-            ->whereUrlId($url->id)
+        $hasVisited = self::whereUrlId($url->id)
+            ->whereVisitorId($this->visitorId())
             ->first();
 
         return $hasVisited ? false : true;
