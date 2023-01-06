@@ -84,7 +84,7 @@ class Visit extends Model
     {
         $hasVisited = self::whereUrlId($url->id)
             ->whereVisitorId($this->visitorId())
-            ->first();
+            ->exists();
 
         return $hasVisited ? false : true;
     }
