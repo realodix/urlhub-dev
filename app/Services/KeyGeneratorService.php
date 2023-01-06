@@ -27,7 +27,7 @@ class KeyGeneratorService
         // If step 1 fail (the string is used or cannot be used), then the generator
         // must generate a unique random string
         if ($this->assertStringCanBeUsedAsKey($urlKey)) {
-            $urlKey = $this->randomString();
+            $urlKey = $this->generateRandomString();
         }
 
         return $urlKey;
@@ -39,7 +39,7 @@ class KeyGeneratorService
      *
      * @return string The generated random string
      */
-    public function randomString()
+    public function generateRandomString()
     {
         $factory = new \RandomLib\Factory;
         $generator = $factory->getMediumStrengthGenerator();

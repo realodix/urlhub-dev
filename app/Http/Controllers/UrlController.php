@@ -95,7 +95,7 @@ class UrlController extends Controller
      */
     public function duplicate(string $key)
     {
-        $randomKey = $this->keyGeneratorService->randomString();
+        $randomKey = $this->keyGeneratorService->generateRandomString();
         app(DuplicateUrl::class)->execute($key, auth()->id(), $randomKey);
 
         return to_route('su_detail', $randomKey)

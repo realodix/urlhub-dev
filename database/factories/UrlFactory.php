@@ -30,7 +30,7 @@ class UrlFactory extends Factory
             'user_id'     => User::factory(),
             'destination' => 'https://github.com/realodix/urlhub',
             'title'       => 'No Title',
-            'keyword'     => app(KeyGeneratorService::class)->randomString(),
+            'keyword'     => app(KeyGeneratorService::class)->generateRandomString(),
             'is_custom'   => false,
             'ip'          => fake()->ipv4(),
         ];
