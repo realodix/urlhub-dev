@@ -26,38 +26,11 @@ class KeyGeneratorService
         // Step 2
         // If step 1 fail (the string is used or cannot be used), then the generator
         // must generate a unique random string
-        if ($this->canBeUsed($urlKey)) {
+        if ($this->assertStringCanBeUsedAsKey($urlKey)) {
             $urlKey = $this->randomString();
         }
 
         return $urlKey;
-    }
-
-    /**
-     * Check if string can be used as a keyword.
-     *
-     * This function will check under several conditions:
-     * 1. If the string is already used in the database
-     * 2. If the string is used as a reserved keyword
-     * 3. If the string is used as a route path
-     *
-     * If any or all of the conditions are true, then the keyword cannot be used.
-     */
-    public function canBeUsed(string $value): bool
-    {
-        $route = \Illuminate\Routing\Route::class;
-        $routeCollection = \Illuminate\Support\Facades\Route::getRoutes()->get();
-        $routePath = array_map(fn ($route) => $route->uri, $routeCollection);
-
-        $isExistsInDb = Url::whereKeyword($value)->first();
-        $isReservedKeyword = in_array($value, config('urlhub.reserved_keyword'));
-        $isRegisteredRoutePath = in_array($value, $routePath);
-
-        if ($isExistsInDb || $isReservedKeyword || $isRegisteredRoutePath) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -76,9 +49,36 @@ class KeyGeneratorService
 
         do {
             $urlKey = $generator->generateString($length, $characters);
-        } while ($this->canBeUsed($urlKey));
+        } while ($this->assertStringCanBeUsedAsKey($urlKey));
 
         return $urlKey;
+    }
+
+    /**
+     * Check if string can be used as a keyword.
+     *
+     * This function will check under several conditions:
+     * 1. If the string is already used in the database
+     * 2. If the string is used as a reserved keyword
+     * 3. If the string is used as a route path
+     *
+     * If any or all of the conditions are true, then the keyword cannot be used.
+     */
+    public function assertStringCanBeUsedAsKey(string $value): bool
+    {
+        $route = \Illuminate\Routing\Route::class;
+        $routeCollection = \Illuminate\Support\Facades\Route::getRoutes()->get();
+        $routePath = array_map(fn ($route) => $route->uri, $routeCollection);
+
+        $isExistsInDb = Url::whereKeyword($value)->first();
+        $isReservedKeyword = in_array($value, config('urlhub.reserved_keyword'));
+        $isRegisteredRoutePath = in_array($value, $routePath);
+
+        if ($isExistsInDb || $isReservedKeyword || $isRegisteredRoutePath) {
+            return true;
+        }
+
+        return false;
     }
 
     /*
