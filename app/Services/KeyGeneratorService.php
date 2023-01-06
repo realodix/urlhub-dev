@@ -21,7 +21,7 @@ class KeyGeneratorService
         // If step 1 fail (the string is used or cannot be used), then the generator
         // must generate a unique random string until it finds a string that can
         // be used as a key
-        if ($this->assertStringCanBeUsedAsKey($key)) {
+        if ($this->assertStringCanBeUsedAsKey($key)  === false) {
             $key = $this->generateRandomString();
         }
 
@@ -56,7 +56,7 @@ class KeyGeneratorService
 
         do {
             $urlKey = $generator->generateString($length, $characters);
-        } while ($this->assertStringCanBeUsedAsKey($urlKey));
+        } while ($this->assertStringCanBeUsedAsKey($urlKey) === false);
 
         return $urlKey;
     }
@@ -82,10 +82,10 @@ class KeyGeneratorService
         $isRegisteredRoutePath = in_array($value, $routePath);
 
         if ($isExistsInDb || $isReservedKeyword || $isRegisteredRoutePath) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /*

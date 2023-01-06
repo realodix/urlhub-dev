@@ -155,6 +155,16 @@ class KeyGeneratorServiceTest extends TestCase
      * @test
      * @group u-model
      */
+    public function assertStringCanBeUsedAsKey()
+    {
+        $this->assertTrue($this->keyGeneratorService->assertStringCanBeUsedAsKey('foo'));
+        $this->assertFalse($this->keyGeneratorService->assertStringCanBeUsedAsKey('login'));
+    }
+
+    /**
+     * @test
+     * @group u-model
+     */
     public function maxCapacity()
     {
         $hashLength = config('urlhub.hash_length');
