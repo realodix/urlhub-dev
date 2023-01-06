@@ -77,8 +77,8 @@ class Visit extends Model
 
     public function isFirstClick(Url $url): bool
     {
-        $hasVisited = Visit::whereVisitorId($this->visitorId())
-            ->whereUrlId($url->id)
+        $hasVisited = self::whereUrlId($url->id)
+            ->whereVisitorId($this->visitorId())
             ->first();
 
         return $hasVisited ? false : true;
