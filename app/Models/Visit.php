@@ -61,7 +61,7 @@ class Visit extends Model
      */
     public function visitorId(): string
     {
-        $visitorId = $this->authenticatedVisitorId();
+        $visitorId = $this->authVisitorId();
 
         if ($this->isAnonymousVisitors()) {
             $visitorId = $this->anonymousVisitorId();
@@ -70,7 +70,7 @@ class Visit extends Model
         return $visitorId;
     }
 
-    public function authenticatedVisitorId(): string
+    public function authVisitorId(): string
     {
         return (string) auth()->id();
     }
