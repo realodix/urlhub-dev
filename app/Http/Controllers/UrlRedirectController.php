@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
 use App\Models\Url;
-use App\Models\Visit;
 use App\Services\UrlRedirection;
 use App\Services\Visitor\CreateVisitorData;
+use App\Services\VisitorService;
 use Illuminate\Support\Facades\DB;
 
 class UrlRedirectController extends Controller
 {
     public function __construct(
-        public Visit $visit,
+        public VisitorService $visitorService,
     ) {
     }
 
@@ -29,7 +29,7 @@ class UrlRedirectController extends Controller
 
             $data = [
                 'url_id'          => $url->id,
-                'is_first_click'  => $this->visit->isFirstClick($url),
+                'is_first_click'  => $this->visitorService->isFirstClick($url),
                 'referer'         => request()->header('referer'),
                 'ip'              => Helper::anonymizeIp(request()->ip()),
                 'browser'         => \Browser::browserFamily(),

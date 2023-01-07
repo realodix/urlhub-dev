@@ -3,11 +3,13 @@
 namespace App\Services\Visitor;
 
 use App\Models\Visit;
+use App\Services\VisitorService;
 
 class CreateVisitorData
 {
     public function __construct(
         public Visit $visit,
+        public VisitorService $visitorService,
     ) {
     }
 
@@ -25,7 +27,7 @@ class CreateVisitorData
 
         Visit::create([
             'url_id'          => $data['url_id'],
-            'visitor_id'      => $this->visit->visitorId(),
+            'visitor_id'      => $this->visitorService->visitorId(),
             'is_first_click'  => $data['is_first_click'],
             'referer'         => $data['referer'],
             'ip'              => $data['ip'],
