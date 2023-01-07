@@ -61,18 +61,29 @@ class Visit extends Model
      */
     public function visitorId(): string
     {
-        $visitorId = $this->authenticatedVisitor();
+        $visitorId = $this->authenticatedVisitorId();
 
         if ($this->isAnonymousVisitors()) {
-            $visitorId = sha1($this->anonymousVisitors());
+            $visitorId = $this->anonymousVisitorId();
         }
 
         return $visitorId;
     }
 
-    public function authenticatedVisitor(): string
+    public function authenticatedVisitorId(): string
     {
         return (string) auth()->id();
+    }
+
+    public function anonymousVisitorId(): string
+    {
+        $data = [
+            'ip'      => request()->ip(),
+            'browser' => \Browser::browserFamily(),
+            'os'      => \Browser::platformFamily(),
+        ];
+
+        return sha1(implode($data));
     }
 
     /**
@@ -81,17 +92,6 @@ class Visit extends Model
     public function isAnonymousVisitors(): bool
     {
         return auth()->check() === false;
-    }
-
-    public function anonymousVisitors(): string
-    {
-        $data = [
-            'ip'      => request()->ip(),
-            'browser' => \Browser::browserFamily(),
-            'os'      => \Browser::platformFamily(),
-        ];
-
-        return implode($data);
     }
 
     /**
