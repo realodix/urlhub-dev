@@ -76,11 +76,6 @@ class Visit extends Model
         return $visitorId;
     }
 
-    public function isAnonymousVisitors(): bool
-    {
-        return auth()->check() === false;
-    }
-
     /**
      * Check if the visitor is an anonymous (unauthenticated) visitor.
      */
