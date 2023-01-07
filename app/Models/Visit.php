@@ -82,6 +82,14 @@ class Visit extends Model
     }
 
     /**
+     * Check if the visitor is an anonymous (unauthenticated) visitor.
+     */
+    public function isAnonymousVisitors(): bool
+    {
+        return auth()->check() === false;
+    }
+
+    /**
      * Check if the visitor has clicked the link before. If the visitor has not
      * clicked the link before, return true.
      */
