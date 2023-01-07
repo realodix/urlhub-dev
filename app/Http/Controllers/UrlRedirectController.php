@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use App\Models\Url;
 use App\Services\UrlRedirection;
-use App\Services\Visitor\CreateVisitorData;
 use App\Services\VisitorService;
 use Illuminate\Support\Facades\DB;
 
@@ -39,7 +38,7 @@ class UrlRedirectController extends Controller
                 'os_version'      => \Browser::platformVersion(),
             ];
 
-            app(CreateVisitorData::class)->execute($data);
+            $this->visitorService->storeVisitorData($data);
 
             return $urlRedirection->execute($url);
         });
