@@ -63,7 +63,7 @@ class Visit extends Model
     {
         $visitorId = (string) auth()->id();
 
-        if (auth()->check() === false) {
+        if ($this->isAnonymousVisitors()) {
             $neighborVisitor = [
                 'ip'      => request()->ip(),
                 'browser' => \Browser::browserFamily(),
@@ -74,6 +74,11 @@ class Visit extends Model
         }
 
         return $visitorId;
+    }
+
+    public function isAnonymousVisitors(): bool
+    {
+        return auth()->check() === false;
     }
 
     /**
