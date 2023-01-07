@@ -63,7 +63,7 @@ class Visit extends Model
     {
         $visitorId = $this->authVisitorId();
 
-        if ($this->isAnonymousVisitors()) {
+        if ($this->isAnonymousVisitor()) {
             $visitorId = $this->anonymousVisitorId();
         }
 
@@ -89,7 +89,7 @@ class Visit extends Model
     /**
      * Check if the visitor is an anonymous (unauthenticated) visitor.
      */
-    public function isAnonymousVisitors(): bool
+    public function isAnonymousVisitor(): bool
     {
         return auth()->check() === false;
     }
