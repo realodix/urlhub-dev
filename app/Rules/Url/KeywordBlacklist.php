@@ -37,9 +37,9 @@ class KeywordBlacklist implements InvokableRule
         );
 
         $isReservedKeyword = in_array($value, config('urlhub.reserved_keyword'), true);
-        $isRegisteredRoute = in_array($value, $routes);
+        $isRegisteredRoutePath = in_array($value, $routes);
 
-        if ($isRegisteredRoute || $isReservedKeyword) {
+        if ($isRegisteredRoutePath === true || $isReservedKeyword === true) {
             return false;
         }
 
