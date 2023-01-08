@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class UrlRedirectController extends Controller
 {
     public function __construct(
+        public UrlRedirection $urlRedirection,
         public VisitorService $visitorService,
     ) {
     }
@@ -20,9 +21,9 @@ class UrlRedirectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function __invoke(UrlRedirection $urlRedirection, string $key)
+    public function __invoke(string $key)
     {
-        return DB::transaction(function () use ($urlRedirection, $key) {
+        return DB::transaction(function () use ($key) {
             $url = Url::whereKeyword($key)->firstOrFail();
 
             $data = [
@@ -34,7 +35,7 @@ class UrlRedirectController extends Controller
 
             $this->visitorService->create($data);
 
-            return $urlRedirection->execute($url);
+            return $this->urlRedirection->execute($url);
         });
     }
 }
