@@ -29,8 +29,6 @@ class UrlRedirectController extends Controller
             $data = [
                 'url_id'          => $url->id,
                 'is_first_click'  => $this->visitorService->isFirstClick($url),
-                'referer'         => request()->header('referer'),
-                'ip'              => request()->ip(),
             ];
 
             $this->visitorService->create($data);
