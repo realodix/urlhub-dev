@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 class Visit extends Model
 {
@@ -48,5 +50,24 @@ class Visit extends Model
     public function url()
     {
         return $this->belongsTo(Url::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Eloquent: Accessors & Mutators
+    |--------------------------------------------------------------------------
+    */
+
+    protected function ip(): Attribute
+    {
+        return Attribute::make(
+            set: function ($value) {
+                if (config('urlhub.anonymize_ip_addr') === false) {
+                    return $value;
+                }
+
+                return IpUtils::anonymize($value);
+            },
+        );
     }
 }

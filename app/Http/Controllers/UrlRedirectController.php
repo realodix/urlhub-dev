@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Helper;
 use App\Models\Url;
 use App\Services\UrlRedirection;
 use App\Services\VisitorService;
@@ -30,7 +29,7 @@ class UrlRedirectController extends Controller
                 'url_id'          => $url->id,
                 'is_first_click'  => $this->visitorService->isFirstClick($url),
                 'referer'         => request()->header('referer'),
-                'ip'              => Helper::anonymizeIp(request()->ip()),
+                'ip'              => request()->ip(),
                 'browser'         => \Browser::browserFamily(),
                 'browser_version' => \Browser::browserVersion(),
                 'device'          => \Browser::deviceType(),

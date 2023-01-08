@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Helper;
 use App\Http\Requests\StoreUrl;
 use App\Models\Url;
 use App\Services\CreateShortenedUrl;
