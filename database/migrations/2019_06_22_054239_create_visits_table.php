@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('visitor_id');
             $table->boolean('is_first_click');
             $table->string('referer', 300)->nullable();
-            $table->ipAddress('ip');
+            $table->ipAddress('ip')->nullable();
             $table->string('browser')->nullable();
             $table->string('browser_version')->nullable();
             $table->string('device')->nullable();
