@@ -30,11 +30,6 @@ class UrlRedirectController extends Controller
                 'is_first_click'  => $this->visitorService->isFirstClick($url),
                 'referer'         => request()->header('referer'),
                 'ip'              => request()->ip(),
-                'browser'         => \Browser::browserFamily(),
-                'browser_version' => \Browser::browserVersion(),
-                'device'          => \Browser::deviceType(),
-                'os'              => \Browser::platformFamily(),
-                'os_version'      => \Browser::platformVersion(),
             ];
 
             $this->visitorService->create($data);

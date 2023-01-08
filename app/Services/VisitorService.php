@@ -25,11 +25,11 @@ class VisitorService
             'is_first_click'  => $data['is_first_click'],
             'referer'         => $data['referer'],
             'ip'              => $data['ip'],
-            'browser'         => $data['browser'],
-            'browser_version' => $data['browser_version'],
-            'device'          => $data['device'],
-            'os'              => $data['os'],
-            'os_version'      => $data['os_version'],
+            'browser'         => \Browser::browserFamily(),
+            'browser_version' => \Browser::browserVersion(),
+            'device'          => \Browser::deviceType(),
+            'os'              => \Browser::platformFamily(),
+            'os_version'      => \Browser::platformVersion(),
         ]);
     }
 
