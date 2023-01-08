@@ -20,7 +20,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('visitor_id');
             $table->boolean('is_first_click');
-            $table->string('referer', 300)->nullable()->default(0);
+            $table->string('referer', 300)->nullable();
             $table->ipAddress('ip');
             $table->string('browser')->nullable();
             $table->string('browser_version')->nullable();
