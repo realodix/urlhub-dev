@@ -38,7 +38,7 @@ class UrlRedirectController extends Controller
                 'os_version'      => \Browser::platformVersion(),
             ];
 
-            $this->visitorService->storeVisitorData($data);
+            $this->visitorService->create($data);
 
             return $urlRedirection->execute($url);
         });

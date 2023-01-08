@@ -12,7 +12,7 @@ class VisitorService
      *
      * @return void
      */
-    public function storeVisitorData(array $data)
+    public function create(array $data)
     {
         $logBotVisit = config('urlhub.track_bot_visits');
         if ($logBotVisit === false && \Browser::isBot() === true) {
