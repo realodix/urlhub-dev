@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\IpUtils;
 
 class Helper
 {
+    public function clientIp()
+    {
+        return request()->ip();
+    }
+
     /**
      * Anonymize an IPv4 or IPv6 address.
      *
