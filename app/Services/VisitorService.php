@@ -12,7 +12,7 @@ class VisitorService
      *
      * @return void
      */
-    public function create(array $data)
+    public function create(Url $url)
     {
         $logBotVisit = config('urlhub.track_bot_visits');
         if ($logBotVisit === false && \Browser::isBot() === true) {
@@ -20,9 +20,9 @@ class VisitorService
         }
 
         Visit::create([
-            'url_id'          => $data['url_id'],
+            'url_id'          => $url->id,
             'visitor_id'      => $this->visitorId(),
-            'is_first_click'  => $data['is_first_click'],
+            'is_first_click'  => $this->isFirstClick($url),
             'referer'         => request()->header('referer'),
             'ip'              => request()->ip(),
             'browser'         => \Browser::browserFamily(),

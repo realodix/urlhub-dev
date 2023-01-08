@@ -26,12 +26,7 @@ class UrlRedirectController extends Controller
         return DB::transaction(function () use ($key) {
             $url = Url::whereKeyword($key)->firstOrFail();
 
-            $data = [
-                'url_id'          => $url->id,
-                'is_first_click'  => $this->visitorService->isFirstClick($url),
-            ];
-
-            $this->visitorService->create($data);
+            $this->visitorService->create($url);
 
             return $this->urlRedirection->execute($url);
         });
