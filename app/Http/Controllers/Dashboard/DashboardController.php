@@ -35,6 +35,7 @@ class DashboardController extends Controller
     /**
      * Show shortened url details page
      *
+     * @param string $urlKey A unique key for the shortened URL
      * @return \Illuminate\Contracts\View\View
      */
     public function edit(string $urlKey)
@@ -82,12 +83,12 @@ class DashboardController extends Controller
     }
 
     /**
-     * @param mixed $key
+     * @param string $urlKey A unique key for the shortened URL
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function duplicate($key)
+    public function duplicate($urlKey)
     {
-        app(DuplicateUrl::class)->execute($key, auth()->id());
+        app(DuplicateUrl::class)->execute($urlKey, auth()->id());
 
         return redirect()->back()
             ->withFlashSuccess(__('The link has successfully duplicated.'));
