@@ -7,6 +7,7 @@ use App\Models\Url;
 class DuplicateUrl
 {
     /**
+     * @param string          $urlKey A unique key for the shortened URL
      * @param int|string|null $userId \Illuminate\Contracts\Auth\Guard::id()
      * @return bool \Illuminate\Database\Eloquent\Model::save()
      */
