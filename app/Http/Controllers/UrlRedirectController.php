@@ -23,12 +23,12 @@ class UrlRedirectController extends Controller
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException<\App\Models\Url>
      */
-    public function __invoke(string $shortUrlKey)
+    public function __invoke(string $urlKey)
     {
-        return DB::transaction(function () use ($shortUrlKey) {
+        return DB::transaction(function () use ($urlKey) {
             // firstOrFail() will throw a ModelNotFoundException if the URL is not
             // found and 404 will be returned to the client.
-            $url = Url::whereKeyword($shortUrlKey)->firstOrFail();
+            $url = Url::whereKeyword($urlKey)->firstOrFail();
 
             $this->visitorService->create($url);
 

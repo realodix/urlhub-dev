@@ -35,12 +35,11 @@ class DashboardController extends Controller
     /**
      * Show shortened url details page
      *
-     * @param mixed $key
      * @return \Illuminate\Contracts\View\View
      */
-    public function edit($key)
+    public function edit(string $urlKey)
     {
-        $url = Url::whereKeyword($key)->first();
+        $url = Url::whereKeyword($urlKey)->first();
 
         $this->authorize('updateUrl', $url);
 

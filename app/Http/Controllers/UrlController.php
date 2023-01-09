@@ -38,12 +38,11 @@ class UrlController extends Controller
      *
      * @codeCoverageIgnore
      *
-     * @param string $key
      * @return \Illuminate\Contracts\View\View
      */
-    public function showDetail($key)
+    public function showDetail(string $urlKey)
     {
-        $url = Url::with('visit')->whereKeyword($key)->firstOrFail();
+        $url = Url::with('visit')->whereKeyword($urlKey)->firstOrFail();
         $data = ['url' => $url, 'visit' => new \App\Models\Visit];
 
         if (config('urlhub.qrcode')) {
