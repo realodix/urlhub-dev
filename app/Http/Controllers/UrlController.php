@@ -77,12 +77,13 @@ class UrlController extends Controller
      * link. You can duplicate it and it will generated a new unique random
      * key.
      *
+     * @param string $urlKey A unique key for the shortened URL
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function duplicate(string $key)
+    public function duplicate(string $urlKey)
     {
         $randomKey = app(KeyGeneratorService::class)->generateRandomString();
-        app(DuplicateUrl::class)->execute($key, auth()->id(), $randomKey);
+        app(DuplicateUrl::class)->execute($urlKey, auth()->id(), $randomKey);
 
         return to_route('su_detail', $randomKey)
             ->withFlashSuccess(__('The link has successfully duplicated.'));
