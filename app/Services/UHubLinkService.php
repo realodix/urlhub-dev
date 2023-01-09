@@ -6,13 +6,18 @@ use App\Http\Requests\StoreUrl;
 use App\Models\Url;
 use Illuminate\Http\Request;
 
-class UHubLink
+class UHubLinkService
 {
     public function __construct(
         public KeyGeneratorService $keyGeneratorService,
     ) {
     }
 
+    /**
+     * Create a shortened URL.
+     *
+     * @param StoreUrl $request \App\Http\Requests\StoreUrl
+     */
     public function create(StoreUrl $request): Url
     {
         return Url::create([
@@ -26,28 +31,32 @@ class UHubLink
     }
 
     /**
-     * @return bool
+     * Update the shortened URL details.
+     *
+     * @param Request $request \Illuminate\Http\Request
+     * @return bool \Illuminate\Database\Eloquent\Model::update()
      */
     public function update(Request $request, Url $url)
     {
         return $url->update([
             'destination' => $request->long_url,
-            'title' => $request->title,
+            'title'       => $request->title,
         ]);
     }
 
     /**
-     * @param int|string|null $userId \Illuminate\Contracts\Auth\Guard::id()
+     * Duplicate the existing URL and create a new shortened URL.
+     *
+     * @param string $urlKey A unique key for the shortened URL
      * @return bool \Illuminate\Database\Eloquent\Model::save()
      */
-    public function duplicate(string $urlKey, $userId, string $randomKey = null)
+    public function duplicate(string $urlKey)
     {
-        $randomKey = $randomKey ?? $this->keyGeneratorService->generateRandomString();
         $shortenedUrl = Url::whereKeyword($urlKey)->first();
 
         $replicate = $shortenedUrl->replicate()->fill([
-            'user_id'   => $userId,
-            'keyword'   => $randomKey,
+            'user_id'   => auth()->id(),
+            'keyword'   => $this->keyGeneratorService->generateRandomString(),
             'is_custom' => false,
         ]);
 
