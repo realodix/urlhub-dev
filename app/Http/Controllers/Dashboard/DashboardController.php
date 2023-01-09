@@ -66,12 +66,12 @@ class DashboardController extends Controller
     /**
      * Delete shortened URLs
      *
-     * @param mixed $url
+     * @param Url $url \App\Models\Url
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function delete($url)
+    public function delete(Url $url)
     {
         $this->authorize('forceDelete', $url);
 

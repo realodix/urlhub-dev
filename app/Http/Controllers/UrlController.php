@@ -57,12 +57,12 @@ class UrlController extends Controller
     /**
      * Delete a shortened URL on user request.
      *
-     * @param mixed $url
+     * @param Url $url \App\Models\Url
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function delete($url)
+    public function delete(Url $url)
     {
         $this->authorize('forceDelete', $url);
 
