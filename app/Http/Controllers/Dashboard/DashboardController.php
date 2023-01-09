@@ -24,7 +24,6 @@ class DashboardController extends Controller
      */
     public function view()
     {
-        // @todo Pakai app() atau resolve() untuk inject service
         return view('backend.dashboard', [
             'url'  => $this->url,
             'user' => $this->user,
