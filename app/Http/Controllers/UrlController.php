@@ -16,7 +16,6 @@ class UrlController extends Controller
      */
     public function __construct(
         public Url $url,
-        public KeyGeneratorService $keyGeneratorService,
     ) {
         $this->middleware('urlhublinkchecker')->only('create');
     }
@@ -29,18 +28,7 @@ class UrlController extends Controller
      */
     public function create(StoreUrl $request)
     {
-        $keyword = $request->custom_key ?? $this->keyGeneratorService->urlKey($request->long_url);
-        $isCustom = $request->custom_key ? true : false;
-
-        $data = [
-            'user_id'     => auth()->id(),
-            'destination' => $request->long_url,
-            'title'       => $request->long_url,
-            'keyword'     => $keyword,
-            'is_custom'   => $isCustom,
-        ];
-
-        $url = app(CreateShortenedUrl::class)->execute($data);
+        $url = app(CreateShortenedUrl::class)->execute($request);
 
         return to_route('su_detail', $url->keyword);
     }
@@ -93,7 +81,7 @@ class UrlController extends Controller
      */
     public function duplicate(string $key)
     {
-        $randomKey = $this->keyGeneratorService->generateRandomString();
+        $randomKey = app(KeyGeneratorService::class)->generateRandomString();
         app(DuplicateUrl::class)->execute($key, auth()->id(), $randomKey);
 
         return to_route('su_detail', $randomKey)
