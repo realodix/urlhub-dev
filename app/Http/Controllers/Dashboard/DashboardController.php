@@ -35,6 +35,7 @@ class DashboardController extends Controller
     /**
      * Show shortened url details page
      *
+     * @param string $urlKey A unique key for the shortened URL
      * @return \Illuminate\Contracts\View\View
      */
     public function edit(string $urlKey)
