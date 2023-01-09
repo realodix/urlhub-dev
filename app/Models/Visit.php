@@ -51,23 +51,4 @@ class Visit extends Model
     {
         return $this->belongsTo(Url::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Eloquent: Accessors & Mutators
-    |--------------------------------------------------------------------------
-    */
-
-    protected function ip(): Attribute
-    {
-        return Attribute::make(
-            set: function ($value) {
-                if (config('urlhub.anonymize_ip_addr') === false) {
-                    return $value;
-                }
-
-                return IpUtils::anonymize($value);
-            },
-        );
-    }
 }
