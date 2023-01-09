@@ -24,6 +24,7 @@ class DashboardController extends Controller
      */
     public function view()
     {
+        // @todo Pakai app() atau resolve() untuk inject service
         return view('backend.dashboard', [
             'url'  => $this->url,
             'user' => $this->user,
@@ -57,6 +58,7 @@ class DashboardController extends Controller
      */
     public function update(Request $request, $url)
     {
+        // @todo Ini juga buat di service
         $url->destination = $request->long_url;
         $url->title = $request->title;
         $url->save();
