@@ -43,7 +43,10 @@ class UrlController extends Controller
     public function showDetail(string $urlKey)
     {
         $url = Url::with('visit')->whereKeyword($urlKey)->firstOrFail();
-        $data = ['url' => $url, 'visit' => new \App\Models\Visit];
+        $data = [
+            'url' => $url,
+            'visit' => new \App\Models\Visit
+        ];
 
         if (config('urlhub.qrcode')) {
             $qrCode = app(QrCodeService::class)->execute($url->short_url);
