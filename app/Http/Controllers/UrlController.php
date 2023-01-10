@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUrl;
 use App\Models\Url;
-use App\Services\CreateShortenedUrl;
-use App\Services\DuplicateUrl;
-use App\Services\KeyGeneratorService;
 use App\Services\QrCodeService;
+use App\Services\UHubLinkService;
 
 class UrlController extends Controller
 {
@@ -16,6 +14,7 @@ class UrlController extends Controller
      */
     public function __construct(
         public Url $url,
+        public UHubLinkService $uHubLinkService,
     ) {
         $this->middleware('urlhublinkchecker')->only('create');
     }
@@ -28,7 +27,7 @@ class UrlController extends Controller
      */
     public function create(StoreUrl $request)
     {
-        $url = app(CreateShortenedUrl::class)->execute($request);
+        $url = $this->uHubLinkService->create($request);
 
         return to_route('su_detail', $url->keyword);
     }
@@ -82,10 +81,9 @@ class UrlController extends Controller
      */
     public function duplicate(string $urlKey)
     {
-        $randomKey = app(KeyGeneratorService::class)->generateRandomString();
-        app(DuplicateUrl::class)->execute($urlKey, auth()->id(), $randomKey);
+        $this->uHubLinkService->duplicate($urlKey);
 
-        return to_route('su_detail', $randomKey)
+        return to_route('su_detail', $this->uHubLinkService->new_keyword)
             ->withFlashSuccess(__('The link has successfully duplicated.'));
     }
 }

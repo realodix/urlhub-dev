@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Url;
 use App\Models\User;
-use App\Services\DuplicateUrl;
 use App\Services\KeyGeneratorService;
-use App\Services\UpdateShortenedUrl;
+use App\Services\UHubLinkService;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -15,6 +14,7 @@ class DashboardController extends Controller
     public function __construct(
         public Url $url,
         public User $user,
+        public UHubLinkService $uHubLinkService,
     ) {
     }
 
@@ -58,7 +58,7 @@ class DashboardController extends Controller
      */
     public function update(Request $request, Url $url)
     {
-        app(UpdateShortenedUrl::class)->execute($request, $url);
+        $this->uHubLinkService->update($request, $url);
 
         return to_route('dashboard')
             ->withFlashSuccess(__('Link changed successfully !'));
@@ -88,7 +88,7 @@ class DashboardController extends Controller
      */
     public function duplicate($urlKey)
     {
-        app(DuplicateUrl::class)->execute($urlKey, auth()->id());
+        $this->uHubLinkService->duplicate($urlKey);
 
         return redirect()->back()
             ->withFlashSuccess(__('The link has successfully duplicated.'));
