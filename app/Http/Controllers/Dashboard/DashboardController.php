@@ -40,7 +40,7 @@ class DashboardController extends Controller
      */
     public function edit(string $urlKey)
     {
-        $url = Url::whereKeyword($urlKey)->first();
+        $url = Url::whereKeyword($urlKey)->firstOrFail();
 
         $this->authorize('updateUrl', $url);
 
