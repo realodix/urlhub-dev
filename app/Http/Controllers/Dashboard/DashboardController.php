@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Url;
 use App\Models\User;
-use App\Services\DuplicateUrl;
 use App\Services\KeyGeneratorService;
 use App\Services\UHubLinkService;
 use Illuminate\Http\Request;
@@ -89,7 +88,7 @@ class DashboardController extends Controller
      */
     public function duplicate($urlKey)
     {
-        app(DuplicateUrl::class)->execute($urlKey, auth()->id());
+        $this->uHubLinkService->duplicate($urlKey);
 
         return redirect()->back()
             ->withFlashSuccess(__('The link has successfully duplicated.'));

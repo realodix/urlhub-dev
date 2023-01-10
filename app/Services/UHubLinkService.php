@@ -8,9 +8,13 @@ use Illuminate\Http\Request;
 
 class UHubLinkService
 {
+    /** @readonly */
+    public string $new_keyword;
+
     public function __construct(
         public KeyGeneratorService $keyGeneratorService,
     ) {
+        $this->new_keyword = $keyGeneratorService->generateRandomString();
     }
 
     /**
@@ -56,7 +60,7 @@ class UHubLinkService
 
         $replicate = $shortenedUrl->replicate()->fill([
             'user_id'   => auth()->id(),
-            'keyword'   => $this->keyGeneratorService->generateRandomString(),
+            'keyword'   => $this->new_keyword,
             'is_custom' => false,
         ]);
 
