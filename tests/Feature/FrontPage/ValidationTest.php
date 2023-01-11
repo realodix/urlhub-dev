@@ -4,8 +4,20 @@ namespace Tests\Feature\FrontPage;
 
 use Tests\TestCase;
 
-class CustomKeyValidationTest extends TestCase
+class ValidationTest extends TestCase
 {
+    /** @test */
+    public function createShortUrlWithWrongUrlFormat()
+    {
+        $response = $this->post(route('su_create'), [
+            'long_url' => 'wrong-url-format',
+        ]);
+
+        $response
+            ->assertRedirectToRoute('home')
+            ->assertSessionHasErrors('long_url');
+    }
+
     /** @test */
     public function customKeyValidation()
     {

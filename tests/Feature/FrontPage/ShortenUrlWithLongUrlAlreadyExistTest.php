@@ -148,18 +148,6 @@ class ShortenUrlWithLongUrlAlreadyExistTest extends TestCase
         $this->assertCount(2, Url::all());
     }
 
-    /** @test */
-    public function createShortUrlWithWrongUrlFormat()
-    {
-        $response = $this->post(route('su_create'), [
-            'long_url' => 'wrong-url-format',
-        ]);
-
-        $response
-            ->assertRedirectToRoute('home')
-            ->assertSessionHasErrors('long_url');
-    }
-
     /*
     |--------------------------------------------------------------------------
     | Custom Short URLs
