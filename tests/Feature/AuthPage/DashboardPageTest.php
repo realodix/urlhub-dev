@@ -100,7 +100,7 @@ class DashboardPageTest extends TestCase
 
         $response = $this->actingAs($this->admin())
             ->from(route('dashboard.su_edit', $url->keyword))
-            ->post(route('dashboard.su_edit.post', $hashids->encode($url->id)), [
+            ->post($this->hashIdRoute('dashboard.su_edit.post', $url->id), [
                 'title'    => $url->title,
                 'long_url' => $newLongUrl,
             ]);
