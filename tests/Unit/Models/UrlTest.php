@@ -44,7 +44,7 @@ class UrlTest extends TestCase
             'user_id' => $this->admin()->id,
         ]);
 
-        $this->assertEquals(1, $url->user->count());
+        $this->assertEquals(1, $url->author->count());
         $this->assertInstanceOf(User::class, $url->user);
     }
 
@@ -58,7 +58,7 @@ class UrlTest extends TestCase
             'user_id' => Url::GUEST_ID,
         ]);
 
-        $this->assertSame('Guest', $url->user->name);
+        $this->assertSame('Guest', $url->author->name);
     }
 
     /**
