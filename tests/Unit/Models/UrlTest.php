@@ -38,7 +38,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function belongsToUser()
+    public function belongsToauthor()
     {
         $url = Url::factory()->create([
             'user_id' => $this->admin()->id,
@@ -253,7 +253,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function numberOfClicksPerUser()
+    public function numberOfClicksPerAuthor()
     {
         $userId = $this->admin()->id;
         $url = Url::factory()->create([
@@ -264,7 +264,7 @@ class UrlTest extends TestCase
         ]);
 
         $expected = Visit::whereUrlId($url->id)->count();
-        $actual = $this->url->numberOfClicksPerUser(userId: $url->user_id);
+        $actual = $this->url->numberOfClicksPerAuthor(userId: $url->user_id);
 
         $this->assertSame($userId, $url->user_id);
         $this->assertSame($expected, $actual);
