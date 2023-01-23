@@ -35,6 +35,9 @@ class UrlTest extends TestCase
     }
 
     /**
+     * Url model must have a relationship with User model as one to many.
+     * This test will check if the relationship exists.
+     *
      * @test
      * @group u-model
      */
@@ -49,6 +52,8 @@ class UrlTest extends TestCase
     }
 
     /**
+     * The default guest name must be Guest.
+     *
      * @test
      * @group u-model
      */
@@ -62,6 +67,9 @@ class UrlTest extends TestCase
     }
 
     /**
+     * Url model must have a relationship with Visit model as one to many.
+     * This test will check if the relationship exists.
+     *
      * @test
      * @group u-model
      */
