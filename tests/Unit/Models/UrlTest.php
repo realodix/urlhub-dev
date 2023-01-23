@@ -41,7 +41,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function belongsToAuthor()
+    public function belongsToModel()
     {
         $url = Url::factory()->create([
             'user_id' => $this->adminUser()->id,
@@ -58,7 +58,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function hasManyUrlStat()
+    public function hasManyUrlModel()
     {
         $url = Url::factory()->create();
 
