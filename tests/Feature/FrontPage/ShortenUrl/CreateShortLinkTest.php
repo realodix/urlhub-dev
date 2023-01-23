@@ -159,9 +159,10 @@ class CreateShortLinkTest extends TestCase
     }
 
     /**
-     * Guest and authen user.
-     * Ketika url sudah dimiliki oleh Guest dan User A membuat URL yang sama, maka
-     * peringatan tidak perlu ditampilkan.
+     * Authen User and Guest
+     *
+     * Ketika URL sudah ada (dibuat oleh authen user), lalu salah guest membuat shorlink
+     * dengan URL yang sama, maka peringatan tidak perlu ditampilkan.
      *
      * @test
      */
@@ -180,21 +181,22 @@ class CreateShortLinkTest extends TestCase
     }
 
     /**
-     * Authen user and guest.
-     * Ketika url sudah dimiliki oleh salah satu User dan Guest membuat URL yang
-     * sama, maka peringatan tidak perlu ditampilkan.
+     * Guest user and authen user
+     *
+     * Ketika URL sudah ada (dibuat oleh Guest), lalu salah satu User membuat shorlink
+     * dengan URL yang sama, maka peringatan tidak perlu ditampilkan.
      *
      * @test
      */
     public function longUrlAlreadyExistsButStillAccepted3()
     {
-        $user = $this->adminUser();
+        $user = $this->normalUser();
 
         $url = Url::factory()->create([
             'user_id' => Url::GUEST_ID,
         ]);
 
-        $response = $this->actingAs($this->adminUser())
+        $response = $this->actingAs($user)
             ->post(route('su_create'), [
                 'long_url' => $url->destination,
             ]);
