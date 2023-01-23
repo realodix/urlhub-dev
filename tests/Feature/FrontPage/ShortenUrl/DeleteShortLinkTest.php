@@ -18,11 +18,9 @@ class DeleteShortLinkTest extends TestCase
     /** @test */
     public function userCanDelete()
     {
-        $url = Url::factory()->create([
-            'user_id' => $this->adminUser()->id,
-        ]);
+        $url = Url::factory()->create();
 
-        $response = $this->actingAs($this->adminUser())
+        $response = $this->actingAs($url->author)
             ->from(route('su_detail', $url->keyword))
             ->get($this->hashIdRoute('su_delete', $url->id));
 
