@@ -89,13 +89,13 @@ class CreateShortLinkTest extends TestCase
      */
     public function longUrlAlreadyExist()
     {
-        $user = $this->admin();
+        $user = $this->adminUser();
 
         $url = Url::factory()->create([
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->post(route('su_create'), [
                 'long_url' => $url->destination,
             ]);
@@ -140,14 +140,14 @@ class CreateShortLinkTest extends TestCase
      */
     public function longUrlAlreadyExistsButStillAccepted1()
     {
-        $user = $this->admin();
+        $user = $this->adminUser();
         $user2 = $this->normalUser();
 
         $url = Url::factory()->create([
             'user_id' => $user2->id,
         ]);
 
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->post(route('su_create'), [
                 'long_url' => $url->destination,
             ]);
@@ -188,13 +188,13 @@ class CreateShortLinkTest extends TestCase
      */
     public function longUrlAlreadyExistsButStillAccepted3()
     {
-        $user = $this->admin();
+        $user = $this->adminUser();
 
         $url = Url::factory()->create([
             'user_id' => Url::GUEST_ID,
         ]);
 
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->post(route('su_create'), [
                 'long_url' => $url->destination,
             ]);

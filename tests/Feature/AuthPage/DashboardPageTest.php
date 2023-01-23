@@ -21,7 +21,7 @@ class DashboardPageTest extends TestCase
      */
     public function dCanAccessPage()
     {
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->get(route('dashboard'));
 
         $response->assertOk();
@@ -34,10 +34,10 @@ class DashboardPageTest extends TestCase
     public function dCanDelete()
     {
         $url = Url::factory()->create([
-            'user_id' => $this->admin()->id,
+            'user_id' => $this->adminUser()->id,
         ]);
 
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->from(route('dashboard'))
             ->get($this->hashIdRoute('dashboard.su_delete', $url->id));
 
@@ -55,10 +55,10 @@ class DashboardPageTest extends TestCase
     public function dCanDuplicate()
     {
         $url = Url::factory()->create([
-            'user_id' => $this->admin()->id,
+            'user_id' => $this->adminUser()->id,
         ]);
 
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->from(route('dashboard'))
             ->get(route('dashboard.su_duplicate', $url->keyword));
 
@@ -76,10 +76,10 @@ class DashboardPageTest extends TestCase
     public function dAuthorizedUserCanAccessEditUrlPage()
     {
         $url = Url::factory()->create([
-            'user_id' => $this->admin()->id,
+            'user_id' => $this->adminUser()->id,
         ]);
 
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->get(route('dashboard.su_edit', $url->keyword));
 
         $response->assertOk();
@@ -93,12 +93,12 @@ class DashboardPageTest extends TestCase
     {
         $hashids = Hashids::connection(\App\Models\Url::class);
         $url = Url::factory()->create([
-            'user_id' => $this->admin()->id,
+            'user_id' => $this->adminUser()->id,
         ]);
 
         $newLongUrl = 'https://phpunit.readthedocs.io/en/9.1';
 
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->from(route('dashboard.su_edit', $url->keyword))
             ->post($this->hashIdRoute('dashboard.su_edit.post', $url->id), [
                 'title'    => $url->title,

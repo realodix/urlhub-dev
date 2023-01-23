@@ -35,7 +35,7 @@ class UrlControllerTest extends TestCase
      */
     public function userShortenURL()
     {
-        $user = $this->admin();
+        $user = $this->adminUser();
         $longUrl = 'https://laravel.com';
 
         $this->actingAs($user);

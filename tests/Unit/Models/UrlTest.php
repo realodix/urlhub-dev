@@ -26,7 +26,7 @@ class UrlTest extends TestCase
         $this->totalUrl = self::N_URL_WITH_USER_ID + self::N_URL_WITHOUT_USER_ID;
 
         Url::factory(self::N_URL_WITH_USER_ID)->create([
-            'user_id' => $this->admin()->id,
+            'user_id' => $this->adminUser()->id,
         ]);
 
         Url::factory(self::N_URL_WITHOUT_USER_ID)->create([
@@ -41,7 +41,7 @@ class UrlTest extends TestCase
     public function belongsToAuthor()
     {
         $url = Url::factory()->create([
-            'user_id' => $this->admin()->id,
+            'user_id' => $this->adminUser()->id,
         ]);
 
         $this->assertEquals(1, $url->author->count());
@@ -129,7 +129,7 @@ class UrlTest extends TestCase
      */
     public function getShortUrlAttribute()
     {
-        $url = Url::whereUserId($this->admin()->id)->first();
+        $url = Url::whereUserId($this->adminUser()->id)->first();
 
         $expected = $url->short_url;
         $actual = url('/'.$url->keyword);
@@ -170,7 +170,7 @@ class UrlTest extends TestCase
     public function totalShortUrlByMe()
     {
         $expected = self::N_URL_WITH_USER_ID;
-        $actual = $this->url->numberOfUrls($this->admin()->id);
+        $actual = $this->url->numberOfUrls($this->adminUser()->id);
 
         $this->assertSame($expected, $actual);
     }
@@ -255,7 +255,7 @@ class UrlTest extends TestCase
      */
     public function numberOfClicksPerAuthor()
     {
-        $userId = $this->admin()->id;
+        $userId = $this->adminUser()->id;
         $url = Url::factory()->create([
             'user_id' => $userId,
         ]);

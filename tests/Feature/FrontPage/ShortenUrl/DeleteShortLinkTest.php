@@ -19,10 +19,10 @@ class DeleteShortLinkTest extends TestCase
     public function userCanDelete()
     {
         $url = Url::factory()->create([
-            'user_id' => $this->admin()->id,
+            'user_id' => $this->adminUser()->id,
         ]);
 
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->from(route('su_detail', $url->keyword))
             ->get($this->hashIdRoute('su_delete', $url->id));
 
@@ -34,7 +34,7 @@ class DeleteShortLinkTest extends TestCase
     public function adminCanDeleteUrlsCreatedByOtherUsers()
     {
         $url = Url::factory()->create();
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->from(route('su_detail', $url->keyword))
             ->get($this->hashIdRoute('su_delete', $url->id));
 
@@ -46,7 +46,7 @@ class DeleteShortLinkTest extends TestCase
     public function adminCanDeleteUrlsCreatedByGuest()
     {
         $url = Url::factory()->create(['user_id' => Url::GUEST_ID]);
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->from(route('su_detail', $url->keyword))
             ->get($this->hashIdRoute('su_delete', $url->id));
 
@@ -86,7 +86,7 @@ class DeleteShortLinkTest extends TestCase
             ->get($this->hashIdRoute('su_delete', $url->id));
         $response->assertForbidden();
 
-        $url = Url::factory()->create(['user_id' => $this->admin()->id]);
+        $url = Url::factory()->create(['user_id' => $this->adminUser()->id]);
         $response = $this->from(route('su_detail', $url->keyword))
             ->get($this->hashIdRoute('su_delete', $url->id));
         $response->assertForbidden();

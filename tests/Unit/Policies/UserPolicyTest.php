@@ -15,7 +15,7 @@ class UserPolicyTest extends TestCase
      */
     public function viewAdmin()
     {
-        $admin = $this->admin();
+        $admin = $this->adminUser();
 
         $this->assertTrue($admin->can('view', $admin));
         $this->assertTrue($admin->can('view', new User));
@@ -43,7 +43,7 @@ class UserPolicyTest extends TestCase
      */
     public function updateAdmin()
     {
-        $admin = $this->admin();
+        $admin = $this->adminUser();
 
         $this->assertTrue($admin->can('update', $admin));
         $this->assertTrue($admin->can('update', new User));
@@ -71,7 +71,7 @@ class UserPolicyTest extends TestCase
      */
     public function updatePassAdmin()
     {
-        $admin = $this->admin();
+        $admin = $this->adminUser();
 
         $this->assertTrue($admin->can('updatePass', $admin));
         $this->assertTrue($admin->can('updatePass', new User));
@@ -105,7 +105,7 @@ class UserPolicyTest extends TestCase
      */
     public function adminCanAccessChangePasswordPage()
     {
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->get($this->getCPRoute($this->normalUser()->name));
 
         $response->assertOk();
@@ -118,7 +118,7 @@ class UserPolicyTest extends TestCase
     public function nonAdminCantAccessChangePasswordPage()
     {
         $response = $this->actingAs($this->normalUser())
-            ->get($this->getCPRoute($this->admin()->name));
+            ->get($this->getCPRoute($this->adminUser()->name));
 
         $response->assertForbidden();
     }
@@ -126,8 +126,8 @@ class UserPolicyTest extends TestCase
     /** @test */
     public function usersCanAccessTheirOwnChangePasswordPage()
     {
-        $response =$this->actingAs($this->admin())
-            ->get($this->getCPRoute($this->admin()->name));
+        $response =$this->actingAs($this->adminUser())
+            ->get($this->getCPRoute($this->adminUser()->name));
 
         $response->assertOk();
     }
@@ -142,7 +142,7 @@ class UserPolicyTest extends TestCase
      */
     public function adminCanAccessAllUsersPage()
     {
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->get(route('user.index'));
 
         $response->assertOk();

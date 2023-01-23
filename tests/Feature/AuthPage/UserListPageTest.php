@@ -12,7 +12,7 @@ class UserListPageTest extends TestCase
      */
     public function ulpAdminCanAccessThisPage()
     {
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->get(route('user.index'));
 
         $response->assertOk();

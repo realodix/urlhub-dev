@@ -21,7 +21,7 @@ class AllUrlsPageTest extends TestCase
      */
     public function auAdminCanAccessThisPage()
     {
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->get(route('dashboard.allurl'));
 
         $response->assertOk();
@@ -47,7 +47,7 @@ class AllUrlsPageTest extends TestCase
     {
         $url = Url::factory()->create();
 
-        $response = $this->actingAs($this->admin())
+        $response = $this->actingAs($this->adminUser())
             ->from(route('dashboard.allurl'))
             ->get($this->hashIdRoute('dashboard.allurl.su_delete', $url->id));
 

@@ -22,7 +22,7 @@ trait Auth
         $admin->assignRole($this->getAdminRole());
     }
 
-    protected function admin()
+    protected function adminUser()
     {
         return User::role($this->adminRole)->first();
     }

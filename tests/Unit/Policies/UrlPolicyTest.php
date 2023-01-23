@@ -15,7 +15,7 @@ class UrlPolicyTest extends TestCase
      */
     public function forceDeleteAdmin()
     {
-        $admin = $this->admin();
+        $admin = $this->adminUser();
         $url = Url::factory()->create([
             'user_id'  => $admin->id,
             'destination' => 'https://laravel.com',
