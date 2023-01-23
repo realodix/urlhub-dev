@@ -24,7 +24,7 @@ class UserListPageTest extends TestCase
      */
     public function ulpNonAdminCantAccessThisPage()
     {
-        $response = $this->actingAs($this->nonAdmin())
+        $response = $this->actingAs($this->normalUser())
             ->get(route('user.index'));
 
         $response->assertForbidden();

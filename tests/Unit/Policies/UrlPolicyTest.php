@@ -33,7 +33,7 @@ class UrlPolicyTest extends TestCase
      */
     public function forceDeleteNonAdmin()
     {
-        $user = $this->nonAdmin();
+        $user = $this->normalUser();
         $url = Url::factory()->create([
             'user_id'  => $user->id,
             'destination' => 'https://laravel.com',

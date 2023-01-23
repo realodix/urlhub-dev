@@ -51,7 +51,7 @@ class ChangePasswordTest extends TestCase
      */
     public function adminCanChangeThePasswordOfAllUsers()
     {
-        $user = $this->nonAdmin();
+        $user = $this->normalUser();
 
         $response = $this->actingAs($this->admin())
             ->from($this->getRoute($user->name))
@@ -105,7 +105,7 @@ class ChangePasswordTest extends TestCase
      */
     public function newPasswordValidateFail($data1, $data2)
     {
-        $user = $this->nonAdmin();
+        $user = $this->normalUser();
 
         $response = $this->actingAs($user)
             ->from($this->getRoute($user->name))

@@ -29,7 +29,7 @@ class UserPolicyTest extends TestCase
      */
     public function viewNonAdmin()
     {
-        $user = $this->nonAdmin();
+        $user = $this->normalUser();
 
         $this->assertTrue($user->can('view', $user));
         $this->assertFalse($user->can('view', new User));
@@ -57,7 +57,7 @@ class UserPolicyTest extends TestCase
      */
     public function updateNonAdmin()
     {
-        $user = $this->nonAdmin();
+        $user = $this->normalUser();
 
         $this->assertTrue($user->can('update', $user));
         $this->assertFalse($user->can('update', new User));
@@ -85,7 +85,7 @@ class UserPolicyTest extends TestCase
      */
     public function updatePassNonAdmin()
     {
-        $user = $this->nonAdmin();
+        $user = $this->normalUser();
 
         $this->assertTrue($user->can('updatePass', $user));
         $this->assertFalse($user->can('updatePass', new User));
@@ -106,7 +106,7 @@ class UserPolicyTest extends TestCase
     public function adminCanAccessChangePasswordPage()
     {
         $response = $this->actingAs($this->admin())
-            ->get($this->getCPRoute($this->nonAdmin()->name));
+            ->get($this->getCPRoute($this->normalUser()->name));
 
         $response->assertOk();
     }
@@ -117,7 +117,7 @@ class UserPolicyTest extends TestCase
      */
     public function nonAdminCantAccessChangePasswordPage()
     {
-        $response = $this->actingAs($this->nonAdmin())
+        $response = $this->actingAs($this->normalUser())
             ->get($this->getCPRoute($this->admin()->name));
 
         $response->assertForbidden();
@@ -153,7 +153,7 @@ class UserPolicyTest extends TestCase
      */
     public function nonAdminCantAccessAllUsersPage()
     {
-        $response = $this->actingAs($this->nonAdmin())
+        $response = $this->actingAs($this->normalUser())
             ->get(route('user.index'));
 
         $response->assertForbidden();

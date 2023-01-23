@@ -141,7 +141,7 @@ class CreateShortLinkTest extends TestCase
     public function longUrlAlreadyExistsButStillAccepted1()
     {
         $user = $this->admin();
-        $user2 = $this->nonAdmin();
+        $user2 = $this->normalUser();
 
         $url = Url::factory()->create([
             'user_id' => $user2->id,
@@ -257,7 +257,7 @@ class CreateShortLinkTest extends TestCase
     {
         $url = Url::factory()->create();
 
-        $response = $this->actingAs($this->nonAdmin())
+        $response = $this->actingAs($this->normalUser())
             ->post(route('su_create'), [
                 'long_url'   => 'https://laravel-news.com',
                 'custom_key' => $url->keyword,

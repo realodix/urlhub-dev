@@ -27,7 +27,7 @@ trait Auth
         return User::role($this->adminRole)->first();
     }
 
-    protected function nonAdmin()
+    protected function normalUser()
     {
         return User::factory()->create();
     }

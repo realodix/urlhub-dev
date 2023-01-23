@@ -58,7 +58,7 @@ class DeleteShortLinkTest extends TestCase
     public function userCannotDeleteUrlsCreatedByOtherUsers()
     {
         $url = Url::factory()->create();
-        $response = $this->actingAs($this->nonAdmin())
+        $response = $this->actingAs($this->normalUser())
             ->from(route('su_detail', $url->keyword))
             ->get($this->hashIdRoute('su_delete', $url->id));
 
@@ -70,7 +70,7 @@ class DeleteShortLinkTest extends TestCase
     public function userCannotDeleteUrlsCreatedByGuest()
     {
         $url = Url::factory()->create(['user_id' => Url::GUEST_ID]);
-        $response = $this->actingAs($this->nonAdmin())
+        $response = $this->actingAs($this->normalUser())
             ->from(route('su_detail', $url->keyword))
             ->get($this->hashIdRoute('su_delete', $url->id));
 

@@ -49,7 +49,7 @@ class RegisterTest extends TestCase
      */
     public function userCannotViewARegistrationFormWhenAuthenticated()
     {
-        $response = $this->actingAs($this->nonAdmin())
+        $response = $this->actingAs($this->normalUser())
             ->get($this->getRoute());
 
         $response->assertRedirect($this->guestMiddlewareRoute());

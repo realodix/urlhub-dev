@@ -33,7 +33,7 @@ class AllUrlsPageTest extends TestCase
      */
     public function auNonAdminCantAccessThisPage()
     {
-        $response = $this->actingAs($this->nonAdmin())
+        $response = $this->actingAs($this->normalUser())
             ->get(route('dashboard.allurl'));
 
         $response->assertForbidden();
@@ -65,7 +65,7 @@ class AllUrlsPageTest extends TestCase
     {
         $url = Url::factory()->create();
 
-        $response = $this->actingAs($this->nonAdmin())
+        $response = $this->actingAs($this->normalUser())
             ->from(route('dashboard.allurl'))
             ->get($this->hashIdRoute('dashboard.allurl.su_delete', $url->id));
 
