@@ -41,13 +41,11 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function belongsToAuthor()
+    public function belongsToUser()
     {
-        $url = Url::factory()->create([
-            'user_id' => $this->adminUser()->id,
-        ]);
+        $url = Url::factory()->create();
 
-        $this->assertEquals(1, $url->author->count());
+        $this->assertEquals(2, $url->author->count());
         $this->assertInstanceOf(User::class, $url->author);
     }
 
