@@ -89,13 +89,9 @@ class CreateShortLinkTest extends TestCase
      */
     public function longUrlAlreadyExist()
     {
-        $user = $this->adminUser();
+        $url = Url::factory()->create();
 
-        $url = Url::factory()->create([
-            'user_id' => $user->id,
-        ]);
-
-        $response = $this->actingAs($this->adminUser())
+        $response = $this->actingAs($url->author)
             ->post(route('su_create'), [
                 'long_url' => $url->destination,
             ]);
@@ -147,7 +143,7 @@ class CreateShortLinkTest extends TestCase
             'user_id' => $user2->id,
         ]);
 
-        $response = $this->actingAs($this->adminUser())
+        $response = $this->actingAs($user)
             ->post(route('su_create'), [
                 'long_url' => $url->destination,
             ]);
