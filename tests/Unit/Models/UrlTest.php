@@ -41,7 +41,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function belongsToUser()
+    public function belongsToUserModel()
     {
         $url = Url::factory()->create();
 
@@ -56,7 +56,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function hasManyUrlStat()
+    public function hasManyUrlModel()
     {
         $url = Url::factory()->create();
 
