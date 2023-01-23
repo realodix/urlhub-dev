@@ -78,7 +78,7 @@ class RegisterTest extends TestCase
         $this->assertTrue(Hash::check('i-love-laravel', $user->password));
 
         Event::assertDispatched(Registered::class, function ($e) use ($user) {
-            return $e->author->id === $user->id;
+            return $e->user->id === $user->id;
         });
     }
 
