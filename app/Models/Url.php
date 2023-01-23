@@ -56,7 +56,7 @@ class Url extends Model
      */
     public function author()
     {
-        return $this->belongsTo(User::class)->withDefault([
+        return $this->belongsTo(User::class, 'user_id')->withDefault([
             'name' => 'Guest',
         ]);
     }
