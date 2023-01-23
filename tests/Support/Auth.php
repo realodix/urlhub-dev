@@ -12,19 +12,14 @@ trait Auth
 
     protected $adminPass = 'admin';
 
-    protected function setUp(): void
+    protected function adminUser()
     {
-        parent::setUp();
-
         $admin = User::factory()->create([
             'password' => bcrypt($this->adminPass),
         ]);
         $admin->assignRole($this->getAdminRole());
-    }
 
-    protected function adminUser()
-    {
-        return User::role($this->adminRole)->first();
+        return $admin;
     }
 
     protected function normalUser()
