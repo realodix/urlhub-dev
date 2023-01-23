@@ -12,12 +12,24 @@ trait Auth
 
     protected $adminPass = 'admin';
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // create permissions
+        Permission::create(['name' => $this->adminRole]);
+
+        // create roles and assign created permissions
+        $adminRole = Role::create(['name' => $this->adminRole]);
+        $adminRole->givePermissionTo(Permission::all());
+    }
+
     protected function adminUser()
     {
         $admin = User::factory()->create([
             'password' => bcrypt($this->adminPass),
         ]);
-        $admin->assignRole($this->getAdminRole());
+        $admin->assignRole($this->adminRole);
 
         return $admin;
     }
@@ -25,17 +37,5 @@ trait Auth
     protected function normalUser()
     {
         return User::factory()->create();
-    }
-
-    private function getAdminRole()
-    {
-        // create permissions
-        Permission::create(['name' => $this->adminRole]);
-
-        // create roles and assign created permissions
-        $adminRole = Role::create(['name' => $this->adminRole]);
-        $adminRole->givePermissionTo(Permission::all());
-
-        return $adminRole;
     }
 }

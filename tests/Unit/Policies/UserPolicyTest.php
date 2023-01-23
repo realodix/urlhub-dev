@@ -112,10 +112,12 @@ class UserPolicyTest extends TestCase
     }
 
     /**
+     * Normal user cant access other users change password page.
+     *
      * @test
      * @group u-policy
      */
-    public function nonAdminCantAccessChangePasswordPage()
+    public function normalUserCantAccessOtherUsersChangePasswordPage()
     {
         $response = $this->actingAs($this->normalUser())
             ->get($this->getCPRoute($this->adminUser()->name));

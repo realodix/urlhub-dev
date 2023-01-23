@@ -26,8 +26,9 @@ class ProfileTest extends TestCase
      */
     public function usersCanAccessTheirOwnProfilePage()
     {
-        $response = $this->actingAs($this->adminUser())
-            ->get($this->getRoute($this->adminUser()->name));
+        $user = $this->normalUser();
+        $response = $this->actingAs($user)
+            ->get($this->getRoute($user->name));
 
         $response->assertOk();
     }
