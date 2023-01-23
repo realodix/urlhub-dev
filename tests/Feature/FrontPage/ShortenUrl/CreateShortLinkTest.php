@@ -136,19 +136,15 @@ class CreateShortLinkTest extends TestCase
      */
     public function longUrlAlreadyExistsButStillAccepted1()
     {
-        $user = $this->adminUser();
-        $user2 = $this->normalUser();
-
-        $url = Url::factory()->create([
-            'user_id' => $user2->id,
-        ]);
+        $user = $this->normalUser();
+        $urlFromOtherUsers = Url::factory()->create();
 
         $response = $this->actingAs($user)
             ->post(route('su_create'), [
-                'long_url' => $url->destination,
+                'long_url' => $urlFromOtherUsers->destination,
             ]);
 
-        $url = Url::whereUserId($user->id)->first();
+        $url = $user->urls()->first();
 
         $response->assertRedirectToRoute('su_detail', $url->keyword);
         $this->assertCount(2, Url::all());
@@ -157,7 +153,7 @@ class CreateShortLinkTest extends TestCase
     /**
      * Authen User and Guest
      *
-     * Ketika URL sudah ada (dibuat oleh authen user), lalu salah guest membuat shorlink
+     * Ketika URL sudah ada (dibuat oleh authen user), lalu guest membuat shorlink
      * dengan URL yang sama, maka peringatan tidak perlu ditampilkan.
      *
      * @test
@@ -197,7 +193,7 @@ class CreateShortLinkTest extends TestCase
                 'long_url' => $url->destination,
             ]);
 
-        $url = Url::whereUserId($user->id)->first();
+        $url = $user->urls()->first();
 
         $response->assertRedirectToRoute('su_detail', $url->keyword);
         $this->assertCount(2, Url::all());
@@ -209,7 +205,11 @@ class CreateShortLinkTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    /**
+     * This test is to make sure that the custom key is not used by other users.
+     *
+     * @test
+     */
     public function customKeyAlreadyExist()
     {
         $url = Url::factory()->create([
@@ -229,7 +229,11 @@ class CreateShortLinkTest extends TestCase
         $this->assertCount(1, Url::all());
     }
 
-    /** @test */
+    /**
+     * This test is to make sure that the custom key is not used by other users.
+     *
+     * @test
+     */
     public function customKeyAlreadyExist2()
     {
         $url = Url::factory()->create();
@@ -248,6 +252,7 @@ class CreateShortLinkTest extends TestCase
 
     /**
      * With authenticated user.
+     * This test is to make sure that the custom key is not used by other users.
      *
      * @test
      */

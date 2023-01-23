@@ -49,7 +49,7 @@ class ProfileTest extends TestCase
      * @test
      * @group f-user
      */
-    public function nonAdminCantAccessOtherUsersProfilePages()
+    public function adminUserCantAccessOtherUsersProfilePages()
     {
         $response = $this->actingAs($this->normalUser())
             ->get($this->getRoute($this->adminUser()->name));
@@ -82,7 +82,7 @@ class ProfileTest extends TestCase
      * @test
      * @group f-user
      */
-    public function nonAdminCantChangeOtherUsersEmail()
+    public function normalUserCantChangeOtherUsersEmail()
     {
         $user = User::factory()->create(['email' => 'user2@urlhub.test']);
 
@@ -102,7 +102,7 @@ class ProfileTest extends TestCase
      */
     public function validationEmailRequired()
     {
-        $user = $this->adminUser();
+        $user = $this->normalUser();
 
         $response = $this->actingAs($user)
             ->from($this->getRoute($user->name))
@@ -121,7 +121,7 @@ class ProfileTest extends TestCase
      */
     public function validationEmailInvalidFormat()
     {
-        $user = $this->adminUser();
+        $user = $this->normalUser();
 
         $response = $this->actingAs($user)
             ->from($this->getRoute($user->name))
@@ -140,7 +140,7 @@ class ProfileTest extends TestCase
      */
     public function validationEmailMaxLength()
     {
-        $user = $this->adminUser();
+        $user = $this->normalUser();
 
         $response = $this->actingAs($user)
             ->from($this->getRoute($user->name))
@@ -160,7 +160,7 @@ class ProfileTest extends TestCase
      */
     public function validationEmailUnique()
     {
-        $user = $this->adminUser();
+        $user = $this->normalUser();
 
         $response = $this->actingAs($user)
             ->from($this->getRoute($user->name))

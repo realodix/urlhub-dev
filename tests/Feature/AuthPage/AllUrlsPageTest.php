@@ -31,7 +31,7 @@ class AllUrlsPageTest extends TestCase
      * @test
      * @group f-allurl
      */
-    public function auNonAdminCantAccessThisPage()
+    public function auNormalUserCantAccessThisPage()
     {
         $response = $this->actingAs($this->normalUser())
             ->get(route('dashboard.allurl'));
@@ -61,7 +61,7 @@ class AllUrlsPageTest extends TestCase
      * @test
      * @group f-allurl
      */
-    public function auNonAdminCantDelete()
+    public function auNormalUserCantDelete()
     {
         $url = Url::factory()->create();
 

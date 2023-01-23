@@ -22,7 +22,7 @@ class UserListPageTest extends TestCase
      * @test
      * @group f-userlist
      */
-    public function ulpNonAdminCantAccessThisPage()
+    public function ulpNormalUserCantAccessThisPage()
     {
         $response = $this->actingAs($this->normalUser())
             ->get(route('user.index'));
