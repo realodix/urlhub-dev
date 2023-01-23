@@ -52,21 +52,6 @@ class UrlTest extends TestCase
     }
 
     /**
-     * The default guest name must be Guest.
-     *
-     * @test
-     * @group u-model
-     */
-    public function defaultGuestName()
-    {
-        $url = Url::factory()->create([
-            'user_id' => Url::GUEST_ID,
-        ]);
-
-        $this->assertSame('Guest', $url->author->name);
-    }
-
-    /**
      * Url model must have a relationship with Visit model as one to many.
      * This test will check if the relationship exists.
      *
@@ -82,6 +67,21 @@ class UrlTest extends TestCase
         ]);
 
         $this->assertTrue($url->visits()->exists());
+    }
+
+    /**
+     * The default guest name must be Guest.
+     *
+     * @test
+     * @group u-model
+     */
+    public function defaultGuestName()
+    {
+        $url = Url::factory()->create([
+            'user_id' => Url::GUEST_ID,
+        ]);
+
+        $this->assertSame('Guest', $url->author->name);
     }
 
     /**
