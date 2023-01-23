@@ -41,7 +41,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function belongsToModel()
+    public function belongsToUserModel()
     {
         $url = Url::factory()->create([
             'user_id' => $this->adminUser()->id,
