@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot call method visits\\(\\) on App\\\\Models\\\\Url\\|null\\.$#"
-			count: 2
-			path: app/Models/Url.php
-
-		-
 			message: "#^Cannot access property \\$email on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: tests/Feature/Auth/RegisterTest.php

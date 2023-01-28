@@ -159,10 +159,12 @@ class Url extends Model
      */
     public function numberOfClicks(int $urlId, bool $unique = false): int
     {
-        $total = self::find($urlId)->visits()->count();
+        /** @var self */
+        $self = self::find($urlId);
+        $total = $self->visits()->count();
 
         if ($unique === true) {
-            $total = self::find($urlId)->visits()
+            $total = $self->visits()
                 ->whereIsFirstClick(true)
                 ->count();
         }
