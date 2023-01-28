@@ -1,2 +1,171 @@
 parameters:
 	ignoreErrors:
+		-
+			message: "#^Method App\\\\Helpers\\\\Helper\\:\\:urlDisplay\\(\\) should return Illuminate\\\\Support\\\\Stringable\\|string but returns string\\|null\\.$#"
+			count: 1
+			path: app/Helpers/Helper.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function rtrim expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Helpers/Helper.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Helpers/Helper.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Helpers/Helper.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of static method Illuminate\\\\Support\\\\Str\\:\\:of\\(\\) expects string, string\\|null given\\.$#"
+			count: 2
+			path: app/Helpers/Helper.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Http/Livewire/Table/AllUlrTable.php
+
+		-
+			message: "#^Cannot access property \\$keyword on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 1
+			path: app/Http/Middleware/UrlHubLinkChecker.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Models/Url.php
+
+		-
+			message: "#^Cannot call method visits\\(\\) on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 2
+			path: app/Models/Url.php
+
+		-
+			message: "#^Cannot access property \\$password on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Rules/PwdCurrent.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Services/KeyGeneratorService.php
+
+		-
+			message: "#^Cannot call method replicate\\(\\) on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 1
+			path: app/Services/UHubLinkService.php
+
+		-
+			message: "#^Cannot call method assignRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: database/seeders/RolesAndPermissionsSeeder.php
+
+		-
+			message: "#^Cannot access property \\$email on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Feature/Auth/RegisterTest.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Feature/Auth/RegisterTest.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Feature/Auth/RegisterTest.php
+
+		-
+			message: "#^Cannot access property \\$password on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Feature/Auth/RegisterTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:assertAuthenticatedAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 1
+			path: tests/Feature/Auth/RegisterTest.php
+
+		-
+			message: "#^Cannot access property \\$destination on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 1
+			path: tests/Feature/AuthPage/DashboardPageTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:actingAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 4
+			path: tests/Feature/AuthPage/DashboardPageTest.php
+
+		-
+			message: "#^Cannot access property \\$email on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Feature/AuthPage/User/ProfileTest.php
+
+		-
+			message: "#^Cannot access property \\$is_custom on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 2
+			path: tests/Feature/FrontPage/ShortenUrl/CreateShortLinkTest.php
+
+		-
+			message: "#^Cannot access property \\$keyword on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 2
+			path: tests/Feature/FrontPage/ShortenUrl/CreateShortLinkTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:actingAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 1
+			path: tests/Feature/FrontPage/ShortenUrl/CreateShortLinkTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:actingAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 1
+			path: tests/Feature/FrontPage/ShortenUrl/DeleteShortLinkTest.php
+
+		-
+			message: "#^Cannot access property \\$user_id on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 2
+			path: tests/Unit/Controllers/UrlControllerTest.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 6
+			path: tests/Unit/Models/UrlTest.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Unit/Models/UrlTest.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Unit/Models/UrlTest.php
+
+		-
+			message: "#^Cannot access property \\$user_id on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 2
+			path: tests/Unit/Models/UrlTest.php
+
+		-
+			message: "#^Cannot call method count\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: tests/Unit/Models/UrlTest.php
+
+		-
+			message: "#^Cannot call method numberOfClicksPerAuthor\\(\\) on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 1
+			path: tests/Unit/Models/UrlTest.php
+
+		-
+			message: "#^Cannot call method count\\(\\) on App\\\\Models\\\\Url\\|null\\.$#"
+			count: 1
+			path: tests/Unit/Models/VisitTest.php
+
+		-
+			message: "#^Cannot call method can\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: tests/Unit/Policies/UrlPolicyTest.php
