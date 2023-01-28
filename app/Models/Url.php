@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property User     $author
  * @property int|null $user_id
  * @property string   $short_url
  * @property string   $destination
