@@ -1,31 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method App\\\\Helpers\\\\Helper\\:\\:urlDisplay\\(\\) should return Illuminate\\\\Support\\\\Stringable\\|string but returns string\\|null\\.$#"
-			count: 1
-			path: app/Helpers/Helper.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function rtrim expects string, string\\|null given\\.$#"
-			count: 1
-			path: app/Helpers/Helper.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|null given\\.$#"
-			count: 1
-			path: app/Helpers/Helper.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
-			count: 1
-			path: app/Helpers/Helper.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of static method Illuminate\\\\Support\\\\Str\\:\\:of\\(\\) expects string, string\\|null given\\.$#"
-			count: 2
-			path: app/Helpers/Helper.php
-
-		-
 			message: "#^Cannot access property \\$keyword on App\\\\Models\\\\Url\\|null\\.$#"
 			count: 1
 			path: app/Http/Middleware/UrlHubLinkChecker.php
