@@ -9,12 +9,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property User     $author
- * @property int|null $user_id
- * @property string   $short_url
- * @property string   $destination
- * @property int      $clicks
- * @property int      $uniqueClicks
+ * @property User           $author
+ * @property Visit[]        $visits
+ * @property int|null       $user_id
+ * @property string         $short_url
+ * @property string         $destination
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property int            $clicks
+ * @property int            $uniqueClicks
  */
 class Url extends Model
 {
