@@ -37,7 +37,7 @@ class KeyGeneratorService
         $length = config('urlhub.hash_length') * -1;
         $pattern = '/[^'.config('urlhub.hash_char').']/i';
 
-        return substr(preg_replace($pattern, '', $value), $length);
+        return substr((string) preg_replace($pattern, '', $value), $length);
     }
 
     /**

@@ -6,11 +6,6 @@ parameters:
 			path: app/Models/Url.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
-			count: 1
-			path: app/Services/KeyGeneratorService.php
-
-		-
 			message: "#^Cannot call method assignRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: database/seeders/RolesAndPermissionsSeeder.php
