@@ -11,11 +11,6 @@ parameters:
 			path: app/Models/Url.php
 
 		-
-			message: "#^Cannot access property \\$password on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/Rules/PwdCurrent.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
 			count: 1
 			path: app/Services/KeyGeneratorService.php
