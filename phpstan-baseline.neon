@@ -6,11 +6,6 @@ parameters:
 			path: app/Models/Url.php
 
 		-
-			message: "#^Cannot call method assignRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: database/seeders/RolesAndPermissionsSeeder.php
-
-		-
 			message: "#^Cannot access property \\$email on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: tests/Feature/Auth/RegisterTest.php
