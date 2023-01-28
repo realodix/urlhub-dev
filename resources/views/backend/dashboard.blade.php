@@ -24,7 +24,7 @@
                     <div class="w-full sm:w-1/4">
                         <div class="block">
                             <b class="text-uh-1">@svg('icon-link', 'mr-1.5') {{__('URLs')}}:</b>
-                            <span class="text-cyan-600">{{compactNumber($url->totalUrl())}}</span> -
+                            <span class="text-cyan-600">{{compactNumber($url->count())}}</span> -
                             <span class="text-teal-600">{{compactNumber($url->whereUserId(auth()->id())->count())}}</span> -
                             <span class="text-orange-600">{{compactNumber($url->numberOfUrlsByGuests())}}</span>
                         </div>
