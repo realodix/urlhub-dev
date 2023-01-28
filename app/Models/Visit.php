@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property Url $url
+ * @property Url            $url
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */

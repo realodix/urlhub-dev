@@ -84,13 +84,3 @@ parameters:
 			message: "#^Cannot access property \\$user_id on App\\\\Models\\\\Url\\|null\\.$#"
 			count: 1
 			path: tests/Unit/Models/UrlTest.php
-
-		-
-			message: "#^Cannot call method count\\(\\) on array\\<App\\\\Models\\\\Url\\>\\.$#"
-			count: 1
-			path: tests/Unit/Models/UserTest.php
-
-		-
-			message: "#^Cannot call method first\\(\\) on array\\<App\\\\Models\\\\Url\\>\\.$#"
-			count: 1
-			path: tests/Unit/Models/UserTest.php

@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @property Url[] $urls
+ * @property Url            $urls
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
