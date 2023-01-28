@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot access property \\$keyword on App\\\\Models\\\\Url\\|null\\.$#"
-			count: 1
-			path: app/Http/Middleware/UrlHubLinkChecker.php
-
-		-
 			message: "#^Cannot call method visits\\(\\) on App\\\\Models\\\\Url\\|null\\.$#"
 			count: 2
 			path: app/Models/Url.php
