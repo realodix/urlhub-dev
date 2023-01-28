@@ -21,11 +21,6 @@ parameters:
 			path: app/Services/KeyGeneratorService.php
 
 		-
-			message: "#^Cannot call method replicate\\(\\) on App\\\\Models\\\\Url\\|null\\.$#"
-			count: 1
-			path: app/Services/UHubLinkService.php
-
-		-
 			message: "#^Cannot call method assignRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: database/seeders/RolesAndPermissionsSeeder.php
