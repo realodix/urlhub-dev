@@ -8,7 +8,6 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
-use Vinkla\Hashids\Facades\Hashids;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -26,10 +25,8 @@ class RouteServiceProvider extends ServiceProvider
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->configureRateLimiting();
 
@@ -49,10 +46,8 @@ class RouteServiceProvider extends ServiceProvider
 
     /**
      * Configure the rate limiters for the application.
-     *
-     * @return void
      */
-    protected function configureRateLimiting()
+    protected function configureRateLimiting(): void
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
@@ -68,24 +63,8 @@ class RouteServiceProvider extends ServiceProvider
             return User::whereName($value)->firstOrFail();
         });
 
-        Route::bind('user_hashId', function (string $value) {
-            return $this->hashidsDecoder(User::class, $value);
+        Route::bind('hash_id', function (string $value) {
+            return decrypt($value);
         });
-
-        Route::bind('su_hashId', function (string $value) {
-            return $this->hashidsDecoder(\App\Models\Url::class, $value);
-        });
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection
-     */
-    private function hashidsDecoder(string $model, string $routeKey)
-    {
-        /** @var \Vinkla\Hashids\Facades\Hashids */
-        $hashids = Hashids::connection($model);
-        $id = $hashids->decode($routeKey)[0] ?? null;
-
-        return resolve($model)->findOrFail($id);
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Traits\Hashidable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property User           $author
@@ -21,8 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Url extends Model
 {
-    use HasFactory;
-    use Hashidable;
+    use \App\Models\Traits\Hashidable;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     const GUEST_ID = null;
 
@@ -59,9 +59,9 @@ class Url extends Model
     */
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Get the user that owns the Url.
      */
-    public function author()
+    public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id')
             ->withDefault([
@@ -70,9 +70,9 @@ class Url extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Get the visits for the Url.
      */
-    public function visits()
+    public function visits(): HasMany
     {
         return $this->hasMany(Visit::class);
     }

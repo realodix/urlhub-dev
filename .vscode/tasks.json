@@ -24,13 +24,25 @@
         {
             "label": "[SA] PHPStan",
             "type": "shell",
-            "command": "./vendor/bin/phpstan analyse -vv",
+            "command": "./vendor/bin/phpstan analyse",
             "problemMatcher": []
         },
         {
             "label": "[SA] PHPStan (baseline)",
             "type": "shell",
-            "command": "./vendor/bin/phpstan analyse --generate-baseline -vv",
+            "command": "./vendor/bin/phpstan analyse --generate-baseline",
+            "problemMatcher": []
+        },
+        {
+            "label": "[SA] Psalm",
+            "type": "shell",
+            "command": "./vendor/bin/psalm",
+            "problemMatcher": []
+        },
+        {
+            "label": "[SA] Psalm (baseline)",
+            "type": "shell",
+            "command": "./vendor/bin/psalm --set-baseline=psalm-baseline.xml",
             "problemMatcher": []
         },
         {

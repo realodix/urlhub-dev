@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserPassword;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 
 class ChangePasswordController extends Controller
@@ -28,17 +29,16 @@ class ChangePasswordController extends Controller
      * Change the password.
      *
      * @param UpdateUserPassword $request \App\Http\Requests\UpdateUserPassword
-     * @param User               $user    \App\Models\User
-     * @return \Illuminate\Http\RedirectResponse
+     * @param User               $hash_id \App\Models\User
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(UpdateUserPassword $request, User $user)
+    public function update(UpdateUserPassword $request, User $hash_id): RedirectResponse
     {
-        $this->authorize('updatePass', $user);
+        $this->authorize('updatePass', $hash_id);
 
-        $user->password = Hash::make($request['new-password']);
-        $user->save();
+        $hash_id->password = Hash::make($request['new-password']);
+        $hash_id->save();
 
         return redirect()->back()
             ->withFlashSuccess(__('Password changed successfully !'));

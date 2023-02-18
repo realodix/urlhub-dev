@@ -4,22 +4,14 @@ namespace Tests\Feature\AuthPage;
 
 use App\Models\Url;
 use Tests\TestCase;
-use Vinkla\Hashids\Facades\Hashids;
 
 class AllUrlsPageTest extends TestCase
 {
-    protected function hashIdRoute($routeName, $url_id)
-    {
-        $hashids = Hashids::connection(Url::class);
-
-        return route($routeName, $hashids->encode($url_id));
-    }
-
     /**
      * @test
      * @group f-allurl
      */
-    public function auAdminCanAccessThisPage()
+    public function auAdminCanAccessThisPage(): void
     {
         $response = $this->actingAs($this->adminUser())
             ->get(route('dashboard.allurl'));
@@ -31,7 +23,7 @@ class AllUrlsPageTest extends TestCase
      * @test
      * @group f-allurl
      */
-    public function auNormalUserCantAccessThisPage()
+    public function auNormalUserCantAccessThisPage(): void
     {
         $response = $this->actingAs($this->normalUser())
             ->get(route('dashboard.allurl'));
@@ -43,13 +35,13 @@ class AllUrlsPageTest extends TestCase
      * @test
      * @group f-allurl
      */
-    public function auAdminCanDelete()
+    public function auAdminCanDelete(): void
     {
         $url = Url::factory()->create();
 
         $response = $this->actingAs($this->adminUser())
             ->from(route('dashboard.allurl'))
-            ->get($this->hashIdRoute('dashboard.allurl.su_delete', $url->id));
+            ->get($this->secureRoute('dashboard.allurl.su_delete', $url->id));
 
         $response->assertRedirectToRoute('dashboard.allurl')
             ->assertSessionHas('flash_success');
@@ -61,13 +53,13 @@ class AllUrlsPageTest extends TestCase
      * @test
      * @group f-allurl
      */
-    public function auNormalUserCantDelete()
+    public function auNormalUserCantDelete(): void
     {
         $url = Url::factory()->create();
 
         $response = $this->actingAs($this->normalUser())
             ->from(route('dashboard.allurl'))
-            ->get($this->hashIdRoute('dashboard.allurl.su_delete', $url->id));
+            ->get($this->secureRoute('dashboard.allurl.su_delete', $url->id));
 
         $response->assertForbidden();
         $this->assertCount(1, Url::all());

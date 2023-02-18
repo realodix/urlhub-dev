@@ -7,6 +7,7 @@ use App\Models\Url;
 use App\Models\User;
 use App\Services\KeyGeneratorService;
 use App\Services\UHubLinkService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -51,14 +52,13 @@ class DashboardController extends Controller
      * Update the destination URL
      *
      * @param Request $request \Illuminate\Http\Request
-     * @param Url     $url     \App\Models\Url
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Url     $hash_id \App\Models\Url
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, Url $url)
+    public function update(Request $request, Url $hash_id): RedirectResponse
     {
-        $this->uHubLinkService->update($request, $url);
+        $this->uHubLinkService->update($request, $hash_id);
 
         return to_route('dashboard')
             ->withFlashSuccess(__('Link changed successfully !'));
@@ -67,16 +67,15 @@ class DashboardController extends Controller
     /**
      * Delete shortened URLs
      *
-     * @param Url $url \App\Models\Url
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Url $hash_id \App\Models\Url
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function delete(Url $url)
+    public function delete(Url $hash_id): RedirectResponse
     {
-        $this->authorize('forceDelete', $url);
+        $this->authorize('forceDelete', $hash_id);
 
-        $url->delete();
+        $hash_id->delete();
 
         return redirect()->back()
             ->withFlashSuccess(__('Link was successfully deleted.'));
@@ -84,9 +83,8 @@ class DashboardController extends Controller
 
     /**
      * @param string $urlKey A unique key to identify the shortened URL
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function duplicate($urlKey)
+    public function duplicate($urlKey): RedirectResponse
     {
         $this->uHubLinkService->duplicate($urlKey);
 
