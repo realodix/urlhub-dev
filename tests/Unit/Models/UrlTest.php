@@ -140,6 +140,25 @@ class UrlTest extends TestCase
     }
 
     /**
+     * The number of shortened URLs that have been created by each User
+     *
+     * @test
+     * @group u-model
+     */
+    public function numberOfUrls(): void
+    {
+        $user = User::factory()->create();
+
+        Url::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $actual = $this->url->numberOfUrls($user->id);
+
+        $this->assertSame(1, $actual);
+    }
+
+    /**
      * The total number of shortened URLs that have been created by all guests
      *
      * @test
@@ -147,9 +166,8 @@ class UrlTest extends TestCase
      */
     public function numberOfUrlsByGuests(): void
     {
-        Url::factory()->create([
-            'user_id' => Url::GUEST_ID,
-        ]);
+        Url::factory()->create(['user_id' => Url::GUEST_ID]);
+
         $actual = $this->url->numberOfUrlsByGuests();
 
         $this->assertSame(1, $actual);
