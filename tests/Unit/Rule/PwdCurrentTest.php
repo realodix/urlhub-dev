@@ -22,7 +22,7 @@ class PwdCurrentTest extends TestCase
     {
         $val = Helper::validator(['foo' => self::$adminPass], [
             'foo' => new PwdCurrent,
-            'foo' => new PwdCurrent
+            'foo' => new PwdCurrent,
         ]);
 
         $this->assertTrue($val->passes());
