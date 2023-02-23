@@ -41,7 +41,7 @@ class QrCodeService
 
     protected function resolveMargin(): int
     {
-        $margin = (int) config('urlhub.qrcode_margin');
+        $margin = config('urlhub.qrcode_margin');
 
         // if the margin is less than 0, set it to 0.
         // if the margin is greater than 0, set it to the margin.
