@@ -147,13 +147,9 @@ class UrlTest extends TestCase
      */
     public function numberOfUrls(): void
     {
-        $user = User::factory()->create();
+        $url = Url::factory()->create();
 
-        Url::factory()->create([
-            'user_id' => $user->id,
-        ]);
-
-        $actual = $this->url->numberOfUrls($user->id);
+        $actual = $this->url->numberOfUrls($url->author->id);
 
         $this->assertSame(1, $actual);
     }
