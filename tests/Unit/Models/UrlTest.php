@@ -175,14 +175,9 @@ class UrlTest extends TestCase
      */
     public function numberOfClicks(): void
     {
-        $v = Visit::factory()->create([
-            'is_first_click' => true,
-        ]);
+        $v = Visit::factory()->create();
 
-        Visit::factory()->create([
-            'url_id' => $v->url->id,
-            'is_first_click' => false,
-        ]);
+        Visit::factory()->create(['url_id' => $v->url->id]);
 
         $actual = $this->url->numberOfClicks($v->url->id);
 
@@ -197,9 +192,7 @@ class UrlTest extends TestCase
      */
     public function numberOfClicksAndUnique(): void
     {
-        $v = Visit::factory()->create([
-            'is_first_click' => true,
-        ]);
+        $v = Visit::factory()->create();
 
         Visit::factory()->create([
             'url_id' => $v->url->id,
