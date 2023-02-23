@@ -42,4 +42,14 @@ class UrlControllerTest extends TestCase
         $url = Url::whereDestination($longUrl)->first();
         $this->assertSame($user->id, $url->user_id);
     }
+
+    /** @test */
+    public function showDetail(): void
+    {
+        $url = Url::factory()->create();
+
+        $response = $this->get(route('su_detail', $url->keyword));
+
+        $response->assertStatus(200);
+    }
 }
