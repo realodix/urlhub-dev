@@ -92,7 +92,7 @@ class UrlTest extends TestCase
             'user_id' => 0,
         ]);
 
-        $this->assertEquals(null, $url->user_id);
+        $this->assertSame(null, $url->user_id);
     }
 
     /**
