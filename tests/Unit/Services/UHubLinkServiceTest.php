@@ -39,7 +39,7 @@ class UHubLinkServiceTest extends TestCase
         config(['urlhub.web_title' => false]);
 
         $expected = 'No Title';
-        $actual = $this->uHubLinkService->title('https://example123456789.com', '');
+        $actual = $this->uHubLinkService->title('https://example123456789.com');
         $this->assertSame($expected, $actual);
     }
 }
