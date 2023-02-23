@@ -18,6 +18,12 @@ class UrlTest extends TestCase
         $this->url = new Url;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Eloquent: Relationships
+    |--------------------------------------------------------------------------
+    */
+
     /**
      * Url model must have a relationship with User model as one to many.
      * This test will check if the relationship exists.
@@ -77,6 +83,12 @@ class UrlTest extends TestCase
 
         $this->assertSame(Url::GUEST_ID, $url->user_id);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Eloquent: Accessors & Mutators
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * @test
@@ -163,6 +175,12 @@ class UrlTest extends TestCase
 
         $this->assertSame(1, $url->uniqueClicks);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | General
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * The number of shortened URLs that have been created by each User
