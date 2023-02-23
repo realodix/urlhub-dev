@@ -140,6 +140,8 @@ class Url extends Model
 
     /**
      * The number of shortened URLs that have been created by each User
+     *
+     * @param int $userId The ID of the author of the shortened URL
      */
     public function numberOfUrls(int $userId): int
     {
