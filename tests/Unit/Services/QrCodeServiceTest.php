@@ -53,4 +53,28 @@ class QrCodeServiceTest extends TestCase
         $this->assertNotSame($size, imagesx($image));
         $this->assertSame(QrCodeService::MAX_SIZE, imagesx($image));
     }
+
+    /**
+     * resolveRoundBlockSize() will return \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeNone
+     * if round_block_size_mode is not set. Use mockery to reflect protected methods.
+     *
+     * @test
+     */
+    public function resolveRoundBlockSizeWillReturnRoundBlockSizeModeNone(): void
+    {
+        $QrCode = $this->getQrCode();
+
+        $mock = \Mockery::mock($QrCode)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $mock->shouldReceive('getRoundBlockSizeMode')
+            ->once()
+            ->andReturnNull();
+
+        $this->assertInstanceOf(
+            \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeNone::class,
+            $mock->resolveRoundBlockSize()
+        );
+    }
 }
