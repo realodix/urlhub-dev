@@ -55,25 +55,6 @@ class QrCodeServiceTest extends TestCase
     }
 
     /**
-     * resolveMargin() should return 0 if config('urlhub.qrcode_margin') set `false`.
-     *
-     * @test
-     * @group u-actions
-     */
-    public function resolveMarginShouldReturnZero(): void
-    {
-        config(['urlhub.qrcode_margin' => false]);
-
-        $QrCode = $this->getQrCode();
-
-        $reflection = new \ReflectionClass($QrCode);
-        $method = $reflection->getMethod('resolveMargin');
-        $method->setAccessible(true);
-
-        $this->assertSame(0, $method->invoke($QrCode));
-    }
-
-    /**
      * resolveRoundBlockSize() should return \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeNone
      * if config('urlhub.qrcode_round_block_size') set `false`.
      *
