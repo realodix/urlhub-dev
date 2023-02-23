@@ -161,7 +161,7 @@ class UrlTest extends TestCase
             'is_first_click' => false,
         ]);
 
-        $this->assertSame(1, $url->unique_clicks);
+        $this->assertSame(1, $url->uniqueClicks);
     }
 
     /**
