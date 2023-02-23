@@ -140,6 +140,41 @@ class UrlTest extends TestCase
     }
 
     /**
+     * Get clicks attribute
+     *
+     * @test
+     * @group u-model
+     */
+    public function getClicksAttribute(): void
+    {
+        $url = Url::factory()->create();
+
+        Visit::factory()->create(['url_id' => $url->id]);
+
+        $this->assertSame(1, $url->clicks);
+    }
+
+    /**
+     * Get uniqueClicks attribute
+     *
+     * @test
+     * @group u-model
+     */
+    public function getUniqueClicksAttribute(): void
+    {
+        $url = Url::factory()->create();
+
+        Visit::factory()->create(['url_id' => $url->id]);
+
+        Visit::factory()->create([
+            'url_id' => $url->id,
+            'is_first_click' => false,
+        ]);
+
+        $this->assertSame(1, $url->unique_clicks);
+    }
+
+    /**
      * The number of shortened URLs that have been created by each User
      *
      * @test
