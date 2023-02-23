@@ -35,9 +35,7 @@ class PwdCurrentTest extends TestCase
 
         $this->assertTrue($val->fails());
         $this->assertSame([
-            'foo' => [
-                'The password you entered does not match your password. Please try again.',
-            ],
+            'foo' => ['The password you entered does not match your password. Please try again.'],
         ], $val->messages()->messages());
     }
 }

@@ -56,9 +56,7 @@ class UrlTest extends TestCase
      */
     public function defaultGuestName(): void
     {
-        $url = Url::factory()->create([
-            'user_id' => Url::GUEST_ID,
-        ]);
+        $url = Url::factory()->create(['user_id' => Url::GUEST_ID]);
 
         $this->assertSame(Url::GUEST_NAME, $url->author->name);
     }
@@ -73,9 +71,7 @@ class UrlTest extends TestCase
     {
         $longUrl = 'https://example.com';
 
-        $this->post(route('su_create'), [
-            'long_url' => $longUrl,
-        ]);
+        $this->post(route('su_create'), ['long_url' => $longUrl]);
 
         $url = Url::whereDestination($longUrl)->first();
 
@@ -88,9 +84,7 @@ class UrlTest extends TestCase
      */
     public function setUserIdAttributeMustBeNull(): void
     {
-        $url = Url::factory()->create([
-            'user_id' => 0,
-        ]);
+        $url = Url::factory()->create(['user_id' => 0]);
 
         $this->assertSame(null, $url->user_id);
     }
@@ -101,9 +95,7 @@ class UrlTest extends TestCase
      */
     public function setLongUrlAttribute(): void
     {
-        $url = Url::factory()->create([
-            'destination' => 'http://example.com/',
-        ]);
+        $url = Url::factory()->create(['destination' => 'http://example.com/']);
 
         $expected = $url->destination;
         $actual = 'http://example.com';
@@ -132,9 +124,7 @@ class UrlTest extends TestCase
     {
         config()->set('urlhub.web_title', false);
 
-        $url = Url::factory()->create([
-            'destination' => 'http://example.com/',
-        ]);
+        $url = Url::factory()->create(['destination' => 'http://example.com/']);
 
         $this->assertSame('No Title', $url->title);
     }
