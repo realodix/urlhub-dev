@@ -25,6 +25,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.21",
+        "imanghafoori/laravel-microscope": "^1.0",
         "laravel/dusk": "^7.6",
         "mockery/mockery": "^1.5",
         "nunomaduro/collision": "^7.0",
