@@ -134,7 +134,7 @@ class UrlTest extends TestCase
      */
     public function setMetaTitleAttributeWhenWebTitleSetToFalse(): void
     {
-        config(['urlhub.web_title', false]);
+        config(['urlhub.web_title' => false]);
 
         $url = Url::factory()->create(['destination' => 'http://example.com/']);
 
