@@ -27,4 +27,19 @@ class UHubLinkServiceTest extends TestCase
         $actual = $this->uHubLinkService->title('https://www.example123456789.com');
         $this->assertSame($expected, $actual);
     }
+
+    /**
+     * title() should return 'no title' if the title is empty and
+     * config('urlhub.web_title') set `false`.
+     *
+     * @test
+     */
+    public function titleShouldReturnNoTitle(): void
+    {
+        config(['urlhub.web_title' => false]);
+
+        $expected = 'No Title';
+        $actual = $this->uHubLinkService->title('https://example123456789.com', '');
+        $this->assertSame($expected, $actual);
+    }
 }
