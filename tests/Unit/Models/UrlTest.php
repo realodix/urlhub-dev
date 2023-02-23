@@ -40,7 +40,7 @@ class UrlTest extends TestCase
      * @test
      * @group u-model
      */
-    public function hasManyUrlModel(): void
+    public function hasManyVisitModel(): void
     {
         $v = Visit::factory()->create();
 
