@@ -29,8 +29,8 @@ class UHubLinkServiceTest extends TestCase
     }
 
     /**
-     * title() should return 'no title' if the title is empty and
-     * config('urlhub.web_title') set `false`.
+     * When config('urlhub.web_title') set `false`, title() should return
+     * 'No Title' if the title is empty
      *
      * @test
      */
