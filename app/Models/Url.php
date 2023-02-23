@@ -192,7 +192,7 @@ class Url extends Model
     }
 
     /**
-     * Total clicks on all short URLs from guest users
+     * Total clicks on all short URLs from all guest users
      */
     public function numberOfClicksFromGuests(): int
     {

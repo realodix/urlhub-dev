@@ -224,7 +224,7 @@ class UrlTest extends TestCase
     }
 
     /**
-     * Total klik dari setiap shortened URLs yang dibuat oleh guest user
+     * Total clicks on all short URLs from all guest users
      *
      * @test
      * @group u-model
