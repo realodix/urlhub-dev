@@ -232,11 +232,7 @@ class UrlTest extends TestCase
     public function numberOfClicksFromGuests(): void
     {
         $visit = Visit::factory()
-            ->for(
-                Url::factory()->create([
-                    'user_id' => Url::GUEST_ID,
-                ])
-            )
+            ->for(Url::factory()->create(['user_id' => Url::GUEST_ID]))
             ->create();
 
         $expected = Visit::whereUrlId($visit->url->id)->count();
