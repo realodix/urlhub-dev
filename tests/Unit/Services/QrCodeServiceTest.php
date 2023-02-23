@@ -56,25 +56,23 @@ class QrCodeServiceTest extends TestCase
 
     /**
      * resolveRoundBlockSize() will return \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeNone
-     * if round_block_size_mode is not set. Use mockery to reflect protected methods.
+     * if config('urlhub.qrcode_round_block_size') set false. Use mockery to reflect protected methods.
      *
      * @test
      */
     public function resolveRoundBlockSizeWillReturnRoundBlockSizeModeNone(): void
     {
+        config(['urlhub.qrcode_round_block_size' => false]);
+
         $QrCode = $this->getQrCode();
 
-        $mock = \Mockery::mock($QrCode)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $mock->shouldReceive('getRoundBlockSizeMode')
-            ->once()
-            ->andReturnNull();
+        $reflection = new \ReflectionClass($QrCode);
+        $method = $reflection->getMethod('resolveRoundBlockSize');
+        $method->setAccessible(true);
 
         $this->assertInstanceOf(
             \Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeNone::class,
-            $mock->resolveRoundBlockSize()
+            $method->invoke($QrCode)
         );
     }
 }
