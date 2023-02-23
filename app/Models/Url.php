@@ -147,7 +147,8 @@ class Url extends Model
     }
 
     /**
-     * The total number of shortened URLs that have been created by guests
+     * The total number of shortened URLs that have been created by all guest
+     * users
      */
     public function numberOfUrlsByGuests(): int
     {
@@ -156,6 +157,9 @@ class Url extends Model
 
     /**
      * Total clicks on each shortened URLs
+     *
+     * @param int  $urlId  The ID of the shortened URL
+     * @param bool $unique If true, only count unique clicks
      */
     public function numberOfClicks(int $urlId, bool $unique = false): int
     {
@@ -177,7 +181,8 @@ class Url extends Model
      */
     public function numberOfClicksPerAuthor(): int
     {
-        // If the user is logged in, get the total clicks on all short URLs from the user
+        // If the user is logged in, get the total clicks on all short URLs from
+        // the user
         $authorId = auth()->check() ? auth()->id() : $this->author->id;
         $url = self::whereUserId($authorId)->get();
 

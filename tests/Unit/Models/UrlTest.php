@@ -140,28 +140,17 @@ class UrlTest extends TestCase
     }
 
     /**
+     * The total number of shortened URLs that have been created by all guests
+     *
      * @test
      * @group u-model
      */
-    public function totalShortUrlByGuest(): void
+    public function numberOfUrlsByGuests(): void
     {
         Url::factory()->create([
             'user_id' => Url::GUEST_ID,
         ]);
         $actual = $this->url->numberOfUrlsByGuests();
-
-        $this->assertSame(1, $actual);
-    }
-
-    /**
-     * @test
-     * @group u-model
-     */
-    public function totalClicks(): void
-    {
-        Visit::factory()->create();
-
-        $actual = $this->url->totalClick();
 
         $this->assertSame(1, $actual);
     }
@@ -187,6 +176,8 @@ class UrlTest extends TestCase
     }
 
     /**
+     * Total clicks on each shortened URL, but only count unique clicks
+     *
      * @test
      * @group u-model
      */
@@ -246,5 +237,18 @@ class UrlTest extends TestCase
 
         $this->assertSame(Url::GUEST_ID, $visit->url->user_id);
         $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @test
+     * @group u-model
+     */
+    public function totalClicks(): void
+    {
+        Visit::factory()->create();
+
+        $actual = $this->url->totalClick();
+
+        $this->assertSame(1, $actual);
     }
 }
