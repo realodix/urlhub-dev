@@ -117,6 +117,7 @@ class UserPolicyTest extends TestCase
     }
 
     /**
+     * Admin can access another user's change password page.
      * @test
      * @group u-policy
      */
@@ -129,7 +130,7 @@ class UserPolicyTest extends TestCase
     }
 
     /**
-     * Normal user cant access other users change password page.
+     * Normal user cant access other user's change password page.
      *
      * @test
      * @group u-policy
@@ -158,7 +159,10 @@ class UserPolicyTest extends TestCase
         $response->assertOk();
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group u-policy
+     */
     public function normalUserCantAccessAllUsersPage(): void
     {
         $response = $this->actingAs($this->normalUser())
