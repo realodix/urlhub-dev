@@ -53,15 +53,15 @@ class VisitorService
         return (string) auth()->id();
     }
 
+    /**
+     * PR IPv4 32bit + IPv6 128bit, jika hanya sha1 (128bit) tidak akan cukup, belum lagi
+     * dengan kombinasi browser dan os. Solusinya hanya hash IP dengan sha3-224/sha3-256.
+     *
+     * Masih mencari komponen apa saja untuk anonymousVisitor.
+     */
     public function anonymousVisitorId(): string
     {
-        $data = [
-            'ip'      => request()->ip(),
-            'browser' => \Browser::browserFamily(),
-            'os'      => \Browser::platformFamily(),
-        ];
-
-        return sha1(implode($data));
+        return hash('sha3-256', request()->ip());
     }
 
     /**
