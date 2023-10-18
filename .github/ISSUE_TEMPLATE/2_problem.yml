@@ -1,6 +1,5 @@
 name: Problem
 description: AdBlockID menyebabkan masalah, seperti salah blokir atau hal lainnya.
-title: 'example.com'
 labels: 'C: Bug'
 body:
   - type: input
