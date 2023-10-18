@@ -13,9 +13,5 @@ body:
     attributes:
       label: Keterangan
       description: Berikan penjelasan rinci dan sertakan screenshot.
-      placeholder: |
-        - Mohon jelaskan ke Kami sedetail dan sejelas mungkin apa yang sebenarnya terjadi.
-        - Terkadang hal yang Anda laporkan muncul ketika [...]. Mohon jelaskan hal yang memicunya.
-        ...
     validations:
       required: true
