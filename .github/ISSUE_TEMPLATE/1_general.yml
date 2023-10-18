@@ -21,16 +21,10 @@ body:
     attributes:
       label: Keterangan
       description: Berikan penjelasan rinci.
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: Reproduction steps
-      description: "How do you trigger this bug? Please walk us through it step by step."
       placeholder: |
-        1.
-        2.
-        3.
+        - Ada iklan di bagian ...
+        - Tidak bisa klik kanan
+        - Teks tidak bisa di-copy atau begitu di-paste muncul link attribution
         ...
     validations:
       required: true
