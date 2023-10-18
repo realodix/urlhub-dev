@@ -13,8 +13,8 @@ body:
       label: Ad Blocker
       description: Produk ad blocker apa yang Anda gunakan?
       options:
-        - AdGuard
         - uBlock Origin
+        - AdGuard
     validations:
       required: true
   - type: textarea
