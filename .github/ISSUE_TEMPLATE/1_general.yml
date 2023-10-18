@@ -24,8 +24,6 @@ body:
       options:
         - label: AdGuard
         - label: uBlock Origin
-    validations:
-      required: true
   - type: textarea
     attributes:
       label: Keterangan
