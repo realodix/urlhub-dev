@@ -2,7 +2,6 @@ name: tests
 
 on:
   - push
-  - pull_request
 
 jobs:
   build:
@@ -50,5 +49,3 @@ jobs:
 
       - name: Send coverage to Coveralls (parallel)
         uses: coverallsapp/github-action@v2
-        with:
-          parallel: true
