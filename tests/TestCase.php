@@ -9,11 +9,6 @@ use Tests\Support\CreatesApplication;
 
 abstract class TestCase extends BaseTestCase
 {
-    use RefreshDatabase;
     use Auth, CreatesApplication;
-
-    protected function secureRoute(string $routeName, mixed $url_id): string
-    {
-        return route($routeName, encrypt($url_id));
-    }
+    use RefreshDatabase;
 }

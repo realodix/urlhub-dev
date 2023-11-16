@@ -3,41 +3,40 @@
 namespace App\Services;
 
 use App\Models\Url;
+use Illuminate\Support\Str;
 
 class KeyGeneratorService
 {
+    private const HASH_CHAR = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
     /**
-     * Generate a short string that can be used as a unique key for shortened long
-     * urls.
+     * Generate a short string that can be used as a unique key for the shortened
+     * url.
      *
-     * @return string A unique string to use as the short url key
+     * @return string A unique string to use as the shortened url key
      */
-    public function urlKey(string $value): string
+    public function generate(string $value): string
     {
-        // Step 1
         $key = $this->generateSimpleString($value);
 
-        // Step 2
-        // If step 1 fail (the string is used or cannot be used), then the generator
-        // must generate a unique random string until it finds a string that can
-        // be used as a key
-        if ($this->assertStringCanBeUsedAsKey($key)  == false) {
+        if (
+            $this->assertStringCanBeUsedAsKey($key) === false
+            || strlen($key) < config('urlhub.hash_length')
+        ) {
             $key = $this->generateRandomString();
         }
 
         return $key;
     }
 
-    /**
-     * Take some characters at the end of the string and remove all characters that
-     * are not in the specified character set.
-     */
     public function generateSimpleString(string $value): string
     {
-        $length = config('urlhub.hash_length') * -1;
-        $pattern = '/[^'.config('urlhub.hash_char').']/i';
-
-        return substr((string) preg_replace($pattern, '', $value), $length);
+        return Str::of($value)
+            // Remove all characters except `0-9a-z-AZ`
+            ->replaceMatches('/[^'.self::HASH_CHAR.']/i', '')
+            // Take the specified number of characters from the end of the string.
+            ->substr(config('urlhub.hash_length') * -1)
+            ->lower();
     }
 
     /**
@@ -46,16 +45,13 @@ class KeyGeneratorService
      *
      * @return string The generated random string
      */
-    public function generateRandomString()
+    public function generateRandomString(): string
     {
         $factory = new \RandomLib\Factory;
         $generator = $factory->getMediumStrengthGenerator();
 
-        $characters = config('urlhub.hash_char');
-        $length = config('urlhub.hash_length');
-
         do {
-            $urlKey = $generator->generateString($length, $characters);
+            $urlKey = $generator->generateString(config('urlhub.hash_length'), self::HASH_CHAR);
         } while ($this->assertStringCanBeUsedAsKey($urlKey) == false);
 
         return $urlKey;
@@ -65,23 +61,24 @@ class KeyGeneratorService
      * Check if string can be used as a keyword.
      *
      * This function will check under several conditions:
-     * 1. If the string is already used in the database
-     * 2. If the string is used as a reserved keyword
-     * 3. If the string is used as a route path
+     * 1. If the string is already used as a key
+     * 2. If the string is in the list of reserved keywords
+     * 3. If the string is in the route path list
      *
-     * If any or all of the conditions are true, then the keyword cannot be used.
+     * If any or all of the above conditions are met, then the string cannot be
+     * used as a keyword and must return false.
      */
     public function assertStringCanBeUsedAsKey(string $value): bool
     {
-        $route = \Illuminate\Routing\Route::class;
-        $routeCollection = \Illuminate\Support\Facades\Route::getRoutes()->get();
-        $routePath = array_map(fn ($route) => $route->uri, $routeCollection);
+        $route = array_map(fn (\Illuminate\Routing\Route $route) => $route->uri,
+            \Illuminate\Support\Facades\Route::getRoutes()->get()
+        );
 
-        $isExistsInDb = Url::whereKeyword($value)->exists();
+        $alreadyInUse = Url::whereKeyword($value)->exists();
         $isReservedKeyword = in_array($value, config('urlhub.reserved_keyword'));
-        $isRegisteredRoutePath = in_array($value, $routePath);
+        $isRoute = in_array($value, $route);
 
-        if ($isExistsInDb || $isReservedKeyword || $isRegisteredRoutePath) {
+        if ($alreadyInUse || $isReservedKeyword || $isRoute) {
             return false;
         }
 
@@ -95,37 +92,35 @@ class KeyGeneratorService
     */
 
     /**
-     * Calculate the maximum number of unique random strings that can be
-     * generated
+     * The maximum number of unique strings that can be generated.
      */
-    public function maxCapacity(): int
+    public function possibleOutput(): int
     {
-        $characters = strlen(config('urlhub.hash_char'));
-        $length = config('urlhub.hash_length');
+        $nChar = strlen(self::HASH_CHAR);
+        $strLen= config('urlhub.hash_length');
 
         // for testing purposes only
         // tests\Unit\Middleware\UrlHubLinkCheckerTest.php
-        if ($length === 0) {
+        if ($strLen === 0) {
             return 0;
         }
 
-        return (int) pow($characters, $length);
+        return gmp_intval(gmp_pow($nChar, $strLen));
     }
 
     /**
-     * The number of unique random strings that have been used as the key for
-     * the long url that has been shortened
+     * The number of unique keywords that have been used.
      *
      * Formula:
-     * usedCapacity = randomKey + customKey
+     * totalKey = randomKey + customKey
      *
-     * The character length and set of characters of `customKey` must be the same
-     * as `randomKey`.
+     * The length of the generated string (randomKey) and the length of the
+     * `customKey` string must be identical.
      */
-    public function usedCapacity(): int
+    public function totalKey(): int
     {
         $hashLength = (int) config('urlhub.hash_length');
-        $regexPattern = '['.config('urlhub.hash_char').']{'.$hashLength.'}';
+        $regexPattern = '['.self::HASH_CHAR.']{'.$hashLength.'}';
 
         $randomKey = Url::whereIsCustom(false)
             ->whereRaw('LENGTH(keyword) = ?', [$hashLength])
@@ -142,38 +137,9 @@ class KeyGeneratorService
     /**
      * Calculate the number of unique random strings that can still be generated.
      */
-    public function idleCapacity(): int
+    public function remainingCapacity(): int
     {
-        $maxCapacity = $this->maxCapacity();
-        $usedCapacity = $this->usedCapacity();
-
         // prevent negative values
-        return max($maxCapacity - $usedCapacity, 0);
-    }
-
-    /**
-     * Calculate the percentage of the remaining unique random strings that can
-     * be generated from the total number of unique random strings that can be
-     * generated (in percent) with the specified precision (in decimal places)
-     * and return the result as a string.
-     */
-    public function idleCapacityInPercent(int $precision = 2): string
-    {
-        $maxCapacity = $this->maxCapacity();
-        $remaining = $this->idleCapacity();
-        $result = round(($remaining / $maxCapacity) * 100, $precision);
-
-        $lowerBoundInPercent = 1 / (10 ** $precision);
-        $upperBoundInPercent = 100 - $lowerBoundInPercent;
-        $lowerBound = $lowerBoundInPercent / 100;
-        $upperBound = 1 - $lowerBound;
-
-        if ($remaining > 0 && $remaining < ($maxCapacity * $lowerBound)) {
-            $result = $lowerBoundInPercent;
-        } elseif (($remaining > ($maxCapacity * $upperBound)) && ($remaining < $maxCapacity)) {
-            $result = $upperBoundInPercent;
-        }
-
-        return $result.'%';
+        return max($this->possibleOutput() - $this->totalKey(), 0);
     }
 }

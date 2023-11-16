@@ -3,7 +3,7 @@ module.exports = {
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
     "./resources/**/*.vue",
-    "./app/Http/Livewire/**/*Table.php",
+    "./app/Livewire/**/*Table.php",
     "./vendor/power-components/livewire-powergrid/resources/views/**/*.php",
     "./vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php",
   ],
@@ -14,7 +14,11 @@ module.exports = {
     extend: {
       colors: {
         "uh-blue": "#3d5b99",
+        "uh-blue-2": "#005a9e",
         "bg-primary": "#f8fafc",
+        "uh-bg-1": "#fff",
+        "uh-bg-2": "#f6f8fa",
+        "uh-border-color": "#d0d7de",
         uh: {
           1: "#344767",
           "2a": "rgb(63 152 222)",

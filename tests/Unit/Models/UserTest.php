@@ -23,13 +23,26 @@ class UserTest extends TestCase
     }
 
     /**
-     * The number of guests is calculated based on a unique IP.
+     * Jumlah tamu yang memiliki tanda tangan yang berbeda.
      *
      * @test
      * @group u-model
      */
     public function totalGuestUsers(): void
     {
-        $this->assertSame(0, (new User)->totalGuestUsers());
+        Url::factory(2)->create(['user_id' => Url::GUEST_ID]);
+        $this->assertSame(2, (new User)->totalGuestUsers());
+    }
+
+    /**
+     * Semua tamu yang memiliki tanda tangan yang identik, harus disatukan.
+     *
+     * @test
+     * @group u-model
+     */
+    public function totalGuestUsers2(): void
+    {
+        Url::factory(5)->create(['user_id' => Url::GUEST_ID, 'user_sign' => 'foo']);
+        $this->assertSame(1, (new User)->totalGuestUsers());
     }
 }

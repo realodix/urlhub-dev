@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Http\Requests\StoreUrl;
+use App\Services\KeyGeneratorService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,7 +22,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Url extends Model
 {
-    use \App\Models\Traits\Hashidable;
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     const GUEST_ID = null;
@@ -39,7 +39,7 @@ class Url extends Model
         'is_custom',
         'destination',
         'title',
-        'ip',
+        'user_sign',
     ];
 
     /**
@@ -120,23 +120,35 @@ class Url extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Scopes
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Scope a query to only include guest users.
-     */
-    public function scopeByGuests(Builder $query): Builder
-    {
-        return $query->whereNull('user_id');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | General
     |--------------------------------------------------------------------------
     */
+
+    public function getKeyword(StoreUrl $request): string
+    {
+        $keyGen = app(KeyGeneratorService::class);
+
+        return $request->custom_key ?? $keyGen->generate($request->long_url);
+    }
+
+    public function getWebTitle(string $webAddress): string
+    {
+        $spatieUrl = \Spatie\Url\Url::fromString($webAddress);
+        $defaultTitle = $spatieUrl->getHost().' - Untitled';
+
+        if (config('urlhub.web_title')) {
+            try {
+                $title = app(\Embed\Embed::class)->get($webAddress)->title ?? $defaultTitle;
+            } catch (\Exception) {
+                // If failed or not found, then return "{domain_name} - Untitled"
+                $title = $defaultTitle;
+            }
+
+            return $title;
+        }
+
+        return 'No Title';
+    }
 
     /**
      * The number of shortened URLs that have been created by each User
@@ -154,7 +166,7 @@ class Url extends Model
      */
     public function numberOfUrlsByGuests(): int
     {
-        return self::byGuests()->count();
+        return self::whereNull('user_id')->count();
     }
 
     /**
@@ -196,7 +208,7 @@ class Url extends Model
      */
     public function numberOfClicksFromGuests(): int
     {
-        $url = self::byGuests()->get();
+        $url = self::whereNull('user_id')->get();
 
         return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
     }

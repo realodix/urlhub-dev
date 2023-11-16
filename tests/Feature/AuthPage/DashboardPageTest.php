@@ -29,32 +29,13 @@ class DashboardPageTest extends TestCase
 
         $response = $this->actingAs($url->author)
             ->from(route('dashboard'))
-            ->get($this->secureRoute('dashboard.su_delete', $url->id));
+            ->get(route('dashboard.su_delete', $url->keyword));
 
         $response
             ->assertRedirectToRoute('dashboard')
             ->assertSessionHas('flash_success');
 
         $this->assertCount(0, Url::all());
-    }
-
-    /**
-     * @test
-     * @group f-dashboard
-     */
-    public function dCanDuplicate(): void
-    {
-        $url = Url::factory()->create();
-
-        $response = $this->actingAs($url->author)
-            ->from(route('dashboard'))
-            ->get(route('dashboard.su_duplicate', $url->keyword));
-
-        $response
-            ->assertRedirectToRoute('dashboard')
-            ->assertSessionHas('flash_success');
-
-        $this->assertCount(2, Url::all());
     }
 
     /**
@@ -83,7 +64,7 @@ class DashboardPageTest extends TestCase
 
         $response = $this->actingAs($url->author)
             ->from(route('dashboard.su_edit', $url->keyword))
-            ->post($this->secureRoute('dashboard.su_edit.post', $url->id), [
+            ->post(route('dashboard.su_edit.post', $url->keyword), [
                 'title'    => $url->title,
                 'long_url' => $newLongUrl,
             ]);

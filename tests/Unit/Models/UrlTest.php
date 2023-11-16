@@ -183,6 +183,36 @@ class UrlTest extends TestCase
     */
 
     /**
+     * @test
+     * @group u-model
+     */
+    public function getWebTitle(): void
+    {
+        $expected = 'example123456789.com - Untitled';
+        $actual = $this->url->getWebTitle('https://example123456789.com');
+        $this->assertSame($expected, $actual);
+
+        $expected = 'www.example123456789.com - Untitled';
+        $actual = $this->url->getWebTitle('https://www.example123456789.com');
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * When config('urlhub.web_title') set `false`, title() should return
+     * 'No Title' if the title is empty
+     *
+     * @test
+     */
+    public function getWebTitle_ShouldReturnNoTitle(): void
+    {
+        config(['urlhub.web_title' => false]);
+
+        $expected = 'No Title';
+        $actual = $this->url->getWebTitle('https://example123456789.com');
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
      * The number of shortened URLs that have been created by each User
      *
      * @test
@@ -296,5 +326,20 @@ class UrlTest extends TestCase
         $actual = $this->url->totalClick();
 
         $this->assertSame(1, $actual);
+    }
+
+    /**
+     * @group u-model
+     */
+    public function testKeywordColumnIsCaseSensitive(): void
+    {
+        $url_1 = Url::factory(['keyword' => 'foo', 'destination' => 'https://example.com'])->create();
+        $url_2 = Url::factory(['keyword' => 'Foo', 'destination' => 'https://example.org'])->create();
+
+        $dest_1 = $url_1->whereKeyword('foo')->first();
+        $dest_2 = $url_2->whereKeyword('Foo')->first();
+
+        $this->assertSame('https://example.com', $dest_1->destination);
+        $this->assertSame('https://example.org', $dest_2->destination);
     }
 }

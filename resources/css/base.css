@@ -4,6 +4,28 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  h4 {
+    @apply text-xl;
+  }
+}
+
+hr {
+  @apply !border-uh-border-color;
+}
+
 /*
  * Components
  */
@@ -17,13 +39,13 @@
 }
 
 .btn {
-	@apply inline-flex items-center px-3 py-1.5;
-  @apply bg-stone-50 hover:bg-stone-200 active:bg-stone-50 text-gray-500 hover:text-gray-600 active:text-gray-500;
-	@apply text-base font-normal leading-6 text-center no-underline align-middle tracking-wide;
+  @apply inline-flex items-center px-3 py-1.5;
+  @apply bg-uh-bg-2 hover:bg-stone-200 active:bg-uh-bg-2 text-gray-500 hover:text-gray-600 active:text-gray-500;
+  @apply text-base font-normal leading-6 text-center no-underline align-middle tracking-wide;
   @apply rounded disabled:opacity-25;
-	@apply cursor-pointer select-none;
-  box-shadow: 0px 1.6px 2px rgba(0,0,0,0.13), 0px 0px 2px rgba(0,0,0,0.11) !important;
-	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  @apply cursor-pointer select-none;
+  /* box-shadow: 0px 1.6px 2px rgba(0,0,0,0.13), 0px 0px 2px rgba(0,0,0,0.11) !important;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; */
 
   &-sm {
     @apply text-sm leading-6;
@@ -31,39 +53,23 @@
   }
 
   &-primary {
-    @apply text-base font-normal text-white bg-[#0078d4] border-[#0078d4];
-    @apply hover:text-[#0078d4] hover:bg-white active:bg-[#0078d4] hover:border-white;
+    @apply text-base font-normal text-white bg-green-700 border-green-800;
+    @apply hover:text-white hover:bg-green-800 active:bg-green-700 hover:border-white;
   }
 
   &-secondary {
-    @apply text-base font-normal text-[#0078d4] bg-white;
-    @apply hover:text-white hover:bg-[#0078d4] active:bg-white hover:border-[#0078d4];
+    @apply border border-uh-border-color;
+    @apply text-sky-950 hover:text-sky-700 active:text-sky-950 ;
+    @apply bg-uh-bg-2 hover:bg-stone-200 active:bg-uh-bg-2 ;
   }
-}
-
-.btn-icon {
-  @apply px-2 py-1 rounded-md;
-  @apply text-gray-500 hover:text-gray-600 active:text-gray-500 ;
-  @apply bg-stone-50 hover:bg-stone-200 active:bg-stone-50 ;
-  box-shadow: 0px 1.6px 2px rgba(0,0,0,0.13), 0px 0px 2px rgba(0,0,0,0.11);
-
-  &-table-delete {
-    @apply text-red-700 hover:text-red-800 active:text-red-700;
-  }
-}
-
-.btn-icon-detail {
-  @apply px-2 py-1 rounded mr-4;
-  @apply text-[#273144];
-  @apply bg-[#e8ebf2] hover:bg-[#dbe0eb] active:bg-[#e8ebf2];
 }
 
 .form-input {
   @apply block w-full;
-  @apply border-slate-200 focus:ring-uh-indigo-400 focus:border-uh-indigo-400 rounded
+  @apply border-uh-border-color focus:ring-uh-blue-2 focus:border-uh-blue-2 rounded
 }
 
 .common-card-style {
-  @apply bg-white sm:rounded-md;
-  @apply sm:shadow-[0px_1px_2px_rgba(25,39,52,0.05),0px_0px_4px_rgba(25,39,52,0.1)];
+  @apply bg-white border-y sm:rounded-lg sm:border border-uh-border-color;
+  /* @apply sm:shadow-[0_1px_2px_#e5e5e8]; */
 }

@@ -1,23 +1,21 @@
 <?php
 
-namespace App\Http\Livewire\Table;
+namespace App\Livewire\Table;
 
 use App\Helpers\Helper;
 use App\Models\Url;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{
-    Column, Footer, Header, PowerGrid, PowerGridComponent,PowerGridEloquent};
+    Column, Footer, Header, PowerGrid, PowerGridColumns, PowerGridComponent
+};
 
 /**
  * @codeCoverageIgnore
  */
 final class MyUrlTable extends PowerGridComponent
 {
-    use ActionButton;
-
     const STR_LIMIT = 60;
 
     public bool $showUpdateMessages = true;
@@ -63,29 +61,26 @@ final class MyUrlTable extends PowerGridComponent
     | You can pass a closure to transform/modify the data.
     |
     */
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('keyword', function (Url $url) {
-                return
-                    '<a href="'.$url->short_url.'" target="_blank" class="font-light text-indigo-700">'.$url->keyword.'</a>'
-                    .Blade::render('@svg(\'icon-open-in-new\', \'!h-[0.7em] ml-1\')');
+                return '<a href="'.$url->short_url.'" target="_blank" class="font-light text-sky-800">'.$url->keyword.'</a>';
             })
             ->addColumn('destination', function (Url $url) {
                 return
                     '<span title="'.htmlspecialchars($url->title).'">'
-                        .Str::limit($url->title, self::STR_LIMIT).
+                        .htmlspecialchars(Str::limit($url->title, self::STR_LIMIT)).
                     '</span>
                     <br>
-                    <a href="'.$url->destination.'" target="_blank" title="'.$url->destination.'" rel="noopener noreferrer" class="text-slate-500">'
-                        .Helper::urlDisplay($url->destination, self::STR_LIMIT)
-                        .Blade::render('@svg(\'icon-open-in-new\', \'!h-[0.7em] ml-1\')').
+                    <a href="'.$url->destination.'" target="_blank" title="'.$url->destination.'" rel="noopener noreferrer" class="text-[#6c6c6c]">'
+                        .Helper::urlDisplay($url->destination, self::STR_LIMIT).
                     '</a>';
             })
             ->addColumn('t_clicks', function (Url $url) {
                 $uClick = Helper::compactNumber($url->uniqueClicks);
                 $tClick = Helper::compactNumber($url->clicks);
-                $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-indigo-600\')');
+                $icon = Blade::render('@svg(\'icon-bar-chart\', \'ml-2 text-amber-600\')');
                 $title = $uClick.' '.__('Uniques').' / '.$tClick.' '.__('Clicks');
 
                 return '<div title="'.$title.'">'.$uClick.' / '.$tClick.$icon.'</div>';
@@ -99,22 +94,17 @@ final class MyUrlTable extends PowerGridComponent
             ->addColumn('action', function (Url $url) {
                 return
                     '<a role="button" href="'.route('su_detail', $url->keyword).'" target="_blank" title="'.__('Go to front page').'"
-                        class="btn-icon btn-icon-table"
+                        class="btn btn-secondary btn-sm"
                     >'
                         .Blade::render('@svg(\'icon-open-in-new\')').
                     '</a>
-                    <a role="button" href="'.route('dashboard.su_duplicate', $url->keyword).'" title="'.__('Duplicate').'"
-                        class="btn-icon btn-icon-table"
-                    >'
-                        .Blade::render('@svg(\'icon-clone-alt\')').
-                    '</a>
-                    <a role="button" href="'.route('dashboard.su_edit', $url->keyword).'" title="'.__('Edit').'"
-                        class="btn-icon btn-icon-table"
+                    <a role="button" href="'.route('dashboard.su_edit', $url).'" title="'.__('Edit').'"
+                        class="btn btn-secondary btn-sm"
                     >'
                         .Blade::render('@svg(\'icon-edit-alt\')').
                     '</a>
-                    <a role="button" href="'.route('dashboard.su_delete', $url->getRouteKey()).'" title="'.__('Delete').'"
-                        class="btn-icon btn-icon-table-delete"
+                    <a role="button" href="'.route('dashboard.su_delete', $url).'" title="'.__('Delete').'"
+                        class="btn btn-secondary btn-sm hover:text-red-600 active:text-red-700"
                     >'
                         .Blade::render('@svg(\'icon-trash-alt\')').
                     '</a>';

@@ -4,19 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUrl;
 use App\Models\Url;
+use App\Models\User;
 use App\Models\Visit;
 use App\Services\QrCodeService;
-use App\Services\UHubLinkService;
 
 class UrlController extends Controller
 {
     /**
      * UrlController constructor.
      */
-    public function __construct(
-        public Url $url,
-        public UHubLinkService $uHubLinkService,
-    ) {
+    public function __construct()
+    {
         $this->middleware('urlhublinkchecker')->only('create');
     }
 
@@ -28,7 +26,14 @@ class UrlController extends Controller
      */
     public function create(StoreUrl $request)
     {
-        $url = $this->uHubLinkService->create($request);
+        $url = Url::create([
+            'user_id'     => auth()->id(),
+            'destination' => $request->long_url,
+            'title'       => app(Url::class)->getWebTitle($request->long_url),
+            'keyword'     => app(Url::class)->getKeyword($request),
+            'is_custom'   => $request->custom_key ? true : false,
+            'user_sign'   => app(User::class)->signature(),
+        ]);
 
         return to_route('su_detail', $url->keyword);
     }
@@ -36,12 +41,12 @@ class UrlController extends Controller
     /**
      * View the shortened URL details.
      *
-     * @param string $urlKey A unique key to identify the shortened URL
+     * @param Url $url \App\Models\Url
      * @return \Illuminate\Contracts\View\View
      */
-    public function showDetail(string $urlKey)
+    public function showDetail(Url $url)
     {
-        $url = Url::with('visits')->whereKeyword($urlKey)->firstOrFail();
+        $url->with('visits');
         $data = [
             'url'   => $url,
             'visit' => app(Visit::class),
@@ -59,33 +64,17 @@ class UrlController extends Controller
     /**
      * Delete a shortened URL on user request.
      *
-     * @param Url $hash_id \App\Models\Url
+     * @param Url $url \App\Models\Url
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function delete(Url $hash_id)
+    public function delete(Url $url)
     {
-        $this->authorize('forceDelete', $hash_id);
+        $this->authorize('forceDelete', $url);
 
-        $hash_id->delete();
+        $url->delete();
 
         return to_route('home');
-    }
-
-    /**
-     * UrlHub only allows users (registered & unregistered) to have a unique
-     * link. You can duplicate it and it will generated a new unique random
-     * key.
-     *
-     * @param string $urlKey A unique key to identify the shortened URL
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function duplicate(string $urlKey)
-    {
-        $this->uHubLinkService->duplicate($urlKey);
-
-        return to_route('su_detail', $this->uHubLinkService->new_keyword)
-            ->withFlashSuccess(__('The link has successfully duplicated.'));
     }
 }

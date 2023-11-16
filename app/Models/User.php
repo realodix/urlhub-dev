@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,9 +18,8 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use \App\Models\Traits\Hashidable;
-    use \Spatie\Permission\Traits\HasRoles;
     use HasApiTokens, HasFactory, Notifiable;
+    use \Spatie\Permission\Traits\HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -75,10 +75,27 @@ class User extends Authenticatable
      */
     public function totalGuestUsers(): int
     {
-        $url = Url::select('ip', DB::raw('count(*) as total'))
-            ->byGuests()->groupBy('ip')
+        $url = Url::select('user_sign', DB::raw('count(*) as total'))
+            ->whereNull('user_id')->groupBy('user_sign')
             ->get();
 
         return $url->count();
+    }
+
+    public function signature(): string
+    {
+        if (auth()->check() === false) {
+            $dd = Helper::deviceDetector();
+
+            return hash('sha3-256', implode([
+                'ip'      => request()->ip(),
+                'browser' => $dd->getClient('name'),
+                'os'      => $dd->getOs('name').$dd->getOs('version'),
+                'device'  => $dd->getDeviceName().$dd->getModel().$dd->getBrandName(),
+                'lang'    => request()->getPreferredLanguage(),
+            ]));
+        }
+
+        return (string) auth()->id();
     }
 }
