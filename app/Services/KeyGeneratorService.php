@@ -120,18 +120,9 @@ class KeyGeneratorService
     public function totalKey(): int
     {
         $hashLength = (int) config('urlhub.hash_length');
-        $regexPattern = '['.self::HASH_CHAR.']{'.$hashLength.'}';
 
-        $randomKey = Url::whereIsCustom(false)
-            ->whereRaw('LENGTH(keyword) = ?', [$hashLength])
+        return Url::whereRaw('LENGTH(keyword) = ?', [$hashLength])
             ->count();
-
-        $customKey = Url::whereIsCustom(true)
-            ->whereRaw('LENGTH(keyword) = ?', [$hashLength])
-            ->whereRaw("keyword REGEXP '".$regexPattern."'")
-            ->count();
-
-        return $randomKey + $customKey;
     }
 
     /**
