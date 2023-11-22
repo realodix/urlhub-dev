@@ -54,6 +54,7 @@ jobs:
           DB_DATABASE: forge
           DB_USERNAME: root
 
+
   mysql_8:
     name: MySQL 8.0
     runs-on: ubuntu-22.04
@@ -103,6 +104,7 @@ jobs:
           DB_DATABASE: forge
           DB_USERNAME: root
 
+
   mariadb:
     name: MariaDB 10
     runs-on: ubuntu-22.04
@@ -151,6 +153,7 @@ jobs:
           DB_CONNECTION: mysql
           DB_DATABASE: forge
           DB_USERNAME: root
+
 
   pgsql:
     name: PostgreSQL 14
@@ -202,61 +205,3 @@ jobs:
           DB_PASSWORD: postgres
           DB_DATABASE: postgres
           DB_PORT: 5432
-
-  # mssql:
-  #   runs-on: ubuntu-20.04
-
-  #   services:
-  #     sqlsrv:
-  #       image: mcr.microsoft.com/mssql/server:2019-latest
-  #       env:
-  #         ACCEPT_EULA: Y
-  #         SA_PASSWORD: Forge123
-  #       ports:
-  #         - 1433:1433
-
-  #   strategy:
-  #     fail-fast: true
-
-  #   name: SQL Server 2019
-
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Setup PHP
-  #       uses: shivammathur/setup-php@v2
-  #       with:
-  #         php-version: 8.1
-  #         extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlsrv, pdo, pdo_sqlsrv, odbc, pdo_odbc
-  #         tools: composer:v2
-  #         coverage: none
-
-  #     - name: Install Dependencies (Composer)
-  #       uses: nick-invision/retry@v2
-  #       with:
-  #         timeout_minutes: 5
-  #         max_attempts: 3
-  #         command: composer update --no-interaction --no-progress
-
-  #     - name: Install Dependencies (NPM)
-  #       uses: nick-invision/retry@v2
-  #       with:
-  #         timeout_minutes: 5
-  #         max_attempts: 3
-  #         command: npm install
-
-  #     - name: Prepare
-  #       run: |
-  #         php artisan config:clear
-  #         npm run dev
-
-  #     - name: Execute tests
-  #       run: vendor/bin/phpunit
-  #       env:
-  #         DB_CONNECTION: sqlsrv
-  #         DB_DATABASE: master
-  #         DB_USERNAME: SA
-  #         DB_PASSWORD: Forge123
