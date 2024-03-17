@@ -3,6 +3,7 @@
 namespace Tests\Feature\FrontPage\ShortenUrl;
 
 use App\Models\Url;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CreateShortLinkTest extends TestCase
@@ -10,9 +11,8 @@ class CreateShortLinkTest extends TestCase
     /**
      * Users shorten the URLs, they don't fill in the custom keyword field. The
      * is_custom column (Urls table) must be filled with 0 / false.
-     *
-     * @test
      */
+    #[Test]
     public function shortenUrl(): void
     {
         $longUrl = 'https://laravel.com';
@@ -30,9 +30,8 @@ class CreateShortLinkTest extends TestCase
      * The user shortens the URL and they fill in the custom keyword field. The
      * keyword column (Urls table) must be filled with the keywords requested
      * by the user and the is_custom column must be filled with 1 / true.
-     *
-     * @test
      */
+    #[Test]
     public function shortenUrlWithCustomKeyword(): void
     {
         $longUrl = 'https://t.co';
@@ -66,9 +65,8 @@ class CreateShortLinkTest extends TestCase
 
     /**
      * This test is to make sure that the custom key is not used by other users.
-     *
-     * @test
      */
+    #[Test]
     public function customKeyAlreadyExist(): void
     {
         $url = Url::factory()->create();
@@ -88,9 +86,8 @@ class CreateShortLinkTest extends TestCase
     /**
      * With authenticated user.
      * This test is to make sure that the custom key is not used by other users.
-     *
-     * @test
      */
+    #[Test]
     public function customKeyAlreadyExist2(): void
     {
         $url = Url::factory()->create();

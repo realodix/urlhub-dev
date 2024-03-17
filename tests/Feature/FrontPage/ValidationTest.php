@@ -2,11 +2,12 @@
 
 namespace Tests\Feature\FrontPage;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ValidationTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createShortUrlWithWrongUrlFormat(): void
     {
         $response = $this->post(route('su_create'), [
@@ -18,7 +19,7 @@ class ValidationTest extends TestCase
             ->assertSessionHasErrors('long_url');
     }
 
-    /** @test */
+    #[Test]
     public function customKeyValidation(): void
     {
         $component = \Livewire\Livewire::test(\App\Livewire\UrlCheck::class);

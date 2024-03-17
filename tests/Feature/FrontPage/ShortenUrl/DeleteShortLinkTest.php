@@ -3,11 +3,12 @@
 namespace Tests\Feature\FrontPage\ShortenUrl;
 
 use App\Models\Url;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DeleteShortLinkTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function userCanDelete(): void
     {
         $url = Url::factory()->create();
@@ -20,7 +21,7 @@ class DeleteShortLinkTest extends TestCase
         $this->assertCount(0, Url::all());
     }
 
-    /** @test */
+    #[Test]
     public function adminCanDeleteUrlsCreatedByOtherUsers(): void
     {
         $url = Url::factory()->create();
@@ -32,7 +33,7 @@ class DeleteShortLinkTest extends TestCase
         $this->assertCount(0, Url::all());
     }
 
-    /** @test */
+    #[Test]
     public function adminCanDeleteUrlsCreatedByGuest(): void
     {
         $url = Url::factory()->create(['user_id' => Url::GUEST_ID]);
@@ -44,7 +45,7 @@ class DeleteShortLinkTest extends TestCase
         $this->assertCount(0, Url::all());
     }
 
-    /** @test */
+    #[Test]
     public function userCannotDeleteUrlsCreatedByOtherUsers(): void
     {
         $url = Url::factory()->create();
@@ -56,7 +57,7 @@ class DeleteShortLinkTest extends TestCase
         $this->assertCount(1, Url::all());
     }
 
-    /** @test */
+    #[Test]
     public function userCannotDeleteUrlsCreatedByGuest(): void
     {
         $url = Url::factory()->create(['user_id' => Url::GUEST_ID]);
@@ -68,7 +69,7 @@ class DeleteShortLinkTest extends TestCase
         $this->assertCount(1, Url::all());
     }
 
-    /** @test */
+    #[Test]
     public function guestCannotDelete(): void
     {
         $url = Url::factory()->create(['user_id' => Url::GUEST_ID]);

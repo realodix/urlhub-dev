@@ -2,15 +2,15 @@
 
 namespace Tests\Feature\FrontPage;
 
-use App\Models\Url;
-use App\Models\Visit;
+use App\Models\{Url, Visit};
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class VisitTest extends TestCase
 {
     const BOT_UA = 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)';
 
-    /** @test */
+    #[Test]
     public function logBotVisits(): void
     {
         config(['urlhub.track_bot_visits' => true]);
@@ -22,7 +22,7 @@ class VisitTest extends TestCase
         $this->assertCount(1, Visit::all());
     }
 
-    /** @test */
+    #[Test]
     public function dontLogBotVisits(): void
     {
         config(['urlhub.track_bot_visits' => false]);
