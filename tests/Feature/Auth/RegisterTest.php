@@ -4,8 +4,8 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\{Event, Hash};
+use PHPUnit\Framework\Attributes\{Group, Test};
 use Tests\TestCase;
 
 class RegisterTest extends TestCase
@@ -25,10 +25,8 @@ class RegisterTest extends TestCase
         return route('register');
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function userCanViewARegistrationForm(): void
     {
         $response = $this->get($this->getRoute());
@@ -43,9 +41,8 @@ class RegisterTest extends TestCase
      * - [pass] php artisan test --parallel
      *
      * assertViewHas juga menghasilkan hal yang sama
-     *
-     * @group f-auth
      */
+    // #[Group('f-auth')]
     // public function testViewIs(): void
     // {
     //     $response = $this->get($this->getRoute());
@@ -53,10 +50,8 @@ class RegisterTest extends TestCase
     //     $response->assertViewIs('auth.register');
     // }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function userCannotViewARegistrationFormWhenAuthenticated(): void
     {
         $response = $this->actingAs($this->normalUser())
@@ -65,10 +60,8 @@ class RegisterTest extends TestCase
         $response->assertRedirect(route('dashboard'));
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function userCanRegister(): void
     {
         Event::fake();
@@ -94,10 +87,8 @@ class RegisterTest extends TestCase
         });
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function nameShouldNotBeTooLong(): void
     {
         $response = $this->post('/register', [
@@ -109,10 +100,8 @@ class RegisterTest extends TestCase
             ->assertSessionHasErrors('name');
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function userCannotRegisterWithoutName(): void
     {
         $response = $this->from($this->getRoute())
@@ -133,10 +122,8 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function userCannotRegisterWithoutEmail(): void
     {
         $response = $this->from($this->getRoute())
@@ -157,10 +144,8 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function userCannotRegisterWithInvalidEmail(): void
     {
         $response = $this->from($this->getRoute())
@@ -182,10 +167,8 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function emailShouldNotBeTooLong(): void
     {
         $response = $this->post('/register', [
@@ -196,10 +179,8 @@ class RegisterTest extends TestCase
         $response->assertSessionHasErrors('email');
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function userCannotRegisterWithoutPassword(): void
     {
         $response = $this->from($this->getRoute())
@@ -221,10 +202,8 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function userCannotRegisterWithoutPasswordConfirmation(): void
     {
         $response = $this->from($this->getRoute())
@@ -246,10 +225,8 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    /**
-     * @test
-     * @group f-auth
-     */
+    #[Test]
+    #[Group('f-auth')]
     public function userCannotRegisterWithPasswordsNotMatching(): void
     {
         $response = $this->from($this->getRoute())
