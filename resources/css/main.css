@@ -57,7 +57,8 @@ main {
         }
 
         td {
-            @apply border border-uh-border-color;
+            border: 1px solid;
+            @apply border-uh-border-color;
         }
 
         td:last-child {
