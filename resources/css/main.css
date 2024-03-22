@@ -45,33 +45,25 @@ main {
 
 
 #power-grid-table-base {
-    table, th, td {
-        @apply border border-uh-border-color;
+
+
+    > div:has(> div > #table_base_default) {
+        border-radius: unset;
     }
 
     table {
         thead {
             @apply bg-uh-bg-2;
+            box-shadow: none;
+            border-radius: unset;
         }
-    }
-}
 
-.power-grid {
-    .pg-header {
-        input {
-            @apply bg-white focus:ring-uh-indigo-400 focus:border-uh-indigo-400;
+        td {
+            @apply border border-uh-border-color;
         }
     }
 
-    .pg-footer {
-        select {
-            @apply bg-white focus:border-gray-300;
-        }
-
-        nav {
-            a {
-                @apply bg-uh-indigo-600 hover:bg-uh-indigo-700 active:bg-uh-indigo-600;
-            }
-        }
+    #pg-footer {
+        border: none;
     }
 }
