@@ -6,17 +6,21 @@ use App\Http\Requests\StoreUrl;
 use App\Services\KeyGeneratorService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 /**
- * @property User           $author
- * @property Visit          $visits
+ * @property int            $id
  * @property int|null       $user_id
- * @property string         $short_url
+ * @property string         $keyword
+ * @property bool           $is_custom
  * @property string         $destination
+ * @property string         $title
+ * @property string         $user_sign
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property User           $author
+ * @property Visit          $visits
+ * @property string         $short_url
  * @property int            $clicks
  * @property int            $uniqueClicks
  */
@@ -43,14 +47,17 @@ class Url extends Model
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'user_id'   => 'integer',
-        'is_custom' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'user_id'   => 'integer',
+            'is_custom' => 'boolean',
+        ];
+    }
 
     /*
     |--------------------------------------------------------------------------

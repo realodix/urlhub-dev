@@ -2,19 +2,17 @@
 
 namespace Tests\Unit\Middleware;
 
-use App\Models\Url;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{DB, Schema};
+use PHPUnit\Framework\Attributes\{DataProvider, Test};
 use Tests\TestCase;
 
 class UrlHubLinkCheckerTest extends TestCase
 {
     /**
-     * @test
-     * @dataProvider keywordBlacklistFailDataProvider
-     *
      * @param array $value
      */
+    #[Test]
+    #[DataProvider('keywordBlacklistFailDataProvider')]
     public function keywordBlacklistFail($value): void
     {
         $response = $this->post(route('su_create'), [
@@ -31,9 +29,8 @@ class UrlHubLinkCheckerTest extends TestCase
      * Persingkat URL ketika generator string sudah tidak dapat menghasilkan keyword
      * unik (semua keyword sudah terpakai). UrlHub harus mencegah user untuk melakukan
      * penyingkatan URL.
-     *
-     * @test
      */
+    #[Test]
     public function remainingCapacityIsZero(): void
     {
         // MySQL 5.7 tidak memungkinkan untuk `urlhub.hash_length` diatur ke `0`
