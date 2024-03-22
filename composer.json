@@ -16,7 +16,6 @@
         "livewire/livewire": "^3.4",
         "matomo/device-detector": "^6.1",
         "power-components/livewire-powergrid": "^5.1",
-        "rappasoft/laravel-livewire-tables": "*",
         "spatie/laravel-permission": "^6.4",
         "spatie/url": "^2.3"
     },
