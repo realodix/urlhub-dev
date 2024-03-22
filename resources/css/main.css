@@ -45,8 +45,6 @@ main {
 
 
 #power-grid-table-base {
-
-
     > div:has(> div > #table_base_default) {
         border-radius: unset;
     }
@@ -60,6 +58,10 @@ main {
 
         td {
             @apply border border-uh-border-color;
+        }
+
+        td:last-child {
+            border-right-color: inherit;
         }
     }
 
