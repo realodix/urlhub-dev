@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Middleware;
 
+use Illuminate\Support\Facades\{DB, Schema};
 use PHPUnit\Framework\Attributes\{DataProvider, Test};
 use Tests\TestCase;
 
@@ -32,10 +33,15 @@ class UrlHubLinkCheckerTest extends TestCase
     #[Test]
     public function remainingCapacityIsZero(): void
     {
+        // MySQL 5.7 tidak memungkinkan untuk `urlhub.hash_length` diatur ke `0`
+        if (Schema::getConnection()->getConfig('driver') === 'mysql') {
+            if (version_compare(DB::select('select version()')[0]->{'version()'}, '5.7')) {
+                $this->markTestSkipped();
+            }
+        }
+
         config(['urlhub.hash_length' => 0]);
-
         $response = $this->post(route('su_create'), ['long_url' => 'https://laravel.com']);
-
         $response
             ->assertRedirectToRoute('home')
             ->assertSessionHas('flash_error');
