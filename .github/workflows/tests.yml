@@ -2,7 +2,6 @@ name: tests
 
 on: [push, pull_request]
 
-
 jobs:
   build:
     name: PHP ${{ matrix.php-version }}
@@ -54,3 +53,5 @@ jobs:
 
       - name: Send Coverage To Coveralls
         uses: coverallsapp/github-action@v2
+        with:
+          parallel: true
