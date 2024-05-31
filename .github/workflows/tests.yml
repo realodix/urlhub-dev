@@ -2,6 +2,7 @@ name: tests
 
 on:
   - push
+  - pull_request
 
 jobs:
   build:
@@ -47,10 +48,12 @@ jobs:
       - name: Prepare
         run: |
           php artisan config:clear
-          npm run dev
+          npm run build
 
       - name: Execute Tests
         run: ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
       - name: Send Coverage To Coveralls
         uses: coverallsapp/github-action@v2
+        with:
+          parallel: true
