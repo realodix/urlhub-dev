@@ -7,8 +7,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/realodix/urlhub/badge.svg?branch=master)](https://coveralls.io/github/realodix/urlhub) <br>
 [![MadeWithLaravel.com shield](https://madewithlaravel.com/storage/repo-shields/1049-shield.svg)](https://madewithlaravel.com/p/plur/shield-link)
 
-> **Warning: UrlHub is still in development**, constantly being optimized and sometimes make changes to the database schema.
-
 > **Whatever your idea, feel free to send a pull request** 😃
 
 UrlHub was created, and is maintained by [Budi Hermawan](https://github.com/realodix), and is an open-source, easy-to-use but powerful URL shortener. It allows you to host your own URL shortener, and gives you many useful features.
@@ -19,7 +17,6 @@ UrlHub was created, and is maintained by [Budi Hermawan](https://github.com/real
 - **QR code generator for each short link:** The fastest way to access to this data is most likely opening the link from a phone. Though short URLs are handy for typing, a more convenient approach to transfer a web link to a mobile phone is through QR codes scanning.
 - **Edit or delete your links:** You can change both the address and the destination URL. You can even delete your URL, a feature that is not available with most shorteners.
 - **View where link goes:** It's nice to see where the link goes before clicking on it so you can avoid sketchy links.
-- **IP anonymization (or IP masking) [optional]:** Anonymizes visitor addresses as soon as technically feasible at the earliest possible stage of the collection network. The full IP address is never written to disk in this case. This feature is designed to help site owners comply with their own privacy policies, recommendations from local data protection authorities and legal regulations like the GDPR, which may prevent the storage of full IP address information.
 - **Power of customisation:** Do you want your site to be just for your use, so no one can register? No problem. It's in the configuration. Users must be registered to create Short URL? That's okay. It's in the configuration. From configuration file, you can edit pretty everything of your website. The choice is yours.
 - **Sortable list of shortened URLs.**
 - **Modern and simple interface.**
@@ -38,7 +35,7 @@ UrlHub is a Laravel application. That means it requires this setup:
 ### Installation Instructions
 1. Rename `.env.example` file to `.env` or run `cp .env.example .env`.
 
-   Update `.env` to your specific needs. Don't forget to set `DB_USERNAME` and `DB_PASSWORD` with the settings used behind.
+   Update `.env` to your specific needs.
 
 2. Run `composer install`.
 
@@ -56,21 +53,18 @@ UrlHub is a Laravel application. That means it requires this setup:
    | user@urlhub.test  | user     | user     | User Access  |
 
 
-### Compiling assets with Laravel Mix
+### Bundle application's assets
 
-#### Using Yarn
-1. `yarn`
-2. `yarn dev` or `yarn prod`
-
-    *You can watch assets with `yarn watch`*
-
-#### Using NPM
 1. `npm install`
-2. `npm run dev` or `npm run prod`
 
-    *You can watch assets with `npm run watch`*
+2.
+    ```sh
+    # Run the Vite development server...
+    npm run dev
 
-   Please note that this project uses Yarn as the package manager, so you can't find the package-lock.json file that is needed by NPM.
+    # Build and version the assets for production...
+    npm run build
+    ```
 
 ## Contributing
 The people who contribute to UrlHub do so for the love of open source, our users and ecosystem, and most importantly, pushing the web forward together. Developers like you can help by contributing to rich and vibrant documentation, issuing pull requests to help us cover niche use cases, and to help sustain what you love about UrlHub.
@@ -86,8 +80,7 @@ From the projects root folder run
 - or `composer test`
 - or `./vendor/bin/phpunit`
 
-![screenshot](https://i.imgur.com/88vGleT.png)
-
+![screenshot](https://github.com/realodix/urlhub/assets/1314456/ae460c2d-77c6-44de-9183-7fca6cf50095)
 
 
 ## Bug Report

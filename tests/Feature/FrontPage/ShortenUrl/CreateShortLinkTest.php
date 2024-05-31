@@ -5,6 +5,7 @@ namespace Tests\Feature\FrontPage\ShortenUrl;
 use App\Models\Url;
 use Tests\TestCase;
 
+#[\PHPUnit\Framework\Attributes\Group('front-page')]
 class CreateShortLinkTest extends TestCase
 {
     /**
@@ -34,7 +35,7 @@ class CreateShortLinkTest extends TestCase
         $longUrl = 'https://t.co';
 
         $customKey = 'foobar';
-        config(['urlhub.hash_length' => strlen($customKey) + 1]);
+        config(['urlhub.keyword_length' => strlen($customKey) + 1]);
         $response = $this->post(route('su_create'), [
             'long_url'   => $longUrl,
             'custom_key' => $customKey,
@@ -44,7 +45,7 @@ class CreateShortLinkTest extends TestCase
         $this->assertTrue($url->is_custom);
 
         $customKey = 'barfoo';
-        config(['urlhub.hash_length' => strlen($customKey) - 1]);
+        config(['urlhub.keyword_length' => strlen($customKey) - 1]);
         $response = $this->post(route('su_create'), [
             'long_url'   => $longUrl,
             'custom_key' => $customKey,

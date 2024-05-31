@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int            $id
@@ -35,7 +34,7 @@ class Visit extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array<string, string>
+     * @return array{is_first_click: 'boolean'}
      */
     protected function casts(): array
     {
@@ -52,8 +51,10 @@ class Visit extends Model
 
     /**
      * Get the url that owns the visit.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function url(): BelongsTo
+    public function url()
     {
         return $this->belongsTo(Url::class);
     }

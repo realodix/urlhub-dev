@@ -2,10 +2,13 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\{Url, User, Visit};
-use PHPUnit\Framework\Attributes\{Group, Test};
+use App\Models\Url;
+use App\Models\User;
+use App\Models\Visit;
+use PHPUnit\Framework\Attributes as PHPUnit;
 use Tests\TestCase;
 
+#[PHPUnit\Group('model')]
 class UrlTest extends TestCase
 {
     private Url $url;
@@ -27,8 +30,7 @@ class UrlTest extends TestCase
      * Url model must have a relationship with User model as one to many.
      * This test will check if the relationship exists.
      */
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function belongsToUserModel(): void
     {
         $url = Url::factory()->create();
@@ -41,8 +43,7 @@ class UrlTest extends TestCase
      * Url model must have a relationship with Visit model as one to many.
      * This test will check if the relationship exists.
      */
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function hasManyVisitModel(): void
     {
         $v = Visit::factory()->create();
@@ -52,22 +53,9 @@ class UrlTest extends TestCase
     }
 
     /**
-     * The default guest name must be Guest.
-     */
-    #[Test]
-    #[Group('u-model')]
-    public function defaultGuestName(): void
-    {
-        $url = Url::factory()->create(['user_id' => Url::GUEST_ID]);
-
-        $this->assertSame(Url::GUEST_NAME, $url->author->name);
-    }
-
-    /**
      * The default guest id must be null.
      */
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function defaultGuestId(): void
     {
         $longUrl = 'https://example.com';
@@ -85,8 +73,7 @@ class UrlTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function setUserIdAttributeMustBeNull(): void
     {
         $url = Url::factory()->create(['user_id' => 0]);
@@ -94,8 +81,7 @@ class UrlTest extends TestCase
         $this->assertSame(null, $url->user_id);
     }
 
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function setLongUrlAttribute(): void
     {
         $url = Url::factory()->create(['destination' => 'http://example.com/']);
@@ -105,8 +91,7 @@ class UrlTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function getShortUrlAttribute(): void
     {
         $url = Url::factory()->create();
@@ -117,8 +102,21 @@ class UrlTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    #[Test]
-    #[Group('u-model')]
+    public function testSetTitleLength(): void
+    {
+        $lengthLimit = Url::TITLE_LENGTH;
+
+        $url = Url::factory()->create(['title' => str_repeat('a', $lengthLimit)]);
+        $this->assertEquals($lengthLimit, strlen($url->title));
+
+        $url = Url::factory()->create(['title' => str_repeat('a', $lengthLimit - 10)]);
+        $this->assertLessThan($lengthLimit, strlen($url->title));
+
+        $url = Url::factory()->create(['title' => str_repeat('a', $lengthLimit + 10)]);
+        $this->assertEquals($lengthLimit, strlen($url->title));
+    }
+
+    #[PHPUnit\Test]
     public function setMetaTitleAttributeWhenWebTitleSetToFalse(): void
     {
         config(['urlhub.web_title' => false]);
@@ -131,8 +129,7 @@ class UrlTest extends TestCase
     /**
      * Get clicks attribute
      */
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function getClicksAttribute(): void
     {
         $url = Url::factory()->create();
@@ -145,8 +142,7 @@ class UrlTest extends TestCase
     /**
      * Get uniqueClicks attribute
      */
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function getUniqueClicksAttribute(): void
     {
         $url = Url::factory()->create();
@@ -167,8 +163,7 @@ class UrlTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function getWebTitle(): void
     {
         $expected = 'example123456789.com - Untitled';
@@ -184,8 +179,7 @@ class UrlTest extends TestCase
      * When config('urlhub.web_title') set `false`, title() should return
      * 'No Title' if the title is empty
      */
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function getWebTitle_ShouldReturnNoTitle(): void
     {
         config(['urlhub.web_title' => false]);
@@ -198,13 +192,17 @@ class UrlTest extends TestCase
     /**
      * The number of shortened URLs that have been created by each User
      */
-    #[Test]
-    #[Group('u-model')]
-    public function numberOfUrls(): void
+    #[PHPUnit\Test]
+    public function numberOfUrl(): void
     {
-        $url = Url::factory()->create();
+        $user = $this->normalUser();
 
-        $actual = $this->url->numberOfUrls($url->author->id);
+        Url::factory([
+            'user_id' => $user->id,
+        ])->create();
+
+        $this->actingAs($user);
+        $actual = $this->url->numberOfUrl();
 
         $this->assertSame(1, $actual);
     }
@@ -212,19 +210,17 @@ class UrlTest extends TestCase
     /**
      * The total number of shortened URLs that have been created by all guests
      */
-    #[Test]
-    #[Group('u-model')]
-    public function numberOfUrlsByGuests(): void
+    #[PHPUnit\Test]
+    public function numberOfUrlFromGuests(): void
     {
         Url::factory()->create(['user_id' => Url::GUEST_ID]);
 
-        $actual = $this->url->numberOfUrlsByGuests();
+        $actual = $this->url->numberOfUrlFromGuests();
 
         $this->assertSame(1, $actual);
     }
 
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function numberOfClicks(): void
     {
         $v = Visit::factory()->create();
@@ -239,8 +235,7 @@ class UrlTest extends TestCase
     /**
      * Total clicks on each shortened URL, but only count unique clicks
      */
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function numberOfClicksAndUnique(): void
     {
         $v = Visit::factory()->create();
@@ -258,16 +253,20 @@ class UrlTest extends TestCase
     /**
      * Total klik dari setiap shortened URLs yang dibuat oleh user tertentu
      */
-    #[Test]
-    #[Group('u-model')]
-    public function numberOfClicksPerAuthor(): void
+    #[PHPUnit\Test]
+    public function numberOfClicksOfEachUser(): void
     {
+        $user = $this->normalUser();
+
         $visit = Visit::factory()
-            ->for(Url::factory())
+            ->for(Url::factory([
+                'user_id' => $user->id,
+            ]))
             ->create();
 
+        $this->actingAs($user);
         $expected = Visit::whereUrlId($visit->url->id)->count();
-        $actual = $visit->url->numberOfClicksPerAuthor();
+        $actual = $visit->url->numberOfClicksOfEachUser();
 
         $this->assertSame($expected, $actual);
         $this->assertSame(1, $actual);
@@ -276,33 +275,20 @@ class UrlTest extends TestCase
     /**
      * Total clicks on all short URLs from all guest users
      */
-    #[Test]
-    #[Group('u-model')]
-    public function numberOfClicksFromGuests(): void
+    #[PHPUnit\Test]
+    public function numberOfClickFromGuest(): void
     {
         $visit = Visit::factory()
             ->for(Url::factory()->create(['user_id' => Url::GUEST_ID]))
             ->create();
 
         $expected = Visit::whereUrlId($visit->url->id)->count();
-        $actual = $this->url->numberOfClicksFromGuests();
+        $actual = $this->url->numberOfClickFromGuest();
 
         $this->assertSame(Url::GUEST_ID, $visit->url->user_id);
         $this->assertSame($expected, $actual);
     }
 
-    #[Test]
-    #[Group('u-model')]
-    public function totalClicks(): void
-    {
-        Visit::factory()->create();
-
-        $actual = $this->url->totalClick();
-
-        $this->assertSame(1, $actual);
-    }
-
-    #[Group('u-model')]
     public function testKeywordColumnIsCaseSensitive(): void
     {
         $url_1 = Url::factory()->create(['keyword' => 'foo', 'destination' => 'https://example.com']);

@@ -9,19 +9,17 @@
     <title>{{config('app.name').' - Simplify your links'}}</title>
 
     @livewireStyles
-    <link rel="stylesheet" media="all" href="{!! mix('css/main.css') !!}" />
-    <link rel="stylesheet" media="all" href="{!! mix('css/frontend.css') !!}" />
+    @filamentStyles
+    @vite(['resources/css/main.css', 'resources/js/app.js'])
 </head>
 
 <body class="@yield('css_class')">
-    @include('partials.nav-header')
+    @include('partials.header')
 
     @yield('content')
 
-    <script src="{!! mix('js/manifest.js') !!}"></script>
-    <script src="{!! mix('js/vendor.js') !!}"></script>
-    <script src="{!! mix('js/frontend.js') !!}"></script>
     @livewireScripts
+    @filamentScripts
 </body>
 
 </html>

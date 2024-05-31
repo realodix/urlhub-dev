@@ -1,7 +1,7 @@
 /.tmp
 public/css/*
 public/js/*
-public/mix-manifest.json
+.phpactor.json
 
 ## IDE Local Workspace Folder
 /.idea
@@ -27,7 +27,10 @@ composer.phar
 composer.lock
 # NPM
 /node_modules
+package-lock.json
 npm-debug.log
+bun.lockb
+yarn.lock
 yarn-error.log
 
 ## Testing

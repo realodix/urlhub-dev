@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Http\Requests\StoreUrl;
+use App\Http\Requests\StoreUrlRequest;
 use App\Services\KeyGeneratorService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 /**
  * @property int            $id
@@ -30,7 +29,7 @@ class Url extends Model
 
     const GUEST_ID = null;
 
-    const GUEST_NAME = 'Guest';
+    const TITLE_LENGTH = 255;
 
     /**
      * The attributes that are mass assignable.
@@ -49,7 +48,7 @@ class Url extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array<string, string>
+     * @return array{user_id: 'integer', is_custom: 'boolean'}
      */
     protected function casts(): array
     {
@@ -67,19 +66,20 @@ class Url extends Model
 
     /**
      * Get the user that owns the Url.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function author(): BelongsTo
+    public function author()
     {
-        return $this->belongsTo(User::class, 'user_id')
-            ->withDefault([
-                'name' => self::GUEST_NAME,
-            ]);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
      * Get the visits for the Url.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function visits(): HasMany
+    public function visits()
     {
         return $this->hasMany(Visit::class);
     }
@@ -111,6 +111,20 @@ class Url extends Model
         );
     }
 
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            set: function ($value) {
+                if (mb_strlen($value) > self::TITLE_LENGTH) {
+                    // $limit minus 3 because Str::limit() adds 3 extra characters.
+                    return str($value)->limit(self::TITLE_LENGTH - 3, '...');
+                }
+
+                return $value;
+            },
+        );
+    }
+
     protected function clicks(): Attribute
     {
         return Attribute::make(
@@ -131,21 +145,26 @@ class Url extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function getKeyword(StoreUrl $request): string
+    public function getKeyword(StoreUrlRequest $request): string
     {
         $keyGen = app(KeyGeneratorService::class);
 
         return $request->custom_key ?? $keyGen->generate($request->long_url);
     }
 
-    public function getWebTitle(string $webAddress): string
+    /**
+     * Get the title from the web
+     *
+     * @param string $value A webpage's URL
+     */
+    public function getWebTitle(string $value): string
     {
-        $spatieUrl = \Spatie\Url\Url::fromString($webAddress);
+        $spatieUrl = \Spatie\Url\Url::fromString($value);
         $defaultTitle = $spatieUrl->getHost().' - Untitled';
 
         if (config('urlhub.web_title')) {
             try {
-                $title = app(\Embed\Embed::class)->get($webAddress)->title ?? $defaultTitle;
+                $title = app(\Embed\Embed::class)->get($value)->title ?? $defaultTitle;
             } catch (\Exception) {
                 // If failed or not found, then return "{domain_name} - Untitled"
                 $title = $defaultTitle;
@@ -159,19 +178,17 @@ class Url extends Model
 
     /**
      * The number of shortened URLs that have been created by each User
-     *
-     * @param int $userId The ID of the author of the shortened URL
      */
-    public function numberOfUrls(int $userId): int
+    public function numberOfUrl(): int
     {
-        return self::whereUserId($userId)->count();
+        return self::whereUserId(auth()->id())->count();
     }
 
     /**
      * The total number of shortened URLs that have been created by all guest
      * users
      */
-    public function numberOfUrlsByGuests(): int
+    public function numberOfUrlFromGuests(): int
     {
         return self::whereNull('user_id')->count();
     }
@@ -179,12 +196,11 @@ class Url extends Model
     /**
      * Total clicks on each shortened URLs
      *
-     * @param int  $urlId  The ID of the shortened URL
+     * @param int  $urlId  ID of the shortened URL in the URL table
      * @param bool $unique If true, only count unique clicks
      */
     public function numberOfClicks(int $urlId, bool $unique = false): int
     {
-        /** @var self */
         $self = self::find($urlId);
         $total = $self->visits()->count();
 
@@ -198,33 +214,22 @@ class Url extends Model
     }
 
     /**
-     * Total clicks on all short URLs on each user
+     * The total number of clicks on all short URLs from each User
      */
-    public function numberOfClicksPerAuthor(): int
+    public function numberOfClicksOfEachUser(): int
     {
-        // If the user is logged in, get the total clicks on all short URLs from
-        // the user
-        $authorId = auth()->check() ? auth()->id() : $this->author->id;
-        $url = self::whereUserId($authorId)->get();
+        $url = self::whereUserId(auth()->id())->get();
 
         return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
     }
 
     /**
-     * Total clicks on all short URLs from all guest users
+     * The total number of clicks on all short URLs from all guest users
      */
-    public function numberOfClicksFromGuests(): int
+    public function numberOfClickFromGuest(): int
     {
         $url = self::whereNull('user_id')->get();
 
         return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
-    }
-
-    /**
-     * Total clicks on all shortened URLs
-     */
-    public function totalClick(): int
-    {
-        return Visit::count();
     }
 }

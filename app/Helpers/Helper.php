@@ -2,7 +2,8 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\{Str, Stringable};
+use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use Spatie\Url\Url as SpatieUrl;
 
 class Helper
@@ -14,40 +15,40 @@ class Helper
      */
     public static function deviceDetector()
     {
-        $dd = new \DeviceDetector\DeviceDetector(request()->userAgent());
-        $dd->setCache(new \DeviceDetector\Cache\LaravelCache);
-        $dd->parse();
+        $device = new \DeviceDetector\DeviceDetector(request()->userAgent());
+        $device->setCache(new \DeviceDetector\Cache\LaravelCache);
+        $device->parse();
 
-        return $dd;
+        return $device;
     }
 
     /**
      * Display the link according to what You need.
      *
-     * @param string $url           URL or Link
-     * @param int    $limit         Length string will be truncated to, including suffix
-     * @param bool   $scheme        Show or remove URL schemes
-     * @param bool   $trailingSlash Show or remove trailing slash
+     * @param string   $value         URL links
+     * @param int|null $limit         Length string will be truncated to, including suffix
+     * @param bool     $scheme        Show or remove URL schemes
+     * @param bool     $trailingSlash Show or remove trailing slash
      */
     public static function urlDisplay(
-        string $url,
+        string $value,
         ?int $limit = null,
         bool $scheme = true,
         bool $trailingSlash = true
     ): string|Stringable {
-        $sUrl = SpatieUrl::fromString($url);
+        $sUrl = SpatieUrl::fromString($value);
         $hostLen = strlen($sUrl->getScheme().'://'.$sUrl->getHost());
-        $urlLen = strlen($url);
+        $urlLen = strlen($value);
         $limit = $limit ?? $urlLen;
 
         if ($scheme === false) {
-            $url = preg_replace('{^http(s)?://}', '', $url);
+            $value = preg_replace('{^http(s)?://}', '', $value);
             $hostLen = strlen($sUrl->getHost());
-            $urlLen = strlen($url);
+            $urlLen = strlen($value);
         }
 
         if ($trailingSlash === false) {
-            $url = rtrim($url, '/');
+            $value = rtrim($value, '/');
         }
 
         $pathLen = $limit - $hostLen;
@@ -55,77 +56,56 @@ class Helper
         if ($urlLen > $limit) {
             // The length of the string returned by str()->limit() does not include the suffix, so
             // it needs to be adjusted so that the length of the string matches the expected limit.
-            $adjLimit = $limit - (strlen((string) Str::of($url)->limit($limit)) - $limit);
+            $adjLimit = $limit - (strlen((string) Str::of($value)->limit($limit)) - $limit);
 
             $firstSide = $hostLen + intval(($pathLen - 1) * 0.5);
             $lastSide = -abs($adjLimit - $firstSide);
 
-            return Str::of($url)->limit($firstSide).substr($url, $lastSide);
+            return Str::of($value)->limit($firstSide).substr($value, $lastSide);
         }
 
-        return $url;
+        return $value;
     }
 
     /**
-     * Convert large positive numbers in to short form like 1K+, 100K+, 199K+, 1M+, 10M+,
-     * 1B+ etc.
+     * List of potentially colliding routes with shortened link keywords
      *
-     * Based on https://gist.github.com/RadGH/84edff0cc81e6326029c
-     *
-     * @param int $number Number to be converted
+     * @return array<string>
      */
-    public static function compactNumber(int $number): int|string
+    public static function routeList(): array
     {
-        $nFormat = floor($number);
-        $suffix = '';
+        $route = array_map(
+            fn (\Illuminate\Routing\Route $route) => $route->uri,
+            \Illuminate\Support\Facades\Route::getRoutes()->get()
+        );
 
-        if ($number >= pow(10, 3) && $number < pow(10, 6)) {
-            // 1k-999k
-            $nFormat = self::numberFormatPrecision($number / pow(10, 3));
-            $suffix = 'K+';
-
-            if (($number / pow(10, 3) === 1) || ($number / pow(10, 4) === 1) || ($number / pow(10, 5) === 1)) {
-                $suffix = 'K';
-            }
-        } elseif ($number >= pow(10, 6) && $number < pow(10, 9)) {
-            // 1m-999m
-            $nFormat = self::numberFormatPrecision($number / pow(10, 6));
-            $suffix = 'M+';
-
-            if (($number / pow(10, 6) === 1) || ($number / pow(10, 7) === 1) || ($number / pow(10, 8) === 1)) {
-                $suffix = 'M';
-            }
-        } elseif ($number >= pow(10, 9) && $number < pow(10, 12)) {
-            // 1b-999b
-            $nFormat = self::numberFormatPrecision($number / pow(10, 9));
-            $suffix = 'B+';
-
-            if (($number / pow(10, 9) === 1) || ($number / pow(10, 10) === 1) || ($number / pow(10, 11) === 1)) {
-                $suffix = 'B';
-            }
-        } elseif ($number >= pow(10, 12)) {
-            // 1t+
-            $nFormat = self::numberFormatPrecision($number / pow(10, 12));
-            $suffix = 'T+';
-
-            if (($number / pow(10, 12) === 1) || ($number / pow(10, 13) === 1) || ($number / pow(10, 14) === 1)) {
-                $suffix = 'T';
-            }
-        }
-
-        return ! empty($nFormat.$suffix) ? $nFormat.$suffix : 0;
+        return collect($route)
+            // ex. foobar/{route_param?} => foobar
+            ->map(fn ($value) => preg_replace('/(\/{)([a-zA-Z]+)(\?})$/', '', $value))
+            // Remove foo/bar
+            ->map(fn ($value) => preg_replace('/^([a-zA-Z-_]+)\/([a-zA-Z-\/{}\.]+)/', '', $value))
+            // Remove '{route_param}' or '+{route_param}'
+            ->map(fn ($value) => preg_replace('/^(\+?)({)([a-zA-Z]+)(})/', '', $value))
+            // Remove '/'
+            ->map(fn ($value) => preg_replace('/\//', '', $value))
+            // Remove empty value
+            ->reject(fn ($value) => empty($value))
+            ->unique()
+            ->sort()
+            ->toArray();
     }
 
     /**
-     * Alternative to make number_format() not to round numbers up.
-     *
-     * Based on https://stackoverflow.com/q/3833137
-     *
-     * @param float $number    Number to be formatted
-     * @param int   $precision Number of decimal points to round to
+     * Get list of public path
      */
-    public static function numberFormatPrecision(float $number, int $precision = 2): float
+    public static function publicPathList(): array
     {
-        return floor($number * pow(10, $precision)) / pow(10, $precision);
+        return collect(scandir(public_path()))
+            ->reject(fn ($value) => in_array($value, ['.', '..']))
+            // remove file with extension
+            ->reject(fn ($value) => preg_match('/\.[^.]+/', $value))
+            // remove array value which is in config('urlhub.reserved_keyword')
+            ->reject(fn ($value) => in_array($value, config('urlhub.reserved_keyword')))
+            ->toArray();
     }
 }

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreUrl;
-use App\Models\{Url, User};
-use App\Services\KeyGeneratorService;
+use App\Http\Requests\UpdateUrlRequest;
+use App\Models\Url;
+use Illuminate\Support\Facades\Gate;
 
 class DashboardController extends Controller
 {
@@ -18,8 +18,6 @@ class DashboardController extends Controller
     {
         return view('backend.dashboard', [
             'url'  => app(Url::class),
-            'user' => app(User::class),
-            'keyGeneratorService' => app(KeyGeneratorService::class),
         ]);
     }
 
@@ -31,7 +29,7 @@ class DashboardController extends Controller
      */
     public function edit(Url $url)
     {
-        $this->authorize('updateUrl', $url);
+        Gate::authorize('updateUrl', $url);
 
         return view('backend.edit', ['url' => $url]);
     }
@@ -39,13 +37,13 @@ class DashboardController extends Controller
     /**
      * Update the destination URL
      *
-     * @param StoreUrl $request \App\Http\Requests\StoreUrl
-     * @param Url      $url     \App\Models\Url
+     * @param UpdateUrlRequest $request \App\Http\Requests\UpdateUrlRequest
+     * @param Url              $url     \App\Models\Url
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(StoreUrl $request, Url $url)
+    public function update(UpdateUrlRequest $request, Url $url)
     {
         $url->update([
             'destination' => $request->long_url,
@@ -66,7 +64,7 @@ class DashboardController extends Controller
      */
     public function delete(Url $url)
     {
-        $this->authorize('forceDelete', $url);
+        Gate::authorize('forceDelete', $url);
 
         $url->delete();
 

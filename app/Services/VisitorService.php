@@ -3,7 +3,10 @@
 namespace App\Services;
 
 use App\Helpers\Helper;
-use App\Models\{Url, User, Visit};
+use App\Models\Url;
+use App\Models\User;
+use App\Models\Visit;
+use Spatie\Url\Url as SpatieUrl;
 
 class VisitorService
 {
@@ -21,9 +24,10 @@ class VisitorService
     public function create(Url $url)
     {
         $logBotVisit = config('urlhub.track_bot_visits');
-        $dd = Helper::deviceDetector();
+        $device = Helper::deviceDetector();
+        $referer = request()->header('referer');
 
-        if ($logBotVisit === false && $dd->isBot() === true) {
+        if ($logBotVisit === false && $device->isBot() === true) {
             return;
         }
 
@@ -31,7 +35,7 @@ class VisitorService
             'url_id'         => $url->id,
             'visitor_id'     => $this->user->signature(),
             'is_first_click' => $this->isFirstClick($url),
-            'referer'        => request()->header('referer'),
+            'referer'        => $this->getRefererHost($referer),
         ]);
     }
 
@@ -48,5 +52,21 @@ class VisitorService
             ->exists();
 
         return $hasVisited ? false : true;
+    }
+
+    /**
+     * Get the referer host.
+     *
+     * Only input the URL host into the referer column
+     */
+    public function getRefererHost(?string $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $referer = SpatieUrl::fromString($value);
+
+        return $referer->getScheme().'://'.$referer->getHost();
     }
 }

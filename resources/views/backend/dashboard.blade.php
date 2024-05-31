@@ -1,24 +1,39 @@
 @extends('layouts.backend')
 
 @section('title', __('Dashboard'))
-
 @section('content')
     <main>
-        <div class="mb-4 p-4 bg-uh-bg-1 border-y sm:rounded-lg sm:border border-uh-border-color">
-            <div class="flex flex-wrap">
-                <div class="w-full sm:w-1/4">
-                    <span class="font-semibold sm:text-2xl">@svg('icon-link', 'mr-1.5') {{__('Short links')}}:</span>
-                    <span class="font-light sm:text-2xl">{{compactNumber($url->whereUserId(auth()->id())->count())}}</span>
+        <div class="grid gird-cols-1 md:grid-cols-4 gap-7 mb-8">
+            <div class="bg-uh-bg-1 p-4 sm:rounded-lg
+                border-y border-uh-border-color sm:border-none sm:shadow-md"
+            >
+                <div class="flex flex-row space-x-4 items-center">
+                    @svg('icon-link', 'mr-1.5 text-emerald-600 text-3xl')
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium uppercase leading-4">Total Links</p>
+                        <p class="text-2xl font-bold text-gray-900 inline-flex items-center space-x-2">
+                            {{numberAbbreviate($url->numberOfUrl(auth()->id()))}}
+                        </p>
+                    </div>
                 </div>
-                <div class="w-full sm:w-1/4">
-                    <span class="font-semibold sm:text-2xl">@svg('icon-bar-chart', 'mr-1.5') {{__('Clicks')}}:</span>
-                    <span class="font-light sm:text-2xl">{{compactNumber($url->numberOfClicksPerAuthor())}}</span>
+            </div>
+            <div class="bg-uh-bg-1 p-4 sm:rounded-lg
+                border-y border-uh-border-color sm:border-none sm:shadow-md"
+            >
+                <div class="flex flex-row space-x-4 items-center">
+                    @svg('icon-chart-line-alt', 'mr-1.5 text-amber-600 text-3xl')
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium uppercase leading-4">Total Clicks</p>
+                        <p class="text-2xl font-bold text-gray-900 inline-flex items-center space-x-2">
+                            {{numberAbbreviate($url->numberOfClicksOfEachUser())}}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="common-card-style p-4">
-            <div class="flex mb-8">
+        <div class="common-card-style">
+            <div class="card_header__v2">
                 <div class="w-1/2">
                     <span class="text-2xl text-uh-1">{{__('My URLs')}}</span>
                 </div>

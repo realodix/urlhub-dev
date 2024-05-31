@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Auth;
 
-use PHPUnit\Framework\Attributes\{Group, Test};
+use PHPUnit\Framework\Attributes as PHPUnit;
 use Tests\TestCase;
 
+#[PHPUnit\Group('auth-page')]
 class ConfirmPasswordTest extends TestCase
 {
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCanViewPasswordConfirm(): void
     {
         $response = $this->actingAs($this->normalUser())
@@ -34,8 +34,7 @@ class ConfirmPasswordTest extends TestCase
     //     $response->assertViewIs('auth.confirm-password');
     // }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function guestCantViewPasswordConfirm(): void
     {
         $response = $this->get(route('password.confirm'));

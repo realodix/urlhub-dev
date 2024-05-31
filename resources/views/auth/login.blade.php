@@ -19,7 +19,7 @@
             {{ session()->forget('login_error') }}
         @endif
 
-        <div class="common-card-style w-full sm:max-w-md mt-6 px-12 py-8 overflow-hidden">
+        <div class="auth-card">
             <form method="POST" action="{{ route('login') }}" aria-label="{{__('Login')}}">
             @csrf
                 <div>
@@ -28,14 +28,14 @@
                     @else
                         <input type="hidden" name="previous" value="{{ URL::previous() }}">
                     @endif
-                    <label for="email" class="block font-medium text-sm text-slate-700">
+                    <label for="email" class="form-label">
                         {{__('E-Mail / Username')}}
                     </label>
-                    <input type="text" name="identity" class="form-input mt-1" value="{{ old('identity') }}" required autofocus>
+                    <input name="identity" class="form-input mt-1" value="{{ old('identity') }}" required autofocus>
                 </div>
 
                 <div class="mt-4">
-                    <label for="password" class="block font-medium text-sm text-slate-700">
+                    <label for="password" class="form-label">
                         {{__('Password')}}
                     </label>
                     <input type="password" name="password" class="form-input mt-1" autocomplete="current-password" required>

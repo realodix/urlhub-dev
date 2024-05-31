@@ -2,7 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\{Url, User};
+use App\Models\Url;
+use App\Models\User;
 use App\Services\KeyGeneratorService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,9 +30,9 @@ class UrlFactory extends Factory
             'user_id'     => User::factory(),
             'destination' => 'https://github.com/realodix/urlhub',
             'title'       => 'No Title',
-            'keyword'     => app(KeyGeneratorService::class)->generateRandomString(),
+            'keyword'     => app(KeyGeneratorService::class)->randomString(),
             'is_custom'   => false,
-            'user_sign'   => fake()->word(),
+            'user_sign'   => fake()->uuid(),
         ];
     }
 }

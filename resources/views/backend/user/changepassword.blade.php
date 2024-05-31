@@ -16,37 +16,37 @@
             </div>
         </div>
         <div class="w-full md:w-8/12 lg:w-6/12 mt-5 md:mt-0 md:ml-4">
-            <form method="post" action="{{route('user.change-password.post', $user)}}">
+            <form method="post" action="{{route('user.password.store', $user)}}">
             @csrf
-                <div class="common-card-style px-4 py-5 sm:p-6">
+                <div class="common-card-style">
                     <div class="grid grid-cols-6 gap-6" x-data="{show: true}">
                         <div class="col-span-6 lg:col-span-4">
-                            <label for="current-password" class="block font-medium text-sm text-slate-700">{{__('Your Password')}}</label>
-                            <input type="password" name="current-password" placeholder="{{__('Enter your password')}}" class="form-input mt-1" required>
+                            <label for="current-password" class="form-label">{{__('Your Password')}}</label>
+                            <input required type="password" name="current-password" placeholder="{{__('Enter your password')}}"
+                                class="form-input mt-1">
                         </div>
 
                         <div class="col-span-6 lg:col-span-4">
-                            <label for="new-password" class="block font-medium text-sm text-slate-700">{{__('New Password')}}</label>
+                            <label for="new-password" class="form-label">{{__('New Password')}}</label>
                             <div class="relative">
-                                <input name="new-password" :type="show ? 'password' : 'text'" placeholder="{{__('Enter a new password')}}" class="form-input mt-1" required>
+                                <input required name="new-password" placeholder="{{__('Enter a new password')}}"
+                                    :type="show ? 'password' : 'text'" class="form-input mt-1" >
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
-                                    <x-icon-eye x-on:click="show=!show" ::class="{'!hidden': !show, 'block':show}" />
-                                    <x-icon-eye-slash x-on:click="show=!show" ::class="{'block': !show, '!hidden':show}" />
+                                    <x-icon-eye-slash x-on:click="show=!show" ::class="{'!hidden': !show, 'block': show}" />
+                                    <x-icon-eye x-on:click="show=!show" ::class="{'block': !show, '!hidden': show}" />
                                 </div>
                             </div>
 
                         </div>
 
                         <div class="col-span-6 lg:col-span-4">
-                            <label for="new-password-confirm"
-                                class="block font-medium text-sm text-slate-700">{{__('Confirmation')}}</label>
+                            <label for="new-password-confirm" class="form-label">{{__('Confirmation')}}</label>
                             <div class="relative">
-                                <input :type="show ? 'password' : 'text'" id="new-password-confirm"
-                                    name="new-password_confirmation" aria-label="Retype the new password"
-                                    placeholder="Retype the new password" class="form-input mt-1" required>
+                                <input required name="new-password_confirmation" placeholder="Retype the new password"
+                                    class="form-input mt-1" :type="show ? 'password' : 'text'">
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
-                                    <x-icon-eye x-on:click="show=!show" ::class="{'!hidden': !show, 'block':show}" />
-                                    <x-icon-eye-slash x-on:click="show=!show" ::class="{'block': !show, '!hidden':show}" />
+                                    <x-icon-eye-slash x-on:click="show=!show" ::class="{'!hidden': !show, 'block': show}" />
+                                    <x-icon-eye x-on:click="show=!show" ::class="{'block': !show, '!hidden': show}" />
                                 </div>
                             </div>
                         </div>
