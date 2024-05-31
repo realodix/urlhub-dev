@@ -55,52 +55,54 @@ jobs:
                 DB_USERNAME: root
 
 
-    # mysql_8:
-    # name: MySQL 8.0
-    # runs-on: ubuntu-22.04
-    # services:
-    #     mysql:
-    #     image: mysql:8
-    #     env:
-    #         MYSQL_ALLOW_EMPTY_PASSWORD: yes
-    #         MYSQL_DATABASE: forge
-    #     ports:
-    #         - 3306:3306
-    #     options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    # steps:
-    #     - name: Checkout code
-    #     uses: actions/checkout@v4
-    #     with:
-    #         fetch-depth: 0
-    #     - name: Setup PHP
-    #     uses: shivammathur/setup-php@v2
-    #     with:
-    #         php-version: 8.3
-    #         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql
-    #         tools: composer:v2
-    #         coverage: none
-    #     - name: Install Dependencies (Composer)
-    #     uses: nick-invision/retry@v2
-    #     with:
-    #         timeout_minutes: 5
-    #         max_attempts: 3
-    #         command: composer update --no-interaction --no-progress
-    #     - name: Install Dependencies (NPM)
-    #     uses: nick-invision/retry@v2
-    #     with:
-    #         timeout_minutes: 5
-    #         max_attempts: 3
-    #         command: npm install
-    #     - name: Prepare
-    #     run: |
-    #         php artisan config:clear
-    #         npm run dev
-    #     - name: Execute tests
-    #     run: vendor/bin/phpunit
-    #     env:
-    #         DB_CONNECTION: mysql
-    #         DB_DATABASE: forge
-    #         DB_USERNAME: root
+    mysql_8:
+        name: MySQL 8.0
+        runs-on: ubuntu-22.04
+        env:
+            DB_CONNECTION: mysql
+        services:
+            mysql:
+                image: mysql:8
+                env:
+                    MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                    MYSQL_DATABASE: forge
+                ports:
+                    - 3306:3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+            with:
+                fetch-depth: 0
+          - name: Setup PHP
+            uses: shivammathur/setup-php@v2
+            with:
+                php-version: 8.3
+                extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql
+                tools: composer:v2
+                coverage: none
+          - name: Install Dependencies (Composer)
+            uses: nick-invision/retry@v2
+            with:
+                timeout_minutes: 5
+                max_attempts: 3
+                command: composer update --no-interaction --no-progress
+          - name: Install Dependencies (NPM)
+            uses: nick-invision/retry@v2
+            with:
+                timeout_minutes: 5
+                max_attempts: 3
+                command: npm install
+          - name: Prepare
+            run: |
+                php artisan config:clear
+                npm run dev
+          - name: Execute tests
+            run: vendor/bin/phpunit
+            env:
+                DB_CONNECTION: mysql
+                DB_DATABASE: forge
+                DB_USERNAME: root
 
 
     # mariadb:
