@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\Url;
+use App\Models\User;
+use Illuminate\Routing\Controllers\{HasMiddleware, Middleware};
 
-class AllUrlController extends Controller
+class AllUrlController extends Controller implements HasMiddleware
 {
-    /**
-     * AllUrlController constructor.
-     */
-    public function __construct()
+    public static function middleware(): array
     {
-        $this->middleware('role:admin');
+        return [new Middleware('role:admin')];
     }
 
     /**
@@ -22,20 +20,29 @@ class AllUrlController extends Controller
      */
     public function view()
     {
-        return view('backend.all-url');
+        return view('backend.url-list');
     }
 
     /**
-     * Delete a Short URL on user (Admin) request.
+     * Show all short links from specific user.
      *
-     * @param Url $url \App\Models\Url
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\View\View
      */
-    public function delete(Url $url)
+    public function userLinkView(string $author)
     {
-        $url->delete();
+        return view('backend.url-list-of-user', [
+            'authorName' => $author,
+            'authorId' => User::where('name', $author)->first()->id,
+        ]);
+    }
 
-        return redirect()->back()
-            ->withFlashSuccess(__('Link was successfully deleted.'));
+    /**
+     * Show all short URLs created by guest.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function guestLinkView()
+    {
+        return view('backend.url-list-of-guest');
     }
 }

@@ -28,11 +28,13 @@
                     <form method="post" action="{{route('su_create')}}" class="mb-4 mt-12" id="formUrl">
                     @csrf
                         <div class="mt-1 text-center">
-                            <input type="text" name="long_url" value="{{ old('long_url') }}" placeholder="{{__('Shorten your link')}}"
+                            <input name="long_url" value="{{ old('long_url') }}" placeholder="{{__('Shorten your link')}}"
                                 class="w-full md:w-4/6 px-2 md:px-4 h-12 sm:h-14
                                     text-xl outline-none
                                     border border-border-uh-border-color focus:border-green-700
-                                    rounded-t-md md:rounded-l-md md:rounded-r-none">
+                                    rounded-t-md md:rounded-l-md md:rounded-r-none
+                                    {{-- tailwindcss/forms --}}
+                                    border-slate-300 focus:ring-inherit">
                             <button type="submit" id="actProcess"
                                 class="w-full md:w-1/6 h-12 sm:h-14 align-top rounded-t-none rounded-b md:rounded-l-none md:rounded-r-md
                                     text-lg text-white bg-green-700 hover:bg-green-800 focus:uh-blue-2"
@@ -48,7 +50,7 @@
                             <span class="block mb-4 font-light">
                                 {{__('Replace clunky URLs with meaningful short links that get more clicks.')}}</span>
                             <div class="inline text-2xl">
-                                {{request()->getHttpHost()}}/ @livewire('url-check')
+                                {{request()->getHttpHost()}}/ @livewire('validation.validate-custom-keyword')
                             </div>
                         </div>
                     </form>

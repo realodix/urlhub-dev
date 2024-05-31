@@ -28,23 +28,22 @@ class FortifyServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      *
      * @return void
+     *
+     * @codeCoverageIgnore
      */
     public function boot()
     {
         $this->loginAndRegister();
         $this->register();
         $this->password();
-        $this->twoFactor();
 
         // Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         // Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         // Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
-        // @codeCoverageIgnoreStart
         Fortify::verifyEmailView(function () {
             return view('auth.verify-email');
         });
-        // @codeCoverageIgnoreEnd
 
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->identity;
@@ -52,11 +51,9 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($email.$request->ip());
         });
 
-        // @codeCoverageIgnoreStart
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
-        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -111,18 +108,6 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::confirmPasswordView(function () {
             return view('auth.confirm-password');
-        });
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @return void
-     */
-    private function twoFactor()
-    {
-        Fortify::twoFactorChallengeView(function () {
-            return view('auth.two-factor-challenge');
         });
     }
 }

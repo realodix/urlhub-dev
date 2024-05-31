@@ -9,22 +9,16 @@
     <title>@yield('title') | {{config('app.name')}}</title>
 
     @livewireStyles
-    <link rel="stylesheet" media="all" href="{!! mix('css/main.css') !!}"/>
-    <link rel="stylesheet" media="all" href="{!! mix('css/backend.css') !!}"/>
+    @vite(['resources/css/main.css', 'resources/js/app.js'])
 </head>
 
 <body class="backend">
-    @include('partials.nav-header')
+    @include('partials.header')
 
-    <main class="main max-w-7xl mx-auto sm:mt-0 py-4 sm:px-6 lg:px-8">
+    <main class="main">
         @yield('content')
     </main>
 
-    @include('partials.b-footer')
-
-    <script src="{!! mix('js/manifest.js') !!}"></script>
-    <script src="{!! mix('js/vendor.js') !!}"></script>
-    <script src="{!! mix('js/backend.js') !!}"></script>
     @livewireScripts
 </body>
 

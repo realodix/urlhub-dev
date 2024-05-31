@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Url, User};
-use App\Services\KeyGeneratorService;
+use Illuminate\Routing\Controllers\{HasMiddleware, Middleware};
 
-class AboutSystemController extends Controller
+class AboutSystemController extends Controller implements HasMiddleware
 {
-    public function __construct()
+    public static function middleware(): array
     {
-        $this->middleware('role:admin');
+        return [new Middleware('role:admin')];
     }
 
     /**
@@ -19,9 +18,10 @@ class AboutSystemController extends Controller
     public function view()
     {
         return view('backend.about', [
-            'url'  => app(Url::class),
-            'user' => app(User::class),
-            'keyGeneratorService' => app(KeyGeneratorService::class),
+            'url'  => app(\App\Models\Url::class),
+            'user' => app(\App\Models\User::class),
+            'visit' => app(\App\Models\Visit::class),
+            'keyGenerator' => app(\App\Services\KeyGeneratorService::class),
         ]);
     }
 }

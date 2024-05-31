@@ -4,9 +4,10 @@ namespace Tests\Unit\Services;
 
 use App\Models\Url;
 use App\Services\KeyGeneratorService;
-use PHPUnit\Framework\Attributes\{DataProvider, Group, Test};
+use PHPUnit\Framework\Attributes as PHPUnit;
 use Tests\TestCase;
 
+#[PHPUnit\Group('services')]
 class KeyGeneratorServiceTest extends TestCase
 {
     private Url $url;
@@ -30,21 +31,19 @@ class KeyGeneratorServiceTest extends TestCase
         $this->totalUrl = self::N_URL_WITH_USER_ID + self::N_URL_WITHOUT_USER_ID;
     }
 
-    /**
-     * String dihasilkan dari pemotongan link dari belakang sepanjang panjang
-     * karakter yang telah ditentukan.
-     */
-    #[Test]
-    #[Group('u-model')]
-    public function keyword_test(): void
+    public function testGenerateUniqueString(): void
     {
-        $length = 3;
-        config(['urlhub.hash_length' => $length]);
+        $value1 = 'foo';
+        $generatedString1 = $this->keyGenerator->generate($value1);
+        Url::factory()->create(['keyword'  => $generatedString1]);
+        $this->assertSame($this->keyGenerator->simpleString($value1), $generatedString1);
+        $this->assertNotSame($generatedString1, $this->keyGenerator->generate($value1));
 
-        $longUrl = 'https://github.com/realodix';
-        $urlKey = $this->keyGenerator->generate($longUrl);
-
-        $this->assertSame(substr($longUrl, -$length), $urlKey);
+        $value2 = 'foo2';
+        $generatedString2 = $this->keyGenerator->generate($value2);
+        config(['urlhub.reserved_keyword' => [$generatedString2]]);
+        $this->assertSame($this->keyGenerator->simpleString($value2), $generatedString2);
+        $this->assertNotSame($generatedString2, $this->keyGenerator->generate($value2));
     }
 
     /**
@@ -53,8 +52,7 @@ class KeyGeneratorServiceTest extends TestCase
      * panjang yang harapkan. Ketika itu terjadi, maka generator harus menghasilkan
      * string acak dengan panjang yang sesuai dengan yang diharapkan.
      */
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function urlKey_string_lenght(): void
     {
         $inputString = 'foobar';
@@ -62,7 +60,7 @@ class KeyGeneratorServiceTest extends TestCase
         // configured_strlen > input_strlen
         // Generator harus menghasilkan string acak dengan panjang yang sesuai.
         $strLen = 8;
-        config(['urlhub.hash_length' => $strLen]);
+        config(['urlhub.keyword_length' => $strLen]);
         $actual = $this->keyGenerator->generate($inputString);
         $this->assertSame($strLen, strlen($actual));
         $this->assertNotSame(strlen($inputString), strlen($actual));
@@ -75,11 +73,10 @@ class KeyGeneratorServiceTest extends TestCase
      * Maka:
      * - String tersebut harus digunakan.
      */
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function urlKey_string_lenght2(): void
     {
-        config(['urlhub.hash_length' => 10]);
+        config(['urlhub.keyword_length' => 10]);
         $longUrl = 'https://t.co';
         $customKey = 'tco';
         $response = $this->post(route('su_create'), [
@@ -92,167 +89,108 @@ class KeyGeneratorServiceTest extends TestCase
         $this->assertTrue($url->is_custom);
     }
 
-    /**
-     * String yang dihasilkan dari pemotongan tautan harus berupa abjad.
-     */
-    #[Test]
-    #[Group('u-model')]
-    public function generateSimpleString_must_be_alphabet(): void
+    public function testStringAlreadyInUse(): void
     {
-        config(['urlhub.hash_length' => 3]);
+        config(['urlhub.keyword_length' => 5]);
+        $value = $this->keyGenerator->generate('https://github.com/realodix');
 
-        $this->assertSame('bar', $this->keyGenerator->generateSimpleString('foobar'));
-        $this->assertSame('bar', $this->keyGenerator->generateSimpleString('foob/ar'));
+        Url::factory()->create(['keyword'  => $value]);
 
-        $this->assertSame('bar', $this->keyGenerator->generateSimpleString('fooBar'));
+        $this->assertFalse($this->keyGenerator->verify($value));
     }
 
-    /**
-     * Panjang string yang dihasilkan dari pemotongan link harus harus sesuai
-     * dengan panjang yang telah ditentukan pada konfigurasi.
-     */
-    #[Test]
-    #[Group('u-model')]
-    public function generateSimpleString_string_length(): void
+    public function testStringIsAReservedKeyword(): void
     {
-        config(['urlhub.hash_length' => 6]);
-        $actual = 'https://github.com/realodix';
-        $expected = 'alodix';
-        $this->assertSame($expected, $this->keyGenerator->generateSimpleString($actual));
+        $value = 'foobar';
 
-        config(['urlhub.hash_length' => 9]);
-        $actual = 'https://github.com/realodix';
-        $expected = 'mrealodix';
-        $this->assertSame($expected, $this->keyGenerator->generateSimpleString($actual));
+        config(['urlhub.reserved_keyword' => [$value]]);
 
-        config(['urlhub.hash_length' => 12]);
-        $actual = 'https://github.com/realodix';
-        $expected = 'bcomrealodix';
-        $this->assertSame($expected, $this->keyGenerator->generateSimpleString($actual));
+        $this->assertFalse($this->keyGenerator->verify($value));
     }
 
-    /**
-     * String yang dihasilkan dari pemotongan link harus berupa huruf kecil.
-     */
-    #[Test]
-    #[Group('u-model')]
-    public function generateSimpleString_mus_be_lowercase(): void
+    public function testStringIsRegisteredRoute(): void
     {
-        $length = 4;
-        config(['urlhub.hash_length' => $length]);
+        $value = 'admin';
 
-        $longUrl = 'https://github.com/realoDIX';
-        $urlKey = $this->keyGenerator->generateSimpleString($longUrl);
-
-        $this->assertSame(mb_strtolower(substr($longUrl, -$length)), $urlKey);
-        $this->assertNotSame(substr($longUrl, -$length), $urlKey);
+        $this->assertFalse($this->keyGenerator->verify($value));
     }
 
-    /**
-     * Generator harus memberikan string yang belum digunakan. Jika string sudah
-     * digunakan sebagai keyword, maka generator harus memberikan string unik
-     * lainnya untuk `keyword`.
-     */
-    #[Test]
-    #[Group('u-model')]
-    public function string_already_in_use(): void
+    public function testStringIsPablicPath(): void
     {
-        $length = 3;
-        config(['urlhub.hash_length' => $length]);
+        $fileSystem = new \Illuminate\Filesystem\Filesystem;
+        $value = 'foo';
 
-        $longUrl = 'https://github.com/realodix';
-        Url::factory()->create(['keyword'  => $this->keyGenerator->generate($longUrl)]);
+        $fileSystem->makeDirectory(public_path($value));
 
-        $this->assertNotSame(substr($longUrl, -$length), $this->keyGenerator->generate($longUrl));
+        $this->assertFalse($this->keyGenerator->verify($value));
+
+        $fileSystem->deleteDirectory(public_path($value));
     }
 
-    /**
-     * Generator harus memberikan string yang tidak ada di dalam daftar reserved
-     * keyword (config('urlhub.reserved_keyword')). Jika string ada di dalam daftar,
-     * maka generator harus memberikan string unik lainnya untuk `keyword`.
-     */
-    #[Test]
-    #[Group('u-model')]
-    public function string_is_reserved_keyword(): void
-    {
-        $actual = 'https://example.com/css';
-        $expected = 'css';
-
-        config(['urlhub.reserved_keyword' => [$expected]]);
-        config(['urlhub.hash_length' => strlen($expected)]);
-
-        $this->assertNotSame($expected, $this->keyGenerator->generate($actual));
-    }
-
-    /**
-     * Generator harus memberikan string yang tidak ada di dalam daftar registered
-     * route paths di Laravel. Jika string ada di dalam daftar, maka generator
-     * harus memberikan string unik lainnya untuk `keyword`.
-     *
-     * Pada pengujian ini, string yang diberikan adalah 'login', dimana 'login'
-     * sudah digunakan sebagai route path.
-     */
-    #[Test]
-    #[Group('u-model')]
-    public function string_is_route_path(): void
-    {
-        $actual = 'https://example.com/login';
-        $expected = 'login';
-
-        config(['urlhub.hash_length' => strlen($expected)]);
-
-        $this->assertNotSame($expected, $this->keyGenerator->generate($actual));
-    }
-
-    #[Test]
-    #[Group('u-model')]
+    #[PHPUnit\Test]
     public function possibleOutput(): void
     {
-        config(['urlhub.hash_length' => 2]);
-        $this->assertSame(pow(62, 2), $this->keyGenerator->possibleOutput());
+        $charLen = strlen($this->keyGenerator::ALPHABET);
+
+        config(['urlhub.keyword_length' => 2]);
+        $this->assertSame(pow($charLen, 2), $this->keyGenerator->possibleOutput());
+
+        if (! extension_loaded('gmp')) {
+            $this->markTestSkipped('The GMP extension is not available.');
+        }
+        config(['urlhub.keyword_length' => 11]);
+        $this->assertSame(
+            gmp_intval(gmp_pow($charLen, 11)),
+            $this->keyGenerator->possibleOutput()
+        );
     }
 
     /**
      * Pengujian dilakukan berdasarkan panjang karakternya.
      */
-    #[Test]
-    #[Group('u-model')]
-    public function totalStringsUsedAsKeys(): void
+    public function testTotalKeyBasedOnStringLength(): void
     {
-        config(['urlhub.hash_length' => config('urlhub.hash_length') + 1]);
+        config(['urlhub.keyword_length' => config('urlhub.keyword_length') + 1]);
 
         Url::factory()->create([
-            'keyword' => $this->keyGenerator->generateRandomString(),
+            'keyword' => $this->keyGenerator->randomString(),
         ]);
         $this->assertSame(1, $this->keyGenerator->totalKey());
 
         Url::factory()->create([
-            'keyword'   => str_repeat('a', config('urlhub.hash_length')),
+            'keyword'   => str_repeat('a', config('urlhub.keyword_length')),
             'is_custom' => true,
         ]);
         $this->assertSame(2, $this->keyGenerator->totalKey());
 
-        // Karena panjang karakter 'keyword' berbeda dengan dengan 'urlhub.hash_length',
+        // Karena panjang karakter 'keyword' berbeda dengan dengan 'urlhub.keyword_length',
         // maka ini tidak ikut terhitung.
         Url::factory()->create([
-            'keyword'   => str_repeat('b', config('urlhub.hash_length') + 2),
+            'keyword'   => str_repeat('b', config('urlhub.keyword_length') + 2),
             'is_custom' => true,
         ]);
         $this->assertSame(2, $this->keyGenerator->totalKey());
 
-        config(['urlhub.hash_length' => config('urlhub.hash_length') + 3]);
+        config(['urlhub.keyword_length' => config('urlhub.keyword_length') + 3]);
         $this->assertSame(0, $this->keyGenerator->totalKey());
         $this->assertSame($this->totalUrl, $this->url->count());
     }
 
     /**
-     * @param mixed $po
-     * @param mixed $tk
-     * @param mixed $expected
+     * Only alphanumeric characters
      */
-    #[Test]
-    #[Group('u-model')]
-    #[DataProvider('remainingCapacityProvider')]
+    public function testTotalKeysBasedOnStringCharacters(): void
+    {
+        config(['urlhub.keyword_length' => 5]);
+
+        Url::factory()->create([
+            'keyword' => 'ab-cd',
+        ]);
+        $this->assertSame(0, $this->keyGenerator->totalKey());
+    }
+
+    #[PHPUnit\Test]
+    #[PHPUnit\DataProvider('remainingCapacityProvider')]
     public function remainingCapacity($po, $tk, $expected): void
     {
         $mock = \Mockery::mock(KeyGeneratorService::class)->makePartial();

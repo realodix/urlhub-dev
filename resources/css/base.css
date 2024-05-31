@@ -4,6 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
+.layout-container {
+    @apply max-w-[90rem] mx-auto;
+}
+
+main {
+    @apply py-4 sm:px-6 lg:px-8;
+    @apply layout-container;
+}
+
+.frontend, .backend, .auth {
+    @apply bg-uh-bg-2 font-sans text-gray-900 antialiased;
+}
+
 @layer base {
     h1 {
         @apply text-4xl;
@@ -40,7 +53,7 @@ hr {
 
 .btn {
     @apply inline-flex items-center px-3 py-1.5;
-    @apply bg-uh-bg-2 hover:bg-stone-200 active:bg-uh-bg-2 text-gray-500 hover:text-gray-600 active:text-gray-500;
+    @apply bg-uh-bg-2 hover:bg-[#eef1f4] active:bg-uh-bg-2 text-gray-500 hover:text-gray-600 active:text-gray-500;
     @apply text-base font-normal leading-6 text-center no-underline align-middle tracking-wide;
     @apply rounded disabled:opacity-25;
     @apply cursor-pointer select-none;
@@ -53,23 +66,65 @@ hr {
     }
 
     &-primary {
-        @apply text-base font-normal text-white bg-green-700 border-green-800;
-        @apply hover:text-white hover:bg-green-800 active:bg-green-700 hover:border-white;
+        @apply text-base font-normal text-white bg-teal-700 border-teal-800;
+        @apply hover:text-white hover:bg-teal-800 active:bg-teal-700 hover:border-white;
     }
 
     &-secondary {
         @apply border border-uh-border-color;
-        @apply text-sky-950 hover:text-sky-700 active:text-sky-950;
-        @apply bg-uh-bg-2 hover:bg-stone-200 active:bg-uh-bg-2;
+        @apply text-sky-950 hover:text-sky-800 active:text-sky-950;
+        @apply bg-uh-bg-2 hover:bg-[#eef1f4] active:bg-uh-bg-2;
     }
+}
+
+.common-card-style {
+    @apply bg-white border-y sm:rounded-lg sm:border border-uh-border-color;
+    @apply px-2 md:px-8 py-5;
+    /* @apply sm:shadow-[0_1px_2px_#e5e5e8]; */
+
+    .card_header {
+        color: #1f2328;
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1.25;
+        border-bottom: 1px solid #e6e6e6;
+        padding-bottom: 0.5rem;
+    }
+
+    .card_header__v2 {
+        display: flex;
+        @apply text-uh-1;
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .card_header__sub_header {
+        color: #1f2328;
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1.25;
+        margin-top: 24px;
+        margin-bottom: 8px;
+
+        &:first-child {
+            margin-top: 0 !important;
+        }
+    }
+}
+
+.auth-card {
+    @apply bg-white border-y sm:rounded-lg sm:border border-uh-border-color;
+    @apply w-full sm:max-w-md mt-6 px-12 py-8 overflow-hidden;
+}
+
+.form-label {
+    display: block;
+    font-weight: 200;
+    margin: 0 0 6px;
 }
 
 .form-input {
     @apply block w-full;
     @apply border-uh-border-color focus:ring-uh-blue-2 focus:border-uh-blue-2 rounded;
-}
-
-.common-card-style {
-    @apply bg-white border-y sm:rounded-lg sm:border border-uh-border-color;
-    /* @apply sm:shadow-[0_1px_2px_#e5e5e8]; */
+    @apply bg-[#f6f8fa] focus:bg-white;
 }

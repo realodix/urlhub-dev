@@ -3,13 +3,13 @@
 namespace Tests\Unit\Helpers;
 
 use App\Helpers\Helper;
-use PHPUnit\Framework\Attributes\{DataProvider, Group, Test};
+use PHPUnit\Framework\Attributes as PHPUnit;
 use Tests\TestCase;
 
+#[PHPUnit\Group('helper')]
 class HelperTest extends TestCase
 {
-    #[Test]
-    #[Group('u-helper')]
+    #[PHPUnit\Test]
     public function urlDisplay(): void
     {
         $this->assertSame(
@@ -28,13 +28,8 @@ class HelperTest extends TestCase
         );
     }
 
-    /**
-     * @param mixed $expected
-     * @param mixed $actual
-     */
-    #[Test]
-    #[Group('u-helper')]
-    #[DataProvider('urlDisplayWithoutSchemeProvider')]
+    #[PHPUnit\Test]
+    #[PHPUnit\DataProvider('urlDisplayWithoutSchemeProvider')]
     public function urlDisplayWithoutScheme($expected, $actual): void
     {
         $this->assertSame($expected, Helper::urlDisplay($actual, scheme: false));
@@ -53,51 +48,11 @@ class HelperTest extends TestCase
         ];
     }
 
-    /**
-     * @param mixed $expected
-     * @param mixed $actual
-     */
-    #[Test]
-    #[Group('u-helper')]
-    #[DataProvider('toAmountShortProvider')]
-    public function compactNumber($expected, $actual): void
+    public function testNumberAbbreviate(): void
     {
-        $this->assertSame($expected, Helper::compactNumber($actual));
-    }
+        $this->assertSame('7K', \Illuminate\Support\Number::abbreviate(6789));
 
-    #[Test]
-    #[Group('u-helper')]
-    public function numberFormatPrecision(): void
-    {
-        $this->assertSame(19.12, Helper::numberFormatPrecision(19.123456));
-        $this->assertSame(19.123, Helper::numberFormatPrecision(19.123456, 3));
-    }
-
-    public static function toAmountShortProvider(): array
-    {
-        return [
-            ['12', 12],
-            ['12', 12.3],
-
-            ['1K', pow(10, 3)],
-            ['10K', pow(10, 4)],
-            ['100K', pow(10, 5)],
-            ['12.34K+', 12345],
-
-            ['1M', pow(10, 6)],
-            ['10M', pow(10, 7)],
-            ['100M', pow(10, 8)],
-            ['99.99M+', 99997092],
-
-            ['1B', pow(10, 9)],
-            ['10B', pow(10, 10)],
-            ['100B', pow(10, 11)],
-            ['1.23B+', 1234567890],
-
-            ['1T', pow(10, 12)],
-            ['10T', pow(10, 13)],
-            ['100T', pow(10, 14)],
-            ['1.23T+', 1234567890000],
-        ];
+        $this->assertSame('6.79K', \Illuminate\Support\Number::abbreviate(6789, maxPrecision: 2));
+        $this->assertSame('6.79K', numberAbbreviate(6789));
     }
 }

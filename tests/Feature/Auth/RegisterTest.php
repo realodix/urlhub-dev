@@ -4,10 +4,12 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\{Event, Hash};
-use PHPUnit\Framework\Attributes\{Group, Test};
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Hash;
+use PHPUnit\Framework\Attributes as PHPUnit;
 use Tests\TestCase;
 
+#[PHPUnit\Group('auth-page')]
 class RegisterTest extends TestCase
 {
     protected function successfulRegistrationRoute(): string
@@ -25,8 +27,7 @@ class RegisterTest extends TestCase
         return route('register');
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCanViewARegistrationForm(): void
     {
         $response = $this->get($this->getRoute());
@@ -42,7 +43,6 @@ class RegisterTest extends TestCase
      *
      * assertViewHas juga menghasilkan hal yang sama
      */
-    // #[Group('f-auth')]
     // public function testViewIs(): void
     // {
     //     $response = $this->get($this->getRoute());
@@ -50,8 +50,7 @@ class RegisterTest extends TestCase
     //     $response->assertViewIs('auth.register');
     // }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCannotViewARegistrationFormWhenAuthenticated(): void
     {
         $response = $this->actingAs($this->normalUser())
@@ -60,8 +59,7 @@ class RegisterTest extends TestCase
         $response->assertRedirect(route('dashboard'));
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCanRegister(): void
     {
         Event::fake();
@@ -87,8 +85,7 @@ class RegisterTest extends TestCase
         });
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function nameShouldNotBeTooLong(): void
     {
         $response = $this->post('/register', [
@@ -100,8 +97,7 @@ class RegisterTest extends TestCase
             ->assertSessionHasErrors('name');
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCannotRegisterWithoutName(): void
     {
         $response = $this->from($this->getRoute())
@@ -122,8 +118,7 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCannotRegisterWithoutEmail(): void
     {
         $response = $this->from($this->getRoute())
@@ -144,8 +139,7 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCannotRegisterWithInvalidEmail(): void
     {
         $response = $this->from($this->getRoute())
@@ -167,8 +161,7 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function emailShouldNotBeTooLong(): void
     {
         $response = $this->post('/register', [
@@ -179,8 +172,7 @@ class RegisterTest extends TestCase
         $response->assertSessionHasErrors('email');
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCannotRegisterWithoutPassword(): void
     {
         $response = $this->from($this->getRoute())
@@ -202,8 +194,7 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCannotRegisterWithoutPasswordConfirmation(): void
     {
         $response = $this->from($this->getRoute())
@@ -225,8 +216,7 @@ class RegisterTest extends TestCase
         $this->assertGuest();
     }
 
-    #[Test]
-    #[Group('f-auth')]
+    #[PHPUnit\Test]
     public function userCannotRegisterWithPasswordsNotMatching(): void
     {
         $response = $this->from($this->getRoute())

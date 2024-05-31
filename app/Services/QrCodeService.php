@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Writer\{PngWriter, SvgWriter};
-use Endroid\QrCode\{ErrorCorrectionLevel, RoundBlockSizeMode};
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\RoundBlockSizeMode;
 
 class QrCodeService
 {
@@ -63,8 +63,8 @@ class QrCodeService
         $format = $containSupportedFormat ? $qFormat : self::FORMAT;
 
         return match ($format) {
-            'svg' => new SvgWriter,
-            default => new PngWriter,
+            'svg' => new \Endroid\QrCode\Writer\SvgWriter,
+            default => new \Endroid\QrCode\Writer\PngWriter,
         };
     }
 

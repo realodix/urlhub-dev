@@ -5,15 +5,14 @@ namespace App\Http\Controllers\Dashboard\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserEmail;
 use App\Models\User;
+use Illuminate\Routing\Controllers\{HasMiddleware, Middleware};
+use Illuminate\Support\Facades\Gate;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
-    /**
-     * UserController constructor.
-     */
-    public function __construct()
+    public static function middleware(): array
     {
-        $this->middleware('role:admin')->only('view');
+        return [new Middleware('role:admin', only: ['view'])];
     }
 
     /**
@@ -36,9 +35,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $this->authorize('view', $user);
+        Gate::authorize('view', $user);
 
-        return view('backend.user.profile', ['user' => $user]);
+        return view('backend.user.account', ['user' => $user]);
     }
 
     /**
@@ -52,12 +51,12 @@ class UserController extends Controller
      */
     public function update(UpdateUserEmail $request, User $user)
     {
-        $this->authorize('update', $user);
+        Gate::authorize('update', $user);
 
         $user->email = $request->email;
         $user->save();
 
         return redirect()->back()
-            ->withFlashSuccess(__('Profile updated.'));
+            ->withFlashSuccess(__('Account updated.'));
     }
 }

@@ -1,31 +1,38 @@
 <?php
 
 use App\Helpers\Helper;
+use Illuminate\Support\Number;
 
 if (! function_exists('urlDisplay')) {
     /**
      * Display the link according to what You need.
      *
-     * @param string $url
-     * @param int    $limit
-     * @param bool   $scheme
+     * @param string   $value
+     * @param int|null $limit
+     * @param bool     $scheme
      * @return string|\Illuminate\Support\Stringable
      */
-    function urlDisplay($url, $limit = null, $scheme = true)
+    function urlDisplay($value, $limit = null, $scheme = true)
     {
-        return Helper::urlDisplay($url, $limit, $scheme);
+        return Helper::urlDisplay($value, $limit, $scheme);
     }
 }
 
-if (! function_exists('compactNumber')) {
+if (! function_exists('numberAbbreviate')) {
     /**
-     * \App\Helpers\Helper::compactNumber()
+     * This is modified version of Laravel Number::abbreviate() method with the
+     * default value of maxPrecision is 2.
      *
-     * @param int $value
-     * @return int|string
+     * - https://laravel.com/docs/11.x/helpers#method-number-abbreviate
+     * - https://github.com/laravel/framework/blob/5d4b26e/src/Illuminate/Support/Number.php#L154
+     *
+     * @param int|float $number
+     * @param int       $precision
+     * @param int|null  $maxPrecision
+     * @return bool|string
      */
-    function compactNumber($value)
+    function numberAbbreviate($number, $precision = 0, $maxPrecision = 2)
     {
-        return Helper::compactNumber($value);
+        return Number::abbreviate($number, $precision, $maxPrecision);
     }
 }

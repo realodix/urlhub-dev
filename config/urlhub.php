@@ -1,9 +1,6 @@
 <?php
 
 return [
-
-    'version' => 'v1.0.0-alpha.9-dev',
-
     /*
     |--------------------------------------------------------------------------
     | Unregistered Users Access
@@ -27,10 +24,19 @@ return [
     */
 
     /*
-     * The expected (and maximum) number of characters in generating unique
-     * keyword.
+     * The expected length of the keyword generated when creating a new short URL.
      */
-    'hash_length' => env('UH_HASH_LENGTH', 6), // >= 1
+    'keyword_length' => env('UH_KEYWORD_LENGTH', 5), // >= 1
+
+    /**
+     * Minimum length of custom keyword.
+     */
+    'custom_keyword_min_length' => env('UH_CUSTOM_KEYWORD_MIN_LENGTH', 3),
+
+    /**
+     * Maximum length of custom keyword.
+     */
+    'custom_keyword_max_length' => env('UH_CUSTOM_KEYWORD_MAX_LENGTH', 11),
 
     /*
      * List of non allowed domain.
@@ -50,12 +56,15 @@ return [
      * example rude words.
      */
     'reserved_keyword' => [
-        'css',
+        // Reserved for future use
+        'build', // When Vite is running in development
+        'hot', // When Vite is running in development
+        'vendor', // When installing packages (ex: laravel/telescope)
+
+        // Others
         'images',
-        'img',
         'fonts',
-        'js',
-        'svg',
+        'storage',
     ],
 
     'web_title' => env('UH_WEB_TITLE', true),
