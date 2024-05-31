@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Middleware;
 
-use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Support\Facades\{DB, Schema};
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UrlHubLinkCheckerTest extends TestCase
