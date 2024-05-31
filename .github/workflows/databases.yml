@@ -12,6 +12,7 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
+          DB_CONNECTION: mysql
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: forge
         ports:
