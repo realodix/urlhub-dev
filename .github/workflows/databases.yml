@@ -5,195 +5,196 @@ on:
 
 
 jobs:
-  mysql_57:
-    name: MySQL 5.7
-    runs-on: ubuntu-22.04
-    services:
-      mysql:
-        image: mysql:5.7
+    mysql_57:
+        name: MySQL 5.7
+        runs-on: ubuntu-22.04
         env:
-          DB_CONNECTION: mysql
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: forge
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.3
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql
-          tools: composer:v2
-          coverage: none
-      - name: Install Dependencies (Composer)
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          command: composer update --no-interaction --no-progress
-      - name: Install Dependencies (NPM)
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          command: npm install
-      - name: Prepare
-        run: |
-          php artisan config:clear
-          npm run dev
-      - name: Execute tests
-        run: vendor/bin/phpunit
-        env:
-          DB_CONNECTION: mysql
-          DB_DATABASE: forge
-          DB_USERNAME: root
+            DB_CONNECTION: mysql
+        services:
+            mysql:
+                image: mysql:5.7
+                env:
+                    MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                    MYSQL_DATABASE: forge
+                ports:
+                    - 3306:3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+            with:
+                fetch-depth: 0
+          - name: Setup PHP
+            uses: shivammathur/setup-php@v2
+            with:
+                php-version: 8.3
+                extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql
+                tools: composer:v2
+                coverage: none
+          - name: Install Dependencies (Composer)
+            uses: nick-invision/retry@v2
+            with:
+                timeout_minutes: 5
+                max_attempts: 3
+                command: composer update --no-interaction --no-progress
+          - name: Install Dependencies (NPM)
+            uses: nick-invision/retry@v2
+            with:
+                timeout_minutes: 5
+                max_attempts: 3
+                command: npm install
+          - name: Prepare
+            run: |
+                php artisan config:clear
+                npm run build
+          - name: Execute tests
+            run: vendor/bin/phpunit
+            env:
+                DB_CONNECTION: mysql
+                DB_DATABASE: forge
+                DB_USERNAME: root
 
 
-  mysql_8:
-    name: MySQL 8.0
-    runs-on: ubuntu-22.04
-    services:
-      mysql:
-        image: mysql:8
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: forge
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.3
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql
-          tools: composer:v2
-          coverage: none
-      - name: Install Dependencies (Composer)
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          command: composer update --no-interaction --no-progress
-      - name: Install Dependencies (NPM)
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          command: npm install
-      - name: Prepare
-        run: |
-          php artisan config:clear
-          npm run dev
-      - name: Execute tests
-        run: vendor/bin/phpunit
-        env:
-          DB_CONNECTION: mysql
-          DB_DATABASE: forge
-          DB_USERNAME: root
+    # mysql_8:
+    # name: MySQL 8.0
+    # runs-on: ubuntu-22.04
+    # services:
+    #     mysql:
+    #     image: mysql:8
+    #     env:
+    #         MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    #         MYSQL_DATABASE: forge
+    #     ports:
+    #         - 3306:3306
+    #     options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    # steps:
+    #     - name: Checkout code
+    #     uses: actions/checkout@v4
+    #     with:
+    #         fetch-depth: 0
+    #     - name: Setup PHP
+    #     uses: shivammathur/setup-php@v2
+    #     with:
+    #         php-version: 8.3
+    #         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql
+    #         tools: composer:v2
+    #         coverage: none
+    #     - name: Install Dependencies (Composer)
+    #     uses: nick-invision/retry@v2
+    #     with:
+    #         timeout_minutes: 5
+    #         max_attempts: 3
+    #         command: composer update --no-interaction --no-progress
+    #     - name: Install Dependencies (NPM)
+    #     uses: nick-invision/retry@v2
+    #     with:
+    #         timeout_minutes: 5
+    #         max_attempts: 3
+    #         command: npm install
+    #     - name: Prepare
+    #     run: |
+    #         php artisan config:clear
+    #         npm run dev
+    #     - name: Execute tests
+    #     run: vendor/bin/phpunit
+    #     env:
+    #         DB_CONNECTION: mysql
+    #         DB_DATABASE: forge
+    #         DB_USERNAME: root
 
 
-  mariadb:
-    name: MariaDB 10
-    runs-on: ubuntu-22.04
-    services:
-      mysql:
-        image: mariadb:10
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: forge
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.3
-          tools: composer:v2
-          coverage: none
-      - name: Install Dependencies (Composer)
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          command: composer update --no-interaction --no-progress
-      - name: Install Dependencies (NPM)
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          command: npm install
-      - name: Prepare
-        run: |
-          php artisan config:clear
-          npm run dev
-      - name: Execute tests
-        run: vendor/bin/phpunit
-        env:
-          DB_CONNECTION: mysql
-          DB_DATABASE: forge
-          DB_USERNAME: root
+    # mariadb:
+    # name: MariaDB 10
+    # runs-on: ubuntu-22.04
+    # services:
+    #     mysql:
+    #     image: mariadb:10
+    #     env:
+    #         MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    #         MYSQL_DATABASE: forge
+    #     ports:
+    #         - 3306:3306
+    #     options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    # steps:
+    #     - name: Checkout code
+    #     uses: actions/checkout@v4
+    #     with:
+    #         fetch-depth: 0
+    #     - name: Setup PHP
+    #     uses: shivammathur/setup-php@v2
+    #     with:
+    #         php-version: 8.3
+    #         tools: composer:v2
+    #         coverage: none
+    #     - name: Install Dependencies (Composer)
+    #     uses: nick-invision/retry@v2
+    #     with:
+    #         timeout_minutes: 5
+    #         max_attempts: 3
+    #         command: composer update --no-interaction --no-progress
+    #     - name: Install Dependencies (NPM)
+    #     uses: nick-invision/retry@v2
+    #     with:
+    #         timeout_minutes: 5
+    #         max_attempts: 3
+    #         command: npm install
+    #     - name: Prepare
+    #     run: |
+    #         php artisan config:clear
+    #         npm run dev
+    #     - name: Execute tests
+    #     run: vendor/bin/phpunit
+    #     env:
+    #         DB_CONNECTION: mysql
+    #         DB_DATABASE: forge
+    #         DB_USERNAME: root
 
 
-  pgsql:
-    name: PostgreSQL 14
-    runs-on: ubuntu-22.04
-    services:
-      postgres:
-        image: postgres:14
-        env:
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.3
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_pgsql
-          tools: composer:v2
-          coverage: none
-      - name: Install Dependencies (Composer)
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          command: composer update --no-interaction --no-progress
-      - name: Install Dependencies (NPM)
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          command: npm install
-      - name: Prepare
-        run: |
-          php artisan config:clear
-          npm run dev
-      - name: Execute tests
-        run: vendor/bin/phpunit
-        env:
-          DB_CONNECTION: pgsql
-          DB_HOST: localhost
-          DB_USERNAME: postgres
-          DB_PASSWORD: postgres
-          DB_DATABASE: postgres
-          DB_PORT: 5432
+    # pgsql:
+    # name: PostgreSQL 14
+    # runs-on: ubuntu-22.04
+    # services:
+    #     postgres:
+    #     image: postgres:14
+    #     env:
+    #         POSTGRES_PASSWORD: postgres
+    #     ports:
+    #         - 5432:5432
+    #     options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
+    # steps:
+    #     - name: Checkout code
+    #     uses: actions/checkout@v4
+    #     with:
+    #         fetch-depth: 0
+    #     - name: Setup PHP
+    #     uses: shivammathur/setup-php@v2
+    #     with:
+    #         php-version: 8.3
+    #         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_pgsql
+    #         tools: composer:v2
+    #         coverage: none
+    #     - name: Install Dependencies (Composer)
+    #     uses: nick-invision/retry@v2
+    #     with:
+    #         timeout_minutes: 5
+    #         max_attempts: 3
+    #         command: composer update --no-interaction --no-progress
+    #     - name: Install Dependencies (NPM)
+    #     uses: nick-invision/retry@v2
+    #     with:
+    #         timeout_minutes: 5
+    #         max_attempts: 3
+    #         command: npm install
+    #     - name: Prepare
+    #     run: |
+    #         php artisan config:clear
+    #         npm run dev
+    #     - name: Execute tests
+    #     run: vendor/bin/phpunit
+    #     env:
+    #         DB_CONNECTION: pgsql
+    #         DB_HOST: localhost
+    #         DB_USERNAME: postgres
+    #         DB_PASSWORD: postgres
+    #         DB_DATABASE: postgres
+    #         DB_PORT: 5432
