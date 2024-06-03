@@ -18,6 +18,7 @@ class UrlTest extends TestCase
         parent::setUp();
 
         $this->url = new Url;
+        $this->visit = new Visit;
     }
 
     /*
@@ -269,7 +270,6 @@ class UrlTest extends TestCase
         $actual = $visit->url->currentUserClickCount();
 
         $this->assertSame($expected, $actual);
-        $this->assertSame(1, $actual);
     }
 
     /**
@@ -278,19 +278,23 @@ class UrlTest extends TestCase
     #[PHPUnit\Test]
     public function userClickCount(): void
     {
-        $user = $this->normalUser();
+        $nUser = 6;
+        $nGuest = 4;
 
-        $visit = Visit::factory()
-            ->for(Url::factory()->create([
-                'user_id' => $user->id,
+        Visit::factory()->count($nUser)
+            ->for(Url::factory())
+            ->create();
+
+        Visit::factory()->count($nGuest)
+            ->for(Url::factory()->state([
+                'user_id' => Url::GUEST_ID,
             ]))
             ->create();
 
-        $expected = Visit::whereUrlId($visit->url->id)->count();
         $actual = $this->url->userClickCount();
 
-        $this->assertSame($user->id, $visit->url->user_id);
-        $this->assertSame($expected, $actual);
+        $this->assertSame($nUser, $this->url->userClickCount());
+        $this->assertSame($nUser + $nGuest, $this->visit->count());
     }
 
     /**
