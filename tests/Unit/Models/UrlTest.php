@@ -251,9 +251,6 @@ class UrlTest extends TestCase
         $this->assertSame(1, $actual);
     }
 
-    /**
-     * Total klik dari setiap shortened URLs yang dibuat oleh user tertentu
-     */
     #[PHPUnit\Test]
     public function currentUserClickCount(): void
     {
