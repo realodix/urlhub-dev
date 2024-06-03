@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string         $short_url
  * @property int            $clicks
  * @property int            $uniqueClicks
+ * @property-read int       $visit_count
+ * @property-read int       $unique_visit_count
  */
 class Url extends Model
 {
@@ -132,6 +134,9 @@ class Url extends Model
         );
     }
 
+    /**
+     * @deprecated https://github.com/realodix/urlhub/pull/1003
+     */
     protected function uniqueClicks(): Attribute
     {
         return Attribute::make(
@@ -214,22 +219,32 @@ class Url extends Model
     }
 
     /**
-     * The total number of clicks on all short URLs from each User
+     * Total clicks from the current user
      */
-    public function numberOfClicksOfEachUser(): int
+    public function currentUserClickCount(): int
     {
-        $url = self::whereUserId(auth()->id())->get();
-
-        return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
+        return self::with('visits')
+            ->where('user_id', auth()->id())
+            ->count();
     }
 
     /**
-     * The total number of clicks on all short URLs from all guest users
+     * Total clicks from all users
      */
-    public function numberOfClickFromGuest(): int
+    public function userClickCount(): int
     {
-        $url = self::whereNull('user_id')->get();
+        return Visit::join('urls', 'visits.url_id', '=', 'urls.id')
+            ->where('urls.user_id', '!=', null)
+            ->count('visits.id');
+    }
 
-        return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
+    /**
+     * Total clicks from all guest users
+     */
+    public function guestUserClickCount(): int
+    {
+        return Visit::join('urls', 'visits.url_id', '=', 'urls.id')
+            ->where('urls.user_id', '=', null)
+            ->count('visits.id');
     }
 }
