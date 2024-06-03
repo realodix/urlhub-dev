@@ -269,9 +269,6 @@ class UrlTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    /**
-     * Total clicks on all short URLs from all users
-     */
     #[PHPUnit\Test]
     public function userClickCount(): void
     {
@@ -292,9 +289,6 @@ class UrlTest extends TestCase
         $this->assertSame($nUser + $nGuest, $this->visit->count());
     }
 
-    /**
-     * Total clicks on all short URLs from all guest users
-     */
     #[PHPUnit\Test]
     public function guestUserClickCount(): void
     {
