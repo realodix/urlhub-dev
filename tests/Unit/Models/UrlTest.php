@@ -291,8 +291,6 @@ class UrlTest extends TestCase
             ]))
             ->create();
 
-        $actual = $this->url->userClickCount();
-
         $this->assertSame($nUser, $this->url->userClickCount());
         $this->assertSame($nUser + $nGuest, $this->visit->count());
     }
@@ -303,17 +301,21 @@ class UrlTest extends TestCase
     #[PHPUnit\Test]
     public function guestUserClickCount(): void
     {
-        $visit = Visit::factory()
-            ->for(Url::factory()->create([
+        $nUser = 6;
+        $nGuest = 4;
+
+        Visit::factory()->count($nUser)
+            ->for(Url::factory())
+            ->create();
+
+        Visit::factory()->count($nGuest)
+            ->for(Url::factory()->state([
                 'user_id' => Url::GUEST_ID,
             ]))
             ->create();
 
-        $expected = Visit::whereUrlId($visit->url->id)->count();
-        $actual = $this->url->guestUserClickCount();
-
-        $this->assertSame(Url::GUEST_ID, $visit->url->user_id);
-        $this->assertSame($expected, $actual);
+        $this->assertSame($nGuest, $this->url->guestUserClickCount());
+        $this->assertSame($nUser + $nGuest, $this->visit->count());
     }
 
     public function testKeywordColumnIsCaseSensitive(): void
