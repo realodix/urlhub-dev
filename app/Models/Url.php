@@ -231,10 +231,6 @@ class Url extends Model
 
     /**
      * The total number of clicks on all short URLs from all users
-     *
-     * count visits
-     * - 'urls.user_id' is not null
-     * - 'urls.id' and 'visits.url_id' is related
      */
     public function userClickCount(): int
     {
