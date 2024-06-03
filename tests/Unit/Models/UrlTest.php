@@ -273,17 +273,36 @@ class UrlTest extends TestCase
     }
 
     /**
+     * Total clicks on all short URLs from all users
+     */
+    #[PHPUnit\Test]
+    public function userClickCount(): void
+    {
+        $user = $this->normalUser();
+
+        $visit = Visit::factory()
+            ->for(Url::factory(['user_id' => $user->id])->create())
+            ->create();
+
+        $expected = Visit::whereUrlId($visit->url->id)->count();
+        $actual = $this->url->userClickCount();
+
+        $this->assertSame($user->id, $visit->url->user_id);
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
      * Total clicks on all short URLs from all guest users
      */
     #[PHPUnit\Test]
-    public function numberOfClickFromGuest(): void
+    public function guestUserClickCount(): void
     {
         $visit = Visit::factory()
             ->for(Url::factory()->create(['user_id' => Url::GUEST_ID]))
             ->create();
 
         $expected = Visit::whereUrlId($visit->url->id)->count();
-        $actual = $this->url->numberOfClickFromGuest();
+        $actual = $this->url->guestUserClickCount();
 
         $this->assertSame(Url::GUEST_ID, $visit->url->user_id);
         $this->assertSame($expected, $actual);

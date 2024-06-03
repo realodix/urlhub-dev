@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUrlRequest;
 use App\Services\KeyGeneratorService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @property int            $id
@@ -229,12 +230,28 @@ class Url extends Model
     }
 
     /**
+     * The total number of clicks on all short URLs from all users
+     *
+     * count visits
+     * - 'urls.user_id' is not null
+     * - 'urls.id' and 'visits.url_id' is related
+     */
+    public function userClickCount(): int
+    {
+        return DB::table('visits')
+            ->join('urls', 'visits.url_id', '=', 'urls.id')
+            ->where('urls.user_id', '!=', null)
+            ->count('visits.id');
+    }
+
+    /**
      * The total number of clicks on all short URLs from all guest users
      */
-    public function numberOfClickFromGuest(): int
+    public function guestUserClickCount(): int
     {
-        $url = self::whereNull('user_id')->get();
-
-        return $url->sum(fn ($url) => $url->numberOfClicks($url->id));
+        return DB::table('visits')
+            ->join('urls', 'visits.url_id', '=', 'urls.id')
+            ->where('urls.user_id', '=', null)
+            ->count('visits.id');
     }
 }
