@@ -260,7 +260,7 @@ class UrlTest extends TestCase
         $user = $this->normalUser();
 
         $visit = Visit::factory()
-            ->for(Url::factory([
+            ->for(Url::factory()->state([
                 'user_id' => $user->id,
             ]))
             ->create();
