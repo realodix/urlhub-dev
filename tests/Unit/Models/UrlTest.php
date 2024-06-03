@@ -281,7 +281,7 @@ class UrlTest extends TestCase
         $user = $this->normalUser();
 
         $visit = Visit::factory()
-            ->for(Url::factory(['user_id' => $user->id])->create())
+            ->for(Url::factory()->create(['user_id' => $user->id]))
             ->create();
 
         $expected = Visit::whereUrlId($visit->url->id)->count();
