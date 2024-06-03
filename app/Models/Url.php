@@ -6,7 +6,6 @@ use App\Http\Requests\StoreUrlRequest;
 use App\Services\KeyGeneratorService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @property int            $id
@@ -234,8 +233,7 @@ class Url extends Model
      */
     public function userClickCount(): int
     {
-        return DB::table('visits')
-            ->join('urls', 'visits.url_id', '=', 'urls.id')
+        return Visit::join('urls', 'visits.url_id', '=', 'urls.id')
             ->where('urls.user_id', '!=', null)
             ->count('visits.id');
     }
@@ -245,8 +243,7 @@ class Url extends Model
      */
     public function guestUserClickCount(): int
     {
-        return DB::table('visits')
-            ->join('urls', 'visits.url_id', '=', 'urls.id')
+        return Visit::join('urls', 'visits.url_id', '=', 'urls.id')
             ->where('urls.user_id', '=', null)
             ->count('visits.id');
     }
