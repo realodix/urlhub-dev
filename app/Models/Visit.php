@@ -71,7 +71,7 @@ class Visit extends Model
     public function userClickCount(): int
     {
         return self::join('urls', 'visits.url_id', '=', 'urls.id')
-            ->where('urls.user_id', '!=', null)
+            ->where('urls.user_id', '!=', Url::GUEST_ID)
             ->count('visits.id');
     }
 
@@ -81,7 +81,7 @@ class Visit extends Model
     public function guestUserUrlVisitCount(): int
     {
         return self::join('urls', 'visits.url_id', '=', 'urls.id')
-            ->where('urls.user_id', null)
+            ->where('urls.user_id', Url::GUEST_ID)
             ->count('visits.id');
     }
 }
