@@ -190,35 +190,45 @@ class UrlTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    /**
-     * The number of shortened URLs that have been created by each User
-     */
     #[PHPUnit\Test]
-    public function numberOfUrl(): void
+    public function currentUserUrlCount(): void
     {
         $user = $this->normalUser();
+        $nCurrentUser = 8;
+        $nUser = 6;
 
-        Url::factory([
-            'user_id' => $user->id,
-        ])->create();
+        Url::factory()->count($nCurrentUser)->create(['user_id' => $user->id]);
+        Url::factory()->count($nUser)->create();
 
         $this->actingAs($user);
-        $actual = $this->url->numberOfUrl();
-
-        $this->assertSame(1, $actual);
+        $this->assertSame($nCurrentUser, $this->url->currentUserUrlCount());
+        $this->assertSame($nUser + $nCurrentUser, $this->url->count());
     }
 
-    /**
-     * The total number of shortened URLs that have been created by all guests
-     */
     #[PHPUnit\Test]
-    public function numberOfUrlFromGuests(): void
+    public function userUrlCount(): void
     {
-        Url::factory()->create(['user_id' => Url::GUEST_ID]);
+        $nUser = 6;
+        $nGuest = 4;
 
-        $actual = $this->url->numberOfUrlFromGuests();
+        Url::factory()->count($nUser)->create();
+        Url::factory()->count($nGuest)->create(['user_id' => Url::GUEST_ID]);
 
-        $this->assertSame(1, $actual);
+        $this->assertSame($nUser, $this->url->userUrlCount());
+        $this->assertSame($nUser + $nGuest, $this->url->count());
+    }
+
+    #[PHPUnit\Test]
+    public function guestUserUrlCount(): void
+    {
+        $nUser = 6;
+        $nGuest = 4;
+
+        Url::factory()->count($nUser)->create();
+        Url::factory()->count($nGuest)->create(['user_id' => Url::GUEST_ID]);
+
+        $this->assertSame($nGuest, $this->url->guestUserUrlCount());
+        $this->assertSame($nUser + $nGuest, $this->url->count());
     }
 
     #[PHPUnit\Test]
@@ -249,64 +259,6 @@ class UrlTest extends TestCase
         $actual = $this->url->numberOfClicks($v->url->id, unique: true);
 
         $this->assertSame(1, $actual);
-    }
-
-    #[PHPUnit\Test]
-    public function currentUserClickCount(): void
-    {
-        $user = $this->normalUser();
-
-        $visit = Visit::factory()
-            ->for(Url::factory()->state([
-                'user_id' => $user->id,
-            ]))
-            ->create();
-
-        $this->actingAs($user);
-        $expected = Visit::whereUrlId($visit->url->id)->count();
-        $actual = $visit->url->currentUserClickCount();
-
-        $this->assertSame($expected, $actual);
-    }
-
-    #[PHPUnit\Test]
-    public function userClickCount(): void
-    {
-        $nUser = 6;
-        $nGuest = 4;
-
-        Visit::factory()->count($nUser)
-            ->for(Url::factory())
-            ->create();
-
-        Visit::factory()->count($nGuest)
-            ->for(Url::factory()->state([
-                'user_id' => Url::GUEST_ID,
-            ]))
-            ->create();
-
-        $this->assertSame($nUser, $this->url->userClickCount());
-        $this->assertSame($nUser + $nGuest, $this->visit->count());
-    }
-
-    #[PHPUnit\Test]
-    public function guestUserClickCount(): void
-    {
-        $nUser = 6;
-        $nGuest = 4;
-
-        Visit::factory()->count($nUser)
-            ->for(Url::factory())
-            ->create();
-
-        Visit::factory()->count($nGuest)
-            ->for(Url::factory()->state([
-                'user_id' => Url::GUEST_ID,
-            ]))
-            ->create();
-
-        $this->assertSame($nGuest, $this->url->guestUserClickCount());
-        $this->assertSame($nUser + $nGuest, $this->visit->count());
     }
 
     public function testKeywordColumnIsCaseSensitive(): void
