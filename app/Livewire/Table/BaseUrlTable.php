@@ -57,7 +57,7 @@ class BaseUrlTable extends PowerGridComponent
                 ->groupBy('url_id'), 'unique_visit_counts', function (JoinClause $join) {
                     $join->on('urls.id', '=', 'unique_visit_counts.url_id');
                 })
-            ->where(fn (Builder $query) => $this->getUserIdBuilder($query))
+            ->where(fn(Builder $query) => $this->getUserIdBuilder($query))
             ->select(
                 'urls.id as id',
                 'users.name as author',

@@ -12,8 +12,7 @@ class VisitorService
 {
     public function __construct(
         public User $user,
-    ) {
-    }
+    ) {}
 
     /**
      * Store the visitor data.

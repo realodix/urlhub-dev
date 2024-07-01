@@ -8,7 +8,7 @@ if (! function_exists('urlDisplay')) {
      * Display the link according to what You need.
      *
      * @param string   $value
-     * @param int|null $limit
+     * @param null|int $limit
      * @param bool     $scheme
      * @return string|\Illuminate\Support\Stringable
      */
@@ -28,7 +28,7 @@ if (! function_exists('n_abb')) {
      *
      * @param int|float $number
      * @param int       $precision
-     * @param int|null  $maxPrecision
+     * @param null|int  $maxPrecision
      * @return bool|string
      */
     function n_abb($number, $precision = 0, $maxPrecision = 2)

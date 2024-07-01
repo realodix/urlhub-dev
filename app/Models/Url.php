@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int            $id
- * @property int|null       $user_id
+ * @property null|int       $user_id
  * @property string         $keyword
  * @property bool           $is_custom
  * @property string         $destination
@@ -95,21 +95,21 @@ class Url extends Model
     protected function userId(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value === 0 ? self::GUEST_ID : $value,
+            set: fn($value) => $value === 0 ? self::GUEST_ID : $value,
         );
     }
 
     protected function shortUrl(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attr) => url('/'.$attr['keyword']),
+            get: fn($value, $attr) => url('/'.$attr['keyword']),
         );
     }
 
     protected function destination(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => rtrim($value, '/'),
+            set: fn($value) => rtrim($value, '/'),
         );
     }
 
@@ -130,7 +130,7 @@ class Url extends Model
     protected function clicks(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attr) => $this->numberOfClicks($attr['id']),
+            get: fn($value, $attr) => $this->numberOfClicks($attr['id']),
         );
     }
 
@@ -140,7 +140,7 @@ class Url extends Model
     protected function uniqueClicks(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attr) => $this->numberOfClicks($attr['id'], unique: true),
+            get: fn($value, $attr) => $this->numberOfClicks($attr['id'], unique: true),
         );
     }
 

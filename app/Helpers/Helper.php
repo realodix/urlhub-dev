@@ -26,7 +26,7 @@ class Helper
      * Display the link according to what You need.
      *
      * @param string   $value         URL links
-     * @param int|null $limit         Length string will be truncated to, including suffix
+     * @param null|int $limit         Length string will be truncated to, including suffix
      * @param bool     $scheme        Show or remove URL schemes
      * @param bool     $trailingSlash Show or remove trailing slash
      */
@@ -75,21 +75,21 @@ class Helper
     public static function routeList(): array
     {
         $route = array_map(
-            fn (\Illuminate\Routing\Route $route) => $route->uri,
+            fn(\Illuminate\Routing\Route $route) => $route->uri,
             \Illuminate\Support\Facades\Route::getRoutes()->get()
         );
 
         return collect($route)
             // ex. foobar/{route_param?} => foobar
-            ->map(fn ($value) => preg_replace('/(\/{)([a-zA-Z]+)(\?})$/', '', $value))
+            ->map(fn($value) => preg_replace('/(\/{)([a-zA-Z]+)(\?})$/', '', $value))
             // Remove foo/bar
-            ->map(fn ($value) => preg_replace('/^([a-zA-Z-_]+)\/([a-zA-Z-\/{}\.]+)/', '', $value))
+            ->map(fn($value) => preg_replace('/^([a-zA-Z-_]+)\/([a-zA-Z-\/{}\.]+)/', '', $value))
             // Remove '{route_param}' or '+{route_param}'
-            ->map(fn ($value) => preg_replace('/^(\+?)({)([a-zA-Z]+)(})/', '', $value))
+            ->map(fn($value) => preg_replace('/^(\+?)({)([a-zA-Z]+)(})/', '', $value))
             // Remove '/'
-            ->map(fn ($value) => preg_replace('/\//', '', $value))
+            ->map(fn($value) => preg_replace('/\//', '', $value))
             // Remove empty value
-            ->reject(fn ($value) => empty($value))
+            ->reject(fn($value) => empty($value))
             ->unique()
             ->sort()
             ->toArray();
@@ -101,11 +101,11 @@ class Helper
     public static function publicPathList(): array
     {
         return collect(scandir(public_path()))
-            ->reject(fn ($value) => in_array($value, ['.', '..']))
+            ->reject(fn($value) => in_array($value, ['.', '..']))
             // remove file with extension
-            ->reject(fn ($value) => preg_match('/\.[^.]+/', $value))
+            ->reject(fn($value) => preg_match('/\.[^.]+/', $value))
             // remove array value which is in config('urlhub.reserved_keyword')
-            ->reject(fn ($value) => in_array($value, config('urlhub.reserved_keyword')))
+            ->reject(fn($value) => in_array($value, config('urlhub.reserved_keyword')))
             ->toArray();
     }
 }
