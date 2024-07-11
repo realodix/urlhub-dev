@@ -4,8 +4,6 @@ namespace App\Livewire\Table;
 
 use App\Models\Url;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\JoinClause;
-use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Footer;
 use PowerComponents\LivewirePowerGrid\Header;
@@ -18,6 +16,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
  */
 class BaseUrlTable extends PowerGridComponent
 {
+    /** @var int */
     const STR_LIMIT = 90;
 
     public string $sortDirection = 'desc';
@@ -45,36 +44,24 @@ class BaseUrlTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Url::query()
-            ->join('users', 'urls.user_id', '=', 'users.id')
-            ->leftJoinSub(DB::table('visits')
-                ->select('url_id', DB::raw('COUNT(id) as visit_count'))
-                ->groupBy('url_id'), 'visit_counts', function (JoinClause $join) {
-                    $join->on('urls.id', '=', 'visit_counts.url_id');
-                })
-            ->leftJoinSub(DB::table('visits')
-                ->select('url_id', DB::raw('SUM(CASE WHEN is_first_click = 1 THEN 1 ELSE 0 END) as unique_visit_count'))
-                ->groupBy('url_id'), 'unique_visit_counts', function (JoinClause $join) {
-                    $join->on('urls.id', '=', 'unique_visit_counts.url_id');
-                })
-            ->where(fn(Builder $query) => $this->getUserIdBuilder($query))
-            ->select(
-                'urls.id as id',
-                'users.name as author',
-                'urls.title',
-                'urls.keyword',
-                'urls.destination',
-                'urls.created_at',
-                DB::raw('COALESCE(visit_counts.visit_count, 0) as visit_count'),
-                DB::raw('COALESCE(unique_visit_counts.unique_visit_count, 0) as unique_visit_count')
-            );
+        return Url::where(fn(Builder $query) => $this->getUserIdBuilder($query))
+            ->with('author')
+            ->withCount([
+                'visits',
+                'visits as unique_visit_count' => function (Builder $query) {
+                    /** @var Builder<\App\Models\Visit> $query */
+                    $query->where('is_first_click', true);
+                },
+            ]);
     }
 
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
             ->add('author', function (Url $url) {
-                return view('components.table.author', ['name' => $url->author])
+                $author = $url->author->name;
+
+                return view('components.table.author', ['name' => $author])
                     ->render();
             })
             ->add('keyword', function (Url $url) {
@@ -92,7 +79,7 @@ class BaseUrlTable extends PowerGridComponent
             })
             ->add('t_clicks', function (Url $url) {
                 return view('components.table.visit', [
-                    'clicks' => $url->visit_count,
+                    'clicks' => $url->visits_count,
                     'uniqueClicks' => $url->unique_visit_count,
                 ])->render();
             })
@@ -116,10 +103,6 @@ class BaseUrlTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Owner', 'author')
-                ->sortable()
-                ->searchable(),
-
             Column::make('Short URL', 'keyword')
                 ->sortable()
                 ->searchable(),

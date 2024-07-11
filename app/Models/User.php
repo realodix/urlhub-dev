@@ -7,7 +7,6 @@ use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @property int            $id
@@ -81,32 +80,32 @@ class User extends Authenticatable
     */
 
     /*
-     * Count the number of guests (URL without user id) by user_sign, then
-     * grouped by user_sign.
+     * Count the total number of guest users
      */
     public function totalGuestUsers(): int
     {
-        $url = DB::table('urls')
-            ->select('user_sign')
-            ->where('user_id', null)
-            ->groupBy('user_sign')
-            ->get();
-
-        return $url->count();
+        return Url::where('user_id', null)
+            ->distinct('user_sign')
+            ->count();
     }
 
     public function signature(): string
     {
         if (auth()->check() === false) {
             $device = Helper::deviceDetector();
+            $browser = $device->getClient();
+            $os = $device->getOs();
 
-            return hash('xxh3', implode([
-                'ip'      => request()->ip(),
-                'browser' => $device->getClient('name'),
-                'os'      => $device->getOs('name').$device->getOs('version'),
-                'device'  => $device->getDeviceName().$device->getModel().$device->getBrandName(),
-                'lang'    => request()->getPreferredLanguage(),
-            ]));
+            $userDeviceInfo = implode([
+                request()->ip(),
+                isset($browser['name']) ? $browser['name'] : '',
+                isset($os['name']) ? $os['name'] : '',
+                isset($os['version']) ? $os['version'] : '',
+                $device->getDeviceName().$device->getModel().$device->getBrandName(),
+                request()->getPreferredLanguage(),
+            ]);
+
+            return hash('xxh3', $userDeviceInfo);
         }
 
         return (string) auth()->id();

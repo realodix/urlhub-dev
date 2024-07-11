@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 #[PHPUnit\Group('auth-page')]
 #[PHPUnit\Group('link-page')]
-class AllUrlsPageTest extends TestCase
+class UrlListPageTest extends TestCase
 {
     #[PHPUnit\Test]
     public function auAdminCanAccessThisPage(): void
@@ -21,13 +21,13 @@ class AllUrlsPageTest extends TestCase
     #[PHPUnit\Test]
     public function auNormalUserCantAccessThisPage(): void
     {
-        $response = $this->actingAs($this->normalUser())
+        $response = $this->actingAs($this->basicUser())
             ->get(route('dashboard.allurl'));
         $response->assertForbidden();
     }
 
     /**
-     * Admin can access user links and guest links table page
+     * Admin can access user links and guest links table page.
      */
     public function testAdminCanAccessUserLinksTablePage(): void
     {
@@ -36,25 +36,17 @@ class AllUrlsPageTest extends TestCase
         $response = $this->actingAs($user)
             ->get(route('dashboard.allurl.u-user', $user->name));
         $response->assertOk();
-
-        $response = $this->actingAs($user)
-            ->get(route('dashboard.allurl.u-guest'));
-        $response->assertOk();
     }
 
     /**
-     * Non admin users can't access user links and guest links table page
+     * Non admin users can't access user links and guest links table page.
      */
     public function testNonAdminUsersCantAccessUserLinksTablePage(): void
     {
-        $user = $this->normalUser();
+        $user = $this->basicUser();
 
         $response = $this->actingAs($user)
             ->get(route('dashboard.allurl.u-user', $this->adminUser()->name));
-        $response->assertForbidden();
-
-        $response = $this->actingAs($user)
-            ->get(route('dashboard.allurl.u-guest'));
         $response->assertForbidden();
     }
 
@@ -78,7 +70,7 @@ class AllUrlsPageTest extends TestCase
     {
         $url = Url::factory()->create();
 
-        $response = $this->actingAs($this->normalUser())
+        $response = $this->actingAs($this->basicUser())
             ->from(route('dashboard.allurl'))
             ->get(route('dboard.url.delete', $url->keyword));
 

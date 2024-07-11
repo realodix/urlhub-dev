@@ -10,32 +10,44 @@ use Tests\TestCase;
 class HelperTest extends TestCase
 {
     #[PHPUnit\Test]
-    public function urlDisplay(): void
+    public function urlFormat(): void
     {
         $this->assertSame(
             'https://example.com/abcde/',
-            Helper::urlDisplay('https://example.com/abcde/')
+            Helper::urlFormat('https://example.com/abcde/')
         );
 
         $this->assertSame(
             'https://example.com',
-            Helper::urlDisplay('https://example.com/', trailingSlash: false)
+            Helper::urlFormat('https://example.com/', trailingSlash: false)
+        );
+
+        $url = 'https://github.com/laravel/framework/commit/de69bb287c5017d1acb7d47a6db1dedf578036d6';
+
+        $this->assertSame(
+            'https://github.com/lara...36d6',
+            Helper::urlFormat($url, limit: 30)
         );
 
         $this->assertSame(
-            'https://github.com/real...e0be',
-            Helper::urlDisplay('https://github.com/realodix/urlhub/commit/33e6d649d2d18345ac2d53a2fe553ae5d174e0be', limit: 30)
+            'github.com/laravel/...578036d6',
+            Helper::urlFormat($url, scheme: false, limit: 30)
+        );
+
+        $this->assertSame(
+            'github.com/laravel/...8036d6/',
+            Helper::urlFormat($url.'/', scheme: false, limit: 29)
         );
     }
 
     #[PHPUnit\Test]
-    #[PHPUnit\DataProvider('urlDisplayWithoutSchemeProvider')]
-    public function urlDisplayWithoutScheme($expected, $actual): void
+    #[PHPUnit\DataProvider('urlFormatWithoutSchemeProvider')]
+    public function urlFormatWithoutScheme($expected, $actual): void
     {
-        $this->assertSame($expected, Helper::urlDisplay($actual, scheme: false));
+        $this->assertSame($expected, Helper::urlFormat($actual, scheme: false));
     }
 
-    public static function urlDisplayWithoutSchemeProvider(): array
+    public static function urlFormatWithoutSchemeProvider(): array
     {
         return [
             ['example.com', 'example.com'],

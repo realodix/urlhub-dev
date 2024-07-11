@@ -20,17 +20,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property User           $author
  * @property Visit          $visits
  * @property string         $short_url
- * @property int            $clicks
- * @property int            $uniqueClicks
- * @property-read int       $visit_count
- * @property-read int       $unique_visit_count
  */
 class Url extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
+    /** @var null */
     const GUEST_ID = null;
 
+    /** @var int */
     const TITLE_LENGTH = 255;
 
     /**
@@ -55,7 +53,7 @@ class Url extends Model
     protected function casts(): array
     {
         return [
-            'user_id'   => 'integer',
+            'user_id' => 'integer',
             'is_custom' => 'boolean',
         ];
     }
@@ -73,7 +71,10 @@ class Url extends Model
      */
     public function author()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')
+            ->withDefault([
+                'name' => 'Guest Author',
+            ]);
     }
 
     /**
@@ -118,29 +119,11 @@ class Url extends Model
         return Attribute::make(
             set: function ($value) {
                 if (mb_strlen($value) > self::TITLE_LENGTH) {
-                    // $limit minus 3 because Str::limit() adds 3 extra characters.
-                    return str($value)->limit(self::TITLE_LENGTH - 3, '...');
+                    return mb_strimwidth($value, 0, self::TITLE_LENGTH, '...');
                 }
 
                 return $value;
             },
-        );
-    }
-
-    protected function clicks(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value, $attr) => $this->numberOfClicks($attr['id']),
-        );
-    }
-
-    /**
-     * @deprecated https://github.com/realodix/urlhub/pull/1003
-     */
-    protected function uniqueClicks(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value, $attr) => $this->numberOfClicks($attr['id'], unique: true),
         );
     }
 
@@ -158,7 +141,7 @@ class Url extends Model
     }
 
     /**
-     * Get the title from the web
+     * Get the title from the web.
      *
      * @param string $value A webpage's URL
      */
@@ -182,7 +165,7 @@ class Url extends Model
     }
 
     /**
-     * Total short URLs that have been created by current user
+     * Total short URLs that have been created by current user.
      */
     public function currentUserUrlCount(): int
     {
@@ -191,7 +174,7 @@ class Url extends Model
     }
 
     /**
-     * Total short URLs that have been created by all users
+     * Total short URLs that have been created by all users.
      */
     public function userUrlCount(): int
     {
@@ -200,31 +183,11 @@ class Url extends Model
     }
 
     /**
-     * Total short URLs that have been created by all guest users
+     * Total short URLs that have been created by all guest users.
      */
     public function guestUserUrlCount(): int
     {
         return self::where('user_id', self::GUEST_ID)
             ->count();
-    }
-
-    /**
-     * Total clicks on each shortened URLs
-     *
-     * @param int  $urlId  ID of the shortened URL in the URL table
-     * @param bool $unique If true, only count unique clicks
-     */
-    public function numberOfClicks(int $urlId, bool $unique = false): int
-    {
-        $self = self::find($urlId);
-        $total = $self->visits()->count();
-
-        if ($unique === true) {
-            $total = $self->visits()
-                ->whereIsFirstClick(true)
-                ->count();
-        }
-
-        return $total;
     }
 }
