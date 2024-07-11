@@ -5,14 +5,13 @@ use Realodix\Relax\Finder;
 
 $localRules = [
     // Base
-    'binary_operator_spaces' => false,
     'single_import_per_statement' => false,
 
-    // Realodix
+    // Relax
     'no_empty_comment'  => false,
 ];
 
-return Config::create('Realodix')
+return Config::create('relax')
     ->setRules($localRules)
-    ->setFinder(Finder::laravel())
+    ->setFinder(Finder::laravel()->in(__DIR__))
     ->setCacheFile(__DIR__.'/.tmp/.php-cs-fixer.cache');
