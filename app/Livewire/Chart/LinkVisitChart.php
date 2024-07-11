@@ -9,7 +9,7 @@ use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
-class UrlClickChart extends ChartWidget
+class LinkVisitChart extends ChartWidget
 {
     protected static ?string $maxHeight = '250px';
 
@@ -20,7 +20,7 @@ class UrlClickChart extends ChartWidget
         $startDate = now()->subQuarter();
         $endDate = now();
         $carbon = CarbonPeriod::create($startDate, $endDate)->toArray();
-        $label = collect($carbon)->map(fn ($date) => $date->format('M d'))
+        $label = collect($carbon)->map(fn($date) => $date->format('M d'))
             ->toArray();
 
         $visitModel = Visit::where('url_id', $this->model->id);
@@ -32,8 +32,8 @@ class UrlClickChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Clicks',
-                    'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
+                    'label' => 'Visits',
+                    'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
                     'backgroundColor' => '#36A2EB',
                     'borderColor' => '#9BD0F5',
                 ],
@@ -49,6 +49,6 @@ class UrlClickChart extends ChartWidget
 
     public function getDescription(): ?string
     {
-        return 'Last 4 months';
+        return 'Stats for past quarter';
     }
 }
