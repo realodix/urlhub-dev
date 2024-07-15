@@ -61,7 +61,7 @@ class Helper
     /**
      * List of potentially colliding routes with shortened link keywords.
      *
-     * @return list<string>
+     * @return array
      */
     public static function routeCollisionList()
     {
@@ -76,12 +76,16 @@ class Helper
      * List of files/folders in the public/ directory that will potentially collide
      * with shortened link keywords.
      *
-     * @return list<string>
+     * @return array
      */
     public static function publicPathCollisionList()
     {
-        // scandir can return false on failure, PHPStan L7 will report an error
-        return collect(scandir(public_path()))
+        $publicPathList = scandir(public_path());
+        if ($publicPathList === false) {
+            return [];
+        }
+
+        return collect($publicPathList)
             // remove ., ..,
             ->reject(fn($value) => in_array($value, ['.', '..']))
             // remove file with extension

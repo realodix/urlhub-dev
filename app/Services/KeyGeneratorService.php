@@ -79,7 +79,7 @@ class KeyGeneratorService
     /**
      * @return \Illuminate\Support\Collection
      */
-    public static function reservedKeyword()
+    public function reservedKeyword()
     {
         $data = [
             config('urlhub.reserved_keyword'),
@@ -88,6 +88,19 @@ class KeyGeneratorService
         ];
 
         return collect($data)->flatten()->unique();
+    }
+
+    /**
+     * Reserved keywords that are already in use as url shortened keywords.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function reservedActiveKeyword()
+    {
+        $reservedKeyword = $this->reservedKeyword();
+        $usedKeyWord = Url::pluck('keyword')->toArray();
+
+        return $reservedKeyword->intersect($usedKeyWord);
     }
 
     /*
