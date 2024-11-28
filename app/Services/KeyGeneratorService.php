@@ -6,6 +6,7 @@ use App\Models\Url;
 
 class KeyGeneratorService
 {
+    /** @var string */
     const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
@@ -18,10 +19,10 @@ class KeyGeneratorService
     {
         $string = $this->simpleString($value);
 
-        if (! $this->verify($string) || strlen($string) < config('urlhub.keyword_length')) {
+        if (!$this->verify($string) || strlen($string) < config('urlhub.keyword_length')) {
             do {
                 $randomString = $this->randomString();
-            } while (! $this->verify($randomString));
+            } while (!$this->verify($randomString));
 
             return $randomString;
         }
@@ -87,7 +88,7 @@ class KeyGeneratorService
             \App\Helpers\Helper::publicPathCollisionList(),
         ];
 
-        return collect($data)->flatten()->unique();
+        return collect($data)->flatten()->unique()->sort();
     }
 
     /**
@@ -151,7 +152,7 @@ class KeyGeneratorService
         $length = config('urlhub.keyword_length');
 
         return Url::whereRaw('LENGTH(keyword) = ?', [$length])
-            ->whereRaw('keyword REGEXP "^[a-zA-Z0-9]{'.$length.'}$"')
+            ->whereRaw('keyword REGEXP "^[a-zA-Z0-9]{' . $length . '}$"')
             ->count();
     }
 
