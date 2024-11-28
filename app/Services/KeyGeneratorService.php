@@ -6,6 +6,7 @@ use App\Models\Url;
 
 class KeyGeneratorService
 {
+    /** @var string */
     const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
@@ -18,10 +19,10 @@ class KeyGeneratorService
     {
         $string = $this->simpleString($value);
 
-        if (! $this->verify($string) || strlen($string) < config('urlhub.keyword_length')) {
+        if (!$this->verify($string) || strlen($string) < config('urlhub.keyword_length')) {
             do {
                 $randomString = $this->randomString();
-            } while (! $this->verify($randomString));
+            } while (!$this->verify($randomString));
 
             return $randomString;
         }
@@ -87,7 +88,7 @@ class KeyGeneratorService
             \App\Helpers\Helper::publicPathCollisionList(),
         ];
 
-        return collect($data)->flatten()->unique();
+        return collect($data)->flatten()->unique()->sort();
     }
 
     /**
@@ -132,6 +133,13 @@ class KeyGeneratorService
             if (! extension_loaded('gmp')) {
                 throw new \RuntimeException('The "GMP" PHP extension is required.');
             }
+
+            // See https://github.com/php/php-src/issues/16870
+            if (PHP_VERSION_ID == 80226 || PHP_VERSION_ID == 80314 || PHP_VERSION_ID == 80401) {
+                throw new \RuntimeException(
+                    'Since there is a gmp_pow bug in PHP 8.2.26 or 8.3.14 or 8.4.1, please update your PHP version immediately.',
+                );
+            }
             // @codeCoverageIgnoreEnd
 
             return gmp_intval(gmp_pow($nChar, $strLen));
@@ -151,7 +159,7 @@ class KeyGeneratorService
         $length = config('urlhub.keyword_length');
 
         return Url::whereRaw('LENGTH(keyword) = ?', [$length])
-            ->whereRaw('keyword REGEXP "^[a-zA-Z0-9]{'.$length.'}$"')
+            ->whereRaw('keyword REGEXP "^[a-zA-Z0-9]{' . $length . '}$"')
             ->count();
     }
 
