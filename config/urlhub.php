@@ -26,7 +26,7 @@ return [
     /*
      * The expected length of the keyword generated when creating a new short URL.
      */
-    'keyword_length' => 12, // >= 1
+    'keyword_length' => 5, // >= 1
 
     /*
      * Minimum length of custom keyword.
