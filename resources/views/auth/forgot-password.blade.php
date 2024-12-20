@@ -13,8 +13,8 @@
     @endif
 
     @if ($errors->any())
-        <div class="alert alert-error">
-            <div class="font-bold">{{ __('Whoops! Something went wrong.') }}</div>
+        <div>
+            <div>{{ __('Whoops! Something went wrong.') }}</div>
 
             <ul>
                 @foreach ($errors->all() as $error)
@@ -25,10 +25,8 @@
     @endif
 
     <div class="auth-card">
-        <p class="font-bold">{{ __('Forgot your password? No problem.') }}
-        <p class="text-gray-600">
-            {{ __('Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-        </p>
+        <p>{{ __('Forgot your password? No problem.') }}</p> <br>
+        <p>{{ __('Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}</p>
 
         <br>
 

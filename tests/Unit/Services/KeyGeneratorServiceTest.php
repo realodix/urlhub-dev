@@ -88,14 +88,7 @@ class KeyGeneratorServiceTest extends TestCase
         $this->assertTrue($url->is_custom);
     }
 
-    /**
-     * Tests whether the verify function returns a false value if the given string
-     * is already used as the active keyword.
-     *
-     * The verify function should return a false value if the given string is
-     * already used as the active keyword.
-     */
-    public function testStringIsAlreadyUsedAsTheActiveKeyword(): void
+    public function testStringAlreadyInUse(): void
     {
         config(['urlhub.keyword_length' => 5]);
         $value = $this->keyGenerator->generate('https://github.com/realodix');
@@ -105,13 +98,6 @@ class KeyGeneratorServiceTest extends TestCase
         $this->assertFalse($this->keyGenerator->verify($value));
     }
 
-    /**
-     * Tests whether the verify function returns a false value if the given string
-     * is a reserved keyword.
-     *
-     * The verify function should return a false value if the given string is
-     * a reserved keyword.
-     */
     public function testStringIsAReservedKeyword(): void
     {
         $value = 'foobar';
@@ -121,13 +107,6 @@ class KeyGeneratorServiceTest extends TestCase
         $this->assertFalse($this->keyGenerator->verify($value));
     }
 
-    /**
-     * Tests whether the verify function returns a false value if the given string
-     * is a registered route.
-     *
-     * The verify function should return a false value if the given string is
-     * a registered route.
-     */
     public function testStringIsRegisteredRoute(): void
     {
         $value = 'admin';
@@ -135,10 +114,6 @@ class KeyGeneratorServiceTest extends TestCase
         $this->assertFalse($this->keyGenerator->verify($value));
     }
 
-    /**
-     * If the keyword is the same as the name of a public path, then it
-     * shouldn't be used as a keyword.
-     */
     public function testStringIsPublicPath(): void
     {
         $fileSystem = new \Illuminate\Filesystem\Filesystem;
@@ -149,15 +124,6 @@ class KeyGeneratorServiceTest extends TestCase
         $fileSystem->deleteDirectory(public_path($value));
     }
 
-    /**
-     * Menguji apakah fungsi reservedActiveKeyword mengembalikan nilai yang sesuai.
-     *
-     * reservedActiveKeyword mengembalikan keyword yang terdaftar sebagai reserved
-     * keyword dan sudah digunakan sebagai custom keyword.
-     *
-     * Kondisi 1: Belum ada reserved keyword yang digunakan.
-     * Kondisi 2: Ada beberapa reserved keyword yang sudah digunakan.
-     */
     public function testReservedActiveKeyword()
     {
         $fileSystem = new \Illuminate\Filesystem\Filesystem;
@@ -169,27 +135,17 @@ class KeyGeneratorServiceTest extends TestCase
         );
 
         // Test case 2: Some reserved keywords already in use
-        $activeKeyword = 'zzz' . fake()->word();
-        Url::factory()->create(['keyword' => $activeKeyword]);
+        $usedKeyWord = 'zzz' . fake()->word();
+        Url::factory()->create(['keyword' => $usedKeyWord]);
 
-        $fileSystem->makeDirectory(public_path($activeKeyword));
+        $fileSystem->makeDirectory(public_path($usedKeyWord));
         $this->assertEquals(
-            $activeKeyword,
+            $usedKeyWord,
             $this->keyGenerator->reservedActiveKeyword()->implode(''),
         );
-        $fileSystem->deleteDirectory(public_path($activeKeyword));
+        $fileSystem->deleteDirectory(public_path($usedKeyWord));
     }
 
-    /**
-     * Menguji apakah fungsi possibleOutput mengembalikan nilai yang sesuai.
-     *
-     * possibleOutput mengembalikan jumlah kombinasi string yang mungkin
-     * dihasilkan oleh generator keyword. Jika panjang keyword yang dihasilkan
-     * terlalu panjang maka fungsi ini mengembalikan nilai PHP_INT_MAX.
-     *
-     * Kondisi 1: Panjang keyword yang dihasilkan relatif pendek.
-     * Kondisi 2: Panjang keyword yang dihasilkan relatif panjang.
-     */
     #[PHPUnit\Test]
     public function possibleOutput(): void
     {

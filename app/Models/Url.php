@@ -147,8 +147,8 @@ class Url extends Model
      */
     public function getWebTitle(string $value): string
     {
-        $uri = \Illuminate\Support\Uri::of($value);
-        $defaultTitle = $uri->host() . ' - Untitled';
+        $spatieUrl = \Spatie\Url\Url::fromString($value);
+        $defaultTitle = $spatieUrl->getHost() . ' - Untitled';
 
         if (config('urlhub.web_title')) {
             try {

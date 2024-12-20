@@ -2,7 +2,7 @@
     <div class="layout-container flex
         px-4 sm:px-6 lg:px-8 h-16 justify-between"
     >
-        <a class="navbar-brand logo" href="{{ url('/') }}">{{ config('app.name') }}</a>
+        <a class="navbar-brand" href="{{ url('/') }}">{{ config('app.name') }}</a>
 
         @auth
             <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -14,8 +14,11 @@
                                 <button class="navbar-toggler items-center">
                                     <div class="text-base font-semibold">{{ str()->title(auth()->user()->name) }}</div>
 
-                                    <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path>
+                                    <svg class="ml-2 -mr-0.5 h-4 w-4"
+                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd"></path>
                                     </svg>
                                 </button>
                             </span>
@@ -43,10 +46,10 @@
                                 </div>
 
                                 <a href="{{ route('user.edit', auth()->user()->name) }}"
-                                    class="nav-item {{ (request()->route()->getName() === 'user.edit') ? 'border-l-2 border-primary-500':'' }}">
+                                    class="nav-item {{ (request()->route()->getName() === 'user.edit') ? 'border-l-2 border-orange-500':'' }}">
                                     @svg('icon-person', 'mr-1') {{ __('Account') }}</a>
                                 <a href="{{ route('user.password.show', auth()->user()->name) }}"
-                                    class="nav-item {{ (request()->route()->getName() === 'user.password.show') ? 'border-l-2 border-primary-500':'' }}">
+                                    class="nav-item {{ (request()->route()->getName() === 'user.password.show') ? 'border-l-2 border-orange-500':'' }}">
                                     @svg('icon-key', 'mr-1') {{ __('Change Password') }}</a>
 
                                 <div class="border-t border-uh-border-color"></div>
@@ -56,7 +59,8 @@
                                 @csrf
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault(); this.closest('form').submit();"
-                                        class="nav-item">
+                                        class="nav-item"
+                                    >
                                         @svg('icon-log-out', 'mr-1') {{ __('Log Out') }}
                                     </a>
                                 </form>
@@ -68,14 +72,15 @@
         @else
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <a href="{{ route('login') }}"
-                    class="btn btn-primary text-xl font-medium
-                        !bg-white hover:!bg-gray-200 active:!bg-gray-100">
-
-                    <svg class="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"></path>
-                    </svg>
-                    {{ __('Log in') }}
-                </a>
+                    class="text-xl font-medium text-gray-500 hover:text-gray-900 mr-8">{{ __('Log in') }}</a>
+                @if (Route::has('register') and Config::get('urlhub.registration'))
+                    <a href="{{ route('register') }}"
+                        class="text-xl font-medium text-white bg-uh-indigo-600 hover:bg-uh-indigo-700 active:bg-uh-indigo-600
+                        px-4 py-2 rounded-md"
+                    >
+                        {{ __('Sign up') }}
+                    </a>
+                @endif
             </div>
         @endauth
 
@@ -119,10 +124,10 @@
                 <div class="mt-3 space-y-1">
                     {{-- Account Management --}}
                     <a href="{{ route('user.edit', auth()->user()->name) }}"
-                        class="nav-item {{ (request()->route()->getName() === 'user.edit') ? 'border-l-2 border-primary-500':'' }}">
+                        class="nav-item {{ (request()->route()->getName() === 'user.edit') ? 'border-l-2 border-orange-500':'' }}">
                         @svg('icon-person', 'mr-1') {{ __('Account') }}</a>
                     <a href="{{ route('user.password.show', auth()->user()->name) }}"
-                        class="nav-item {{ (request()->route()->getName() === 'user.password.show') ? 'border-l-2 border-primary-500':'' }}">
+                        class="nav-item {{ (request()->route()->getName() === 'user.password.show') ? 'border-l-2 border-orange-500':'' }}">
                         @svg('icon-key', 'mr-1') {{ __('Change Password') }}</a>
 
                     {{-- Authentication --}}

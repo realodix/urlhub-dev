@@ -11,17 +11,17 @@
             <h3 class="text-lg font-medium text-slate-900">{{ __('Edit URL Details') }}</h3>
             <br>
             <div class="inline sm:block mr-2 text-sm text-slate-600">
-                @svg('icon-person', 'mr-1 text-slate-900')
+                @svg('icon-person', 'mr-1')
                 {{ $url->author->name }}
             </div>
             <div class="inline sm:block text-sm text-slate-600">
-                @svg('icon-calendar', 'mr-1 text-slate-900')
+                @svg('icon-calendar', 'mr-1')
                 <span title="{{ $url->created_at->toDayDateTimeString() }}">{{ $url->created_at->diffForHumans() }}</span>
             </div>
 
             @if ($url->created_at != $url->updated_at)
             <div class="inline sm:block text-sm text-slate-600">
-                @svg('icon-updated', 'mr-1 font-bold text-slate-900')
+                @svg('icon-updated', 'mr-1 font-bold')
                 <span title="{{ $url->updated_at->toDayDateTimeString() }}">{{ $url->updated_at->diffForHumans() }}</span>
             </div>
             @endif
@@ -34,7 +34,7 @@
                 <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 lg:col-span-4">
                         <label for="short-url" class="form-label">{{ __('Short URL') }}</label>
-                        <span class="short-url text-primary-500">{{ urlFormat($url->short_url, scheme: false) }}</span>
+                        <span class="short-url text-uh-blue">{{ urlFormat($url->short_url, scheme: false) }}</span>
                     </div>
 
                     <div class="col-span-6">

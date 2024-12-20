@@ -24,10 +24,10 @@ class UpdateUserPassword extends FormRequest
     public function rules()
     {
         return [
-            'current_password' => ['current_password'],
-            'new_password' => [
+            'current-password' => ['current_password'],
+            'new-password' => [
                 'required', 'min:6', 'confirmed',
-                'unique:users,password', 'different:current_password',
+                'unique:users,password', 'different:current-password',
             ],
         ];
     }

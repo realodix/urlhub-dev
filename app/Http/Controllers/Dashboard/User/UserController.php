@@ -57,6 +57,6 @@ class UserController extends Controller implements HasMiddleware
         $user->save();
 
         return redirect()->back()
-            ->with('flash_success', __('Account updated.'));
+            ->withFlashSuccess(__('Account updated.'));
     }
 }

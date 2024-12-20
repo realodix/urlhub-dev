@@ -7,8 +7,8 @@
 @section('content')
 <div class="flex flex-col min-h-screen sm:justify-center items-center pt-6 sm:pt-0">
     @if ($errors->any())
-        <div class="alert alert-error">
-            <div class="font-bold">{{ __('Whoops! Something went wrong.') }}</div>
+        <div>
+            <div>{{ __('Whoops! Something went wrong.') }}</div>
 
             <ul>
                 @foreach ($errors->all() as $error)
@@ -31,12 +31,12 @@
 
             <div class="mt-4">
                 <label class="form-label">{{ __('Password') }}</label>
-                <input type="password" name="password" autocomplete="new_password" class="form-input mt-1" required/>
+                <input type="password" name="password" autocomplete="new-password" class="form-input mt-1" required/>
             </div>
 
             <div class="mt-4">
                 <label class="form-label">{{ __('Confirm Password') }}</label>
-                <input type="password" name="password_confirmation" autocomplete="new_password" class="form-input mt-1" required/>
+                <input type="password" name="password_confirmation" autocomplete="new-password" class="form-input mt-1" required/>
             </div>
 
             <div class="flex items-center justify-center mt-8">

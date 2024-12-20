@@ -55,7 +55,7 @@ class DashboardController extends Controller
         ]);
 
         return to_route('dashboard')
-            ->with('flash_success', __('Link changed successfully !'));
+            ->withFlashSuccess(__('Link changed successfully !'));
     }
 
     /**
@@ -73,6 +73,6 @@ class DashboardController extends Controller
         $url->delete();
 
         return redirect()->back()
-            ->with('flash_success', __('Link was successfully deleted.'));
+            ->withFlashSuccess(__('Link was successfully deleted.'));
     }
 }
