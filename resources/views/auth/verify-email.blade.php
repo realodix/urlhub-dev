@@ -12,14 +12,14 @@
         </div>
     @endif
 
-    <div class="common-card-style mb-8">
+    <div class="card-default mb-8">
         <p class="font-bold">
             {{ __('Thanks for signing up!') }}
         </p>
-        <p class="text-gray-600">
+        <p class="text-slate-600">
             {{ __('Before getting started, could you verify your email address by clicking on the link we just emailed to you?') }}
         </p>
-        <p class="text-gray-600">
+        <p class="text-slate-600">
             {{ __('If you didn\'t receive the email, we will gladly send you another.') }}
         </p>
     </div>

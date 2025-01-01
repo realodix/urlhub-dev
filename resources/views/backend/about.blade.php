@@ -6,25 +6,21 @@
 @section('content')
 <main class="page_about max-w-4xl">
     <div class="flex flex-wrap gap-4 mb-4 justify-end">
-        <div class="bg-white p-4 sm:rounded-lg w-full md:w-2/6
-            border-y border-uh-border-color sm:border-none sm:shadow-md"
-        >
+        <div class="--card-style p-4 w-full md:w-2/6">
             <div class="flex flex-row space-x-4 items-center">
                 <div>
                     <p class="text-[#4f5b93] text-sm font-medium leading-4">PHP</p>
-                    <p class="text-2xl font-bold text-gray-600 inline-flex items-center space-x-2">
+                    <p class="text-2xl font-bold text-slate-600 inline-flex items-center space-x-2">
                         {{ phpversion() }}
                     </p>
                 </div>
             </div>
         </div>
-        <div class="bg-white p-4 sm:rounded-lg w-full md:w-2/6
-            border-y border-uh-border-color sm:border-none sm:shadow-md"
-        >
+        <div class="--card-style p-4 w-full md:w-2/6">
             <div class="flex flex-row space-x-4 items-center">
                 <div>
                     <p class="text-[#ff2d20] text-sm font-medium leading-4">Laravel</p>
-                    <p class="text-2xl font-bold text-gray-600 inline-flex items-center space-x-2">
+                    <p class="text-2xl font-bold text-slate-600 inline-flex items-center space-x-2">
                         {{ app()->version() }}
                     </p>
                 </div>
@@ -34,7 +30,7 @@
 
     <br>
 
-    <div class="common-card-style">
+    <div class="card-default">
         <div class="card_header__sub_header">Links</div>
         <dl>
             @php
@@ -95,7 +91,7 @@
         $reservedActiveKeyList = $keyGenerator->reservedActiveKeyword()->toArray();
         $reservedKeyword = $keyGenerator->reservedKeyword();
     @endphp
-    <div class="common-card-style">
+    <div class="card-default">
         <div class="card_header">{{ __('Configuration') }}</div>
 
         <div class="card_header__sub_header">Shortened Links</div>
@@ -111,7 +107,7 @@
 
             <dt class="mt-2"><code>domain_blacklist</code></dt>
             <dd class="mt-2">
-                <div class="bg-gray-50 p-2 border border-gray-300 rounded text-sm">
+                <div class="bg-gray-50 p-2 border border-border-300 rounded text-sm">
                     @if (!empty($domainBlacklist))
                         <code>{{ implode(", ", $domainBlacklist) }}</code>
                     @else
@@ -122,8 +118,8 @@
 
             <dt class="mt-2 mb-2">Reserved Keywords</dt>
             <dd class="mt-2 mb-2">
-                <div class="bg-gray-50 p-2 border border-gray-300 rounded text-sm">
-                    <code class="text-gray-500">// {{ $reservedKeyword->count() }} Strings</code> <br>
+                <div class="bg-gray-50 p-2 border border-border-300 rounded text-sm">
+                    <code class="text-slate-500">// {{ $reservedKeyword->count() }} Strings</code> <br>
                     <code>{{ $reservedKeyword->implode(', ') }}</code>
 
                     @if (!empty($reservedActiveKeyList))
@@ -133,7 +129,7 @@
                         <code>
 
                         @foreach ($reservedActiveKeyList as $reservedActiveKey)
-                            <a href="{{ route('su_detail', $reservedActiveKey) }}"
+                            <a href="{{ route('link_detail', $reservedActiveKey) }}"
                                 target="_blank"
                                 class="underline decoration-dotted">{{ $reservedActiveKey }}</a>,
                         @endforeach

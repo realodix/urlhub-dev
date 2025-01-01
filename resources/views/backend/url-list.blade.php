@@ -4,15 +4,15 @@
 
 @section('content')
 <main>
-    <div class="common-card-style">
+    <div class="card-default">
         <div class="card_header__v2">
             <div class="w-1/2">
-                <span class="text-2xl text-black">
+                <span class="text-2xl text-slate-800">
                     {{ __('List of All URLs') }}
                 </span>
             </div>
             <div class="w-1/2 text-right">
-                <a href="{{ route('dashboard.allurl.u-guest') }}" title="{{ __('Shortened long links by Guest') }}" class="btn btn-primary">
+                <a href="{{ route('dboard.allurl.u-guest') }}" title="{{ __('Shortened long links by Guest') }}" class="btn btn-primary">
                     {{ __('By Guest') }}
                 </a>
             </div>
