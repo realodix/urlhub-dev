@@ -43,10 +43,10 @@
                                 </div>
 
                                 <a href="{{ route('user.edit', auth()->user()->name) }}"
-                                    class="nav-item {{ (request()->route()->getName() === 'user.edit') ? 'border-l-2 border-indigo-500':'' }}">
+                                    class="nav-item {{ (request()->route()->getName() === 'user.edit') ? 'border-l-2 border-primary-500':'' }}">
                                     @svg('icon-person', 'mr-1') {{ __('Account') }}</a>
                                 <a href="{{ route('user.password.show', auth()->user()->name) }}"
-                                    class="nav-item {{ (request()->route()->getName() === 'user.password.show') ? 'border-l-2 border-indigo-500':'' }}">
+                                    class="nav-item {{ (request()->route()->getName() === 'user.password.show') ? 'border-l-2 border-primary-500':'' }}">
                                     @svg('icon-key', 'mr-1') {{ __('Change Password') }}</a>
 
                                 <div class="border-t border-border-200"></div>
@@ -68,8 +68,7 @@
         @else
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <a href="{{ route('login') }}"
-                    class="btn btn-primary text-xl font-medium
-                        !bg-white hover:!bg-gray-200 active:!bg-gray-100">
+                    class="btn text-xl font-medium bg-white hover:bg-primary-100 hover:border-primary-300 active:bg-primary-100">
 
                     <svg class="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"></path>
@@ -119,10 +118,10 @@
                 <div class="mt-3 space-y-1">
                     {{-- Account Management --}}
                     <a href="{{ route('user.edit', auth()->user()->name) }}"
-                        class="nav-item {{ (request()->route()->getName() === 'user.edit') ? 'border-l-2 border-indigo-500':'' }}">
+                        class="nav-item {{ (request()->route()->getName() === 'user.edit') ? 'border-l-2 border-primary-500':'' }}">
                         @svg('icon-person', 'mr-1') {{ __('Account') }}</a>
                     <a href="{{ route('user.password.show', auth()->user()->name) }}"
-                        class="nav-item {{ (request()->route()->getName() === 'user.password.show') ? 'border-l-2 border-indigo-500':'' }}">
+                        class="nav-item {{ (request()->route()->getName() === 'user.password.show') ? 'border-l-2 border-primary-500':'' }}">
                         @svg('icon-key', 'mr-1') {{ __('Change Password') }}</a>
 
                     {{-- Authentication --}}
