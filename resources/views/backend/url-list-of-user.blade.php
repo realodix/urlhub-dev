@@ -4,18 +4,14 @@
 
 @section('content')
 <main>
-    <div class="common-card-style">
-        <div class="card_header__v2">
-            <div class="w-1/2">
-                <span class="text-2xl text-uh-1">
-                    {{ __('Links created by') }} {{ $authorName }}
-                </span>
-            </div>
+    <div class="content">
+        <div class="content-header">
+            <p class="text-2xl">{{ __('Links created by') }} {{ $authorName }}</p>
         </div>
 
         @include('partials/messages')
 
-        @livewire('table.UrlListOfUsersTable', ['user_id' => $authorId])
+        @livewire('table.url_list_of_users_table', ['user_id' => $authorId])
     </div>
 </main>
 @endsection

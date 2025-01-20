@@ -12,7 +12,7 @@ class ValidationTest extends TestCase
 {
     public function testShortUrlGenerationWithIncorrectUrlFormat(): void
     {
-        $response = $this->post(route('su_create'), [
+        $response = $this->post(route('link.create'), [
             'long_url' => 'wrong-url-format',
         ]);
 
@@ -36,8 +36,8 @@ class ValidationTest extends TestCase
     #[PHPUnit\DataProvider('customKeyPassProvider')]
     public function testCustomKeyValidationShouldPass($value): void
     {
-        $response = $this->post(route('su_create'), [
-            'long_url' => 'https://laravel.com/',
+        $response = $this->post(route('link.create'), [
+            'long_url'   => 'https://laravel.com/',
             'custom_key' => $value,
         ]);
 
@@ -74,8 +74,8 @@ class ValidationTest extends TestCase
     #[PHPUnit\DataProvider('customKeyFailProvider')]
     public function testCustomKeyValidationShouldFail($value): void
     {
-        $response = $this->post(route('su_create'), [
-            'long_url' => 'https://laravel.com/',
+        $response = $this->post(route('link.create'), [
+            'long_url'   => 'https://laravel.com/',
             'custom_key' => $value,
         ]);
 

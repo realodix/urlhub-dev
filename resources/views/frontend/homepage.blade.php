@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="pt-16 sm:pt-28">
-    @if (! auth()->check() and ! config('urlhub.public_site'))
+    @if (!auth()->check() and !config('urlhub.public_site'))
         <div class="flex flex-wrap md:justify-center">
             <div class="w-full md:w-8/12 font-thin text-5xl text-slate-600 text-center welcome-msg">
                 {{ __('Please login to shorten URLs') }}</div>
@@ -15,30 +15,27 @@
         </div>
     @else
         <div class="flex flex-wrap md:justify-center">
-            <h1 class="mx-auto max-w-md md:max-w-3xl relative z-10
-                font-bold text-uh-blue-2 text-center md:text-4xl xl:text-5xl text-3xl !leading-tight"
+            <span class="mx-auto max-w-md md:max-w-3xl relative z-10
+                font-bold text-center text-gray-700 md:text-4xl xl:text-5xl text-3xl !leading-tight"
             >
-                Simple URL shortener <br>
-                <span class="font-thin text-black">for individuals &amp; businesses.</span>
-            </h1>
+                Simple <span class="hero__emphasizing">URL shortener</span> <br>
+                <span class="font-light">for individuals &amp; businesses</span>
+            </span>
         </div>
 
-        <div class="flex flex-wrap justify-center mt-12 px-4 lg:px-0">
+        <div class="flex flex-wrap justify-center mt-12 md:mt-16 px-4 lg:px-0">
             <div class="w-full max-w-4xl">
-                <form method="post" action="{{ route('su_create') }}" class="mb-4 mt-12" id="formUrl">
+                <form method="post" action="{{ route('link.create') }}" class="mb-4 mt-12">
                 @csrf
                     <div class="mt-1 text-center">
-                        <input name="long_url" value="{{ old('long_url') }}" placeholder="{{ __('Shorten your link') }}"
+                        <input name="long_url" required value="{{ old('long_url') }}" placeholder="{{ __('Shorten your link') }}"
                             class="w-full md:w-4/6 px-2 md:px-4 h-12 sm:h-14
                                 text-xl outline-none
-                                border border-border-uh-border-color focus:border-green-700
+                                border border-border-200 focus:border-primary-600
                                 rounded-t-md md:rounded-l-md md:rounded-r-none
                                 {{-- tailwindcss/forms --}}
-                                border-slate-300 focus:ring-inherit">
-                        <button type="submit" id="actProcess"
-                            class="w-full md:w-1/6 h-12 sm:h-14 align-top rounded-t-none rounded-b md:rounded-l-none md:rounded-r-md
-                                text-lg text-white bg-green-700 hover:bg-green-800 focus:uh-blue-2"
-                        >
+                                border-border-300 focus:ring-inherit">
+                        <button type="submit" class="w-full md:w-1/6 h-12 sm:h-14 align-top rounded-t-none rounded-b md:rounded-l-none md:rounded-r-md duration-300 text-lg text-white bg-primary-600 hover:bg-primary-600/90 focus:bg-primary-700">
                             {{ __('Shorten') }}
                         </button>
                     </div>

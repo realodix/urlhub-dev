@@ -33,9 +33,9 @@ class LinkVisitChart extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'Visits',
-                    'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
-                    'backgroundColor' => '#36A2EB',
-                    'borderColor' => '#9BD0F5',
+                    'data'  => $data->map(fn(TrendValue $value) => $value->aggregate),
+                    'backgroundColor' => '#006edb',
+                    'borderColor'     => '#006edb',
                 ],
             ],
             'labels' => $label,

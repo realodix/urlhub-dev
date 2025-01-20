@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Footer;
-use PowerComponents\LivewirePowerGrid\Header;
-use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
@@ -22,13 +20,15 @@ final class UserTable extends PowerGridComponent
 
     public string $sortDirection = 'desc';
 
+    public string $tableName = 'user-table';
+
     public function setUp(): array
     {
         return [
-            Header::make()
+            PowerGrid::header()
                 ->showToggleColumns()
                 ->showSearchInput(),
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage(25, [10, 25, 50, 100])
                 ->showRecordCount('full'),
         ];
@@ -43,29 +43,29 @@ final class UserTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('name', function (User $user) {
-                $urlsCount = $user->urls_count;
-                $urlCountTitle = number_format($urlsCount).' short '.Str::plural('link', $urlsCount);
+                $urlCount = $user->urls_count;
+                $urlCountTitle = number_format($urlCount) . ' short ' . Str::plural('link', $urlCount);
 
-                return $user->name.' <span title="'.$urlCountTitle.'">('.n_abb($urlsCount).')</span>';
+                return $user->name . ' <span title="' . $urlCountTitle . '">(' . n_abb($urlCount) . ')</span>';
             })
             ->add('email')
             ->add('created_at_formatted', function (User $user) {
                 return
-                    '<span title="'.$user->created_at->toDayDateTimeString().'">'
-                        .$user->created_at->shortRelativeDiffForHumans().
+                    '<span title="' . $user->created_at->toDayDateTimeString() . '">'
+                        . $user->created_at->shortRelativeDiffForHumans() .
                     '</span>';
             })
             ->add('action', function (User $user) {
                 return
-                    '<a role="button" href="'.route('user.edit', $user).'" title="'.__('Details').'"
-                        class="btn btn-secondary btn-sm"
+                    '<a role="button" href="' . route('user.edit', $user) . '" title="' . __('Details') . '"
+                        class="btn btn-secondary btn-square btn-xs"
                     >'
-                        .Blade::render('@svg(\'icon-person-edit\')').
+                        . Blade::render('@svg(\'icon-person-edit\')') .
                     '</a>
-                    <a role="button" href="'.route('user.password.show', $user).'" title="'.__('Change Password').'"
-                        class="btn btn-secondary btn-sm"
+                    <a role="button" href="' . route('user.password.show', $user) . '" title="' . __('Change Password') . '"
+                        class="btn btn-secondary btn-square btn-xs"
                     >'
-                        .Blade::render('@svg(\'icon-key\')').
+                        . Blade::render('@svg(\'icon-key\')') .
                     '</a>';
             });
     }

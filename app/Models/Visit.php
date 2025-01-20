@@ -6,17 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property int            $id
- * @property int            $url_id
- * @property string         $visitor_id
- * @property bool           $is_first_click
- * @property string         $referer
+ * @property int $id
+ * @property int $url_id
+ * @property string $visitor_id
+ * @property bool $is_first_click
+ * @property string $referer
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property Url            $urls
+ * @property Url $urls
  */
 class Visit extends Model
 {
+    /** @use HasFactory<\Database\Factories\VisitFactory> */
     use HasFactory;
 
     /**
@@ -34,7 +35,7 @@ class Visit extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{is_first_click: 'boolean'}
+     * @return array{is_first_click:'boolean'}
      */
     protected function casts(): array
     {
@@ -66,9 +67,9 @@ class Visit extends Model
     */
 
     /**
-     * Number of current user link visits.
+     * Number of link visits from the currently logged-in user.
      */
-    public function currentUserLinkVisitCount(): int
+    public function authUserLinkVisitCount(): int
     {
         return self::whereHas('url', function ($query) {
             $query->where('user_id', auth()->id());

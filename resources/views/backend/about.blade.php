@@ -5,80 +5,116 @@
 @section('title', __('About System'))
 @section('content')
 <main class="page_about max-w-4xl">
-    <div class="flex flex-wrap gap-4 mb-4 justify-end">
-        <div class="bg-uh-bg-1 p-4 sm:rounded-lg w-full md:w-2/6
-            border-y border-uh-border-color sm:border-none sm:shadow-md"
-        >
-            <div class="flex flex-row space-x-4 items-center">
-                <div>
-                    <p class="text-[#4f5b93] text-sm font-medium leading-4">PHP</p>
-                    <p class="text-2xl font-bold text-gray-600 inline-flex items-center space-x-2">
-                        {{ phpversion() }}
-                    </p>
+    <x-about.env class="mb-6" />
+
+    <div class="content">
+        <h3>Links</h3>
+        @php
+            $urlCount = n_abb($url->count());
+            $visitCount = n_abb($visit->count());
+            $userUrlCount = n_abb($url->userUrlCount());
+            $userLinkVisitCount = n_abb($visit->userLinkVisitCount());
+            $guestUrlCount = n_abb($url->guestUserUrlCount());
+            $guestUserLinkVisitCount = n_abb($visit->guestUserLinkVisitCount());
+        @endphp
+
+        <div class="mt-4 mb-6 px-0">
+            <dl class="grid grid-cols-1 gap-2.5 sm:gap-3 md:gap-5 md:grid-cols-2 lg:grid-cols-3">
+                <div class="card !bg-gray-50 !rounded px-4 py-3">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-600 md:mt-1">
+                            Total
+                        </dt>
+                        <dd class="-mt-1 font-normal text-gray-900 md:mt-1 md:text-xl">
+                            {{ $urlCount }} ({{ $visitCount }} visits)
+                        </dd>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="bg-uh-bg-1 p-4 sm:rounded-lg w-full md:w-2/6
-            border-y border-uh-border-color sm:border-none sm:shadow-md"
-        >
-            <div class="flex flex-row space-x-4 items-center">
-                <div>
-                    <p class="text-[#ff2d20] text-sm font-medium leading-4">Laravel</p>
-                    <p class="text-2xl font-bold text-gray-600 inline-flex items-center space-x-2">
-                        {{ app()->version() }}
-                    </p>
+                <div class="card !bg-gray-50 !rounded px-4 py-3">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-600 md:mt-1">
+                            User
+                        </dt>
+                        <dd class="-mt-1 font-normal text-gray-900 md:mt-1 md:text-xl">
+                            {{ $userUrlCount }} ({{ $userLinkVisitCount }} visits)
+                        </dd>
+                    </div>
                 </div>
-            </div>
+                <div class="card !bg-gray-50 !rounded px-4 py-3">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-600 md:mt-1">
+                            Guest
+                        </dt>
+                        <dd class="-mt-1 font-normal text-gray-900 md:mt-1 md:text-xl">
+                            {{ $guestUrlCount }} ({{ $guestUserLinkVisitCount }} visits)
+                        </dd>
+                    </div>
+                </div>
+            </dl>
         </div>
-    </div>
 
-    <br>
+        <h3>Users</h3>
+        <div class="mt-4 mb-6 px-0">
+            <dl class="grid grid-cols-1 gap-2.5 sm:gap-3 md:gap-5 md:grid-cols-2 lg:grid-cols-3">
+                <div class="card !bg-gray-50 !rounded px-4 py-3">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-600 md:mt-1">
+                            User
+                        </dt>
+                        <dd class="-mt-1 font-normal text-gray-900 md:mt-1 md:text-xl">
+                            {{ n_abb($user->count()) }}
+                        </dd>
+                    </div>
+                </div>
+                <div class="card !bg-gray-50 !rounded px-4 py-3">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-600 md:mt-1">
+                            Guest
+                        </dt>
+                        <dd class="-mt-1 font-normal text-gray-900 md:mt-1 md:text-xl">
+                            {{ n_abb($user->totalGuestUsers()) }}
+                        </dd>
+                    </div>
+                </div>
+            </dl>
+        </div>
 
-    <div class="common-card-style">
-        <div class="card_header__sub_header">Links</div>
-        <dl>
-            @php
-                $urlCount = n_abb($url->count());
-                $visitCount = n_abb($visit->count());
-                $userUrlCount = n_abb($url->userUrlCount());
-                $userLinkVisitCount = n_abb($visit->userLinkVisitCount());
-                $guestUrlCount = n_abb($url->guestUserUrlCount());
-                $guestUserLinkVisitCount = n_abb($visit->guestUserLinkVisitCount());
-            @endphp
-            <dt>Total</dt>
-            <dd>{{ $urlCount }} ({{ $visitCount }} visits)</dd>
+        <h3>Random String</h3>
+        <p class="font-light text-sm">Random String Generation for Shortened URLs.</p>
+        <div class="mt-4 mb-6 px-0">
+            <dl class="grid grid-cols-1 md:grid-flow-col md:auto-cols-auto gap-2.5 sm:gap-3">
+                <div class="card !bg-gray-50 !rounded px-4 py-3">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-600 md:mt-1">
+                            Potential Output
+                        </dt>
+                        <dd class="-mt-1 font-normal text-gray-900 md:mt-1 md:text-xl">
+                            @if ($keyGenerator->possibleOutput() === PHP_INT_MAX)
+                                (<code>PHP_INT_MAX</code>) {{ number_format(PHP_INT_MAX) }}
+                            @else
+                                @php
+                                    $number = strlen(KeyGeneratorService::ALPHABET);
+                                    $powNumber = config('urlhub.keyword_length');
+                                    $result = number_format($keyGenerator->possibleOutput());
+                                @endphp
 
-            <dt>User</dt>
-            <dd>{{ $userUrlCount }} ({{ $userLinkVisitCount }} visits)</dd>
-
-            <dt>Guest</dt>
-            <dd>{{ $guestUrlCount }} ({{ $guestUserLinkVisitCount }} visits)</dd>
-        </dl>
-
-        <div class="card_header__sub_header">Users</div>
-        <dl>
-            <dt>User</dt>
-            <dd>{{ n_abb($user->count()) }}</dd>
-
-            <dt>Guest</dt>
-            <dd>{{ n_abb($user->totalGuestUsers()) }}</dd>
-        </dl>
-
-        <div class="card_header__sub_header">Random String</div>
-        <dl>
-            <dt>Possible Output</dt>
-            <dd>
-                @php
-                    $number = strlen(KeyGeneratorService::ALPHABET);
-                    $powNumber = config('urlhub.keyword_length');
-                    $result = number_format($keyGenerator->possibleOutput());
-                @endphp
-                ( {{ $number }}<sup>{{ $powNumber }}</sup> ) {{ $result }}
-            </dd>
-
-            <dt>Generated</dt>
-            <dd>{{ number_format($keyGenerator->totalKey()) }}</dd>
-        </dl>
+                                ( {{ $number }}<sup>{{ $powNumber }}</sup> ) {{ $result }}
+                            @endif
+                        </dd>
+                    </div>
+                </div>
+                <div class="card !bg-gray-50 !rounded px-4 py-3">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-600 md:mt-1 md:w-64">
+                            Generated Count
+                        </dt>
+                        <dd class="-mt-1 font-normal text-gray-900 md:mt-1 md:text-xl md:w-64">
+                            {{ number_format($keyGenerator->totalKey()) }}
+                        </dd>
+                    </div>
+                </div>
+            </dl>
+        </div>
     </div>
 
     <br>
@@ -87,12 +123,13 @@
         $redirectCacheMaxAge = config('urlhub.redirect_cache_max_age');
         $domainBlacklist = collect(config('urlhub.domain_blacklist'))
             ->sort()->toArray();
-        $reservedActiveKeyList = $keyGenerator->reservedActiveKeyword();
+        $reservedActiveKeyList = $keyGenerator->reservedActiveKeyword()->toArray();
+        $reservedKeyword = $keyGenerator->reservedKeyword();
     @endphp
-    <div class="common-card-style">
-        <div class="card_header">{{ __('Configuration') }}</div>
+    <div class="content config">
+        <h1>{{ __('Configuration') }}</h1>
 
-        <div class="card_header__sub_header">Shortened Links</div>
+        <h3>Shortened Links</h3>
         <dl>
             <dt><code>keyword_length</code></dt>
             <dd>{{ config('urlhub.keyword_length') }} characters</dd>
@@ -103,10 +140,13 @@
             <dt><code>custom_keyword_max_length</code></dt>
             <dd>{{ config('urlhub.custom_keyword_max_length') }} characters</dd>
 
-            <dt class="mt-2"><code>domain_blacklist</code></dt>
+            <dt class="mt-2">
+                <code>domain_blacklist</code>
+                <p class="font-light text-sm">This is a list of domain names that are not allowed to be shortened.</p>
+            </dt>
             <dd class="mt-2">
-                <div class="bg-gray-50 p-2 border border-gray-300 rounded text-sm">
-                    @if (! empty($domainBlacklist))
+                <div class="card !bg-gray-50 !rounded px-3 py-2 text-sm">
+                    @if (!empty($domainBlacklist))
                         <code>{{ implode(", ", $domainBlacklist) }}</code>
                     @else
                         <code>None</code>
@@ -114,20 +154,25 @@
                 </div>
             </dd>
 
-            <dt class="mt-2 mb-2">Reserved Keywords</dt>
+            <dt class="mt-2 mb-2">
+                <code>reserved_keyword</code>
+                <p class="font-light text-sm">
+                    Reserved keywords are strings that cannot be used as a shortened URL keyword. The route list and folder/file names in the public folder are also included in this list.
+                </p>
+            </dt>
             <dd class="mt-2 mb-2">
-                <div class="bg-gray-50 p-2 border border-gray-300 rounded text-sm">
-                    <code class="text-gray-500">// {{ $keyGenerator->reservedKeyword()->count() }} Strings</code> <br>
-                    <code>{{ $keyGenerator->reservedKeyword()->sort()->implode(', ') }}</code>
+                <div class="card !bg-gray-50 !rounded px-3 py-2 text-sm">
+                    <code class="text-slate-500">// {{ $reservedKeyword->count() }} Strings</code> <br>
+                    <code>{{ $reservedKeyword->implode(', ') }}</code>
 
-                    @if (! empty($reservedActiveKeyList->toArray()))
+                    @if (!empty($reservedActiveKeyList))
                         <br><br>
                         <code class="text-red-400">// Unfortunately the list below is already used </code> <br>
                         <code class="text-red-400">// as shortened URL keyword</code> <br>
                         <code>
 
-                        @foreach ($reservedActiveKeyList->sort()->toArray() as $reservedActiveKey)
-                            <a href="{{ route('su_detail', $reservedActiveKey) }}"
+                        @foreach ($reservedActiveKeyList as $reservedActiveKey)
+                            <a href="{{ route('link_detail', $reservedActiveKey) }}"
                                 target="_blank"
                                 class="underline decoration-dotted">{{ $reservedActiveKey }}</a>,
                         @endforeach
@@ -153,7 +198,7 @@
             </dd>
         </dl>
 
-        <div class="card_header__sub_header">Guest / Unregistered Users</div>
+        <h3>Guest / Unregistered Users</h3>
         <dl>
             <dt>Allow create short links</dt>
             <dd>

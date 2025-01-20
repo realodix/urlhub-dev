@@ -3,6 +3,8 @@
 namespace Tests\Feature\FrontPage\ShortenUrl;
 
 use App\Models\Url;
+use App\Services\KeyGeneratorService;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 #[\PHPUnit\Framework\Attributes\Group('front-page')]
@@ -15,13 +17,13 @@ class CreateShortLinkTest extends TestCase
     public function testShortenUrl(): void
     {
         $longUrl = 'https://laravel.com';
-        $response = $this->post(route('su_create'), [
+        $response = $this->post(route('link.create'), [
             'long_url' => $longUrl,
         ]);
 
         $url = Url::whereDestination($longUrl)->first();
 
-        $response->assertRedirectToRoute('su_detail', $url->keyword);
+        $response->assertRedirectToRoute('link_detail', $url->keyword);
         $this->assertFalse($url->is_custom);
     }
 
@@ -36,23 +38,61 @@ class CreateShortLinkTest extends TestCase
 
         $customKey = 'foobar';
         config(['urlhub.keyword_length' => strlen($customKey) + 1]);
-        $response = $this->post(route('su_create'), [
+        $response = $this->post(route('link.create'), [
             'long_url'   => $longUrl,
             'custom_key' => $customKey,
         ]);
-        $response->assertRedirectToRoute('su_detail', $customKey);
+        $response->assertRedirectToRoute('link_detail', $customKey);
         $url = Url::whereDestination($longUrl)->first();
         $this->assertTrue($url->is_custom);
 
         $customKey = 'barfoo';
         config(['urlhub.keyword_length' => strlen($customKey) - 1]);
-        $response = $this->post(route('su_create'), [
+        $response = $this->post(route('link.create'), [
             'long_url'   => $longUrl,
             'custom_key' => $customKey,
         ]);
-        $response->assertRedirectToRoute('su_detail', $customKey);
+        $response->assertRedirectToRoute('link_detail', $customKey);
         $url = Url::whereDestination($longUrl)->first();
         $this->assertTrue($url->is_custom);
+    }
+
+    /**
+     * Shorten urls when the remaining space is not enough.
+     *
+     * Shorten the URL when the string generator can no longer generate unique
+     * keywords (all keywords have been used). UrlHub must prevent users from
+     * shortening URLs.
+     *
+     * @see App\Http\Controllers\UrlController::create()
+     * @see App\Http\Middleware\UrlHubLinkChecker
+     * @see App\Services\KeyGeneratorService::remainingCapacity()
+     */
+    public function testShortenUrlWhenRemainingSpaceIsNotEnough(): void
+    {
+        $this->mock(KeyGeneratorService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('remainingCapacity')->andReturn(0);
+        });
+
+        $response = $this->post(route('link.create'), ['long_url' => 'https://laravel.com']);
+        $response
+            ->assertRedirectToRoute('home')
+            ->assertSessionHas('flash_error');
+    }
+
+    public function testShortenUrlWithInternalLink(): void
+    {
+        $response = $this->post(route('link.create'), ['long_url' => request()->getHost()]);
+        $response
+            ->assertRedirectToRoute('home')
+            ->assertSessionHas('flash_error');
+        $this->assertCount(0, Url::all());
+
+        $response = $this->post(route('link.create'), ['long_url' => config('app.url')]);
+        $response
+            ->assertRedirectToRoute('home')
+            ->assertSessionHas('flash_error');
+        $this->assertCount(0, Url::all());
     }
 
     /*
@@ -68,7 +108,7 @@ class CreateShortLinkTest extends TestCase
     {
         $url = Url::factory()->create();
 
-        $response = $this->post(route('su_create'), [
+        $response = $this->post(route('link.create'), [
             'long_url'   => 'https://laravel-news.com',
             'custom_key' => $url->keyword,
         ]);
@@ -89,7 +129,7 @@ class CreateShortLinkTest extends TestCase
         $url = Url::factory()->create();
 
         $response = $this->actingAs($this->basicUser())
-            ->post(route('su_create'), [
+            ->post(route('link.create'), [
                 'long_url'   => 'https://laravel-news.com',
                 'custom_key' => $url->keyword,
             ]);

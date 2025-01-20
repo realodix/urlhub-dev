@@ -5,35 +5,31 @@
 @section('css_class', 'auth')
 
 @section('content')
-@if ($errors->any())
-    <div>
-        <div>{{ __('Whoops! Something went wrong.') }}</div>
+<div class="flex flex-col min-h-screen sm:justify-center items-center pt-6 sm:pt-0">
+    @if ($errors->any())
+        <div class="alert alert-error">
+            <div class="font-bold">{{ __('Whoops! Something went wrong.') }}</div>
 
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-<form method="POST" action="{{ route('password.confirm') }}">
-@csrf
-    <div>
-        <label>{{ __('Password') }}</label>
-        <input type="password" name="password" autocomplete="current-password" required>
-    </div>
-
-    <div>
-        <button type="submit">
-            {{ __('Confirm Password') }}
-        </button>
-    </div>
-
-    @if (Route::has('password.request'))
-        <a href="{{ route('password.request') }}">
-            {{ __('Forgot Your Password?') }}
-        </a>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
-</form>
+
+    <div class="auth-card">
+        <form method="POST" action="{{ route('password.confirm') }}" class="space-y-4">
+        @csrf
+            <div>
+                <label>{{ __('Password') }}</label>
+                <input type="password" name="password" required autocomplete="current_password" class="form-input">
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                {{ __('Confirm Password') }}
+            </button>
+        </form>
+    </div>
+</div>
 @endsection

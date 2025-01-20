@@ -10,13 +10,12 @@ use Tests\TestCase;
 #[PHPUnit\Group('services')]
 class KeyGeneratorServiceTest extends TestCase
 {
+    private const N_URL_WITH_USER_ID = 1;
+    private const N_URL_WITHOUT_USER_ID = 2;
+
     private Url $url;
 
     private KeyGeneratorService $keyGenerator;
-
-    private const N_URL_WITH_USER_ID = 1;
-
-    private const N_URL_WITHOUT_USER_ID = 2;
 
     private int $totalUrl;
 
@@ -34,15 +33,37 @@ class KeyGeneratorServiceTest extends TestCase
     public function testGenerateUniqueString(): void
     {
         $value1 = 'foo';
+
+        $hash = $this->keyGenerator->generate($value1);
+        $this->assertSame($this->keyGenerator->hashedString($value1), $hash);
+
+        $urlFactory = Url::factory()->create(['keyword' => $hash]);
+        $hash2 = $this->keyGenerator->generate($value1);
+        $this->assertSame(strtoupper($this->keyGenerator->hashedString($value1)), $hash2);
+
+        Url::factory()->create(['keyword' => $hash2]);
+        $hash3 = $this->keyGenerator->generate($value1);
+        $this->assertSame(
+            $this->keyGenerator->hashedString($value1 . $urlFactory->latest('id')->value('id')),
+            $hash3,
+        );
+
+        Url::factory()->create(['keyword' => $hash3]);
+        $this->assertNotSame($hash2, $this->keyGenerator->generate($value1));
+    }
+
+    public function testGenerateUniqueStringWithReservedKeyword(): void
+    {
+        $value1 = 'foo';
         $generatedString1 = $this->keyGenerator->generate($value1);
         Url::factory()->create(['keyword' => $generatedString1]);
-        $this->assertSame($this->keyGenerator->simpleString($value1), $generatedString1);
+        $this->assertSame($this->keyGenerator->hashedString($value1), $generatedString1);
         $this->assertNotSame($generatedString1, $this->keyGenerator->generate($value1));
 
         $value2 = 'foo2';
         $generatedString2 = $this->keyGenerator->generate($value2);
         config(['urlhub.reserved_keyword' => [$generatedString2]]);
-        $this->assertSame($this->keyGenerator->simpleString($value2), $generatedString2);
+        $this->assertSame($this->keyGenerator->hashedString($value2), $generatedString2);
         $this->assertNotSame($generatedString2, $this->keyGenerator->generate($value2));
     }
 
@@ -79,17 +100,24 @@ class KeyGeneratorServiceTest extends TestCase
         config(['urlhub.keyword_length' => 10]);
         $longUrl = 'https://t.co';
         $customKey = 'tco';
-        $response = $this->post(route('su_create'), [
+        $response = $this->post(route('link.create'), [
             'long_url' => $longUrl,
             'custom_key' => $customKey,
         ]);
-        $response->assertRedirectToRoute('su_detail', $customKey);
+        $response->assertRedirectToRoute('link_detail', $customKey);
 
         $url = Url::whereDestination($longUrl)->first();
         $this->assertTrue($url->is_custom);
     }
 
-    public function testStringAlreadyInUse(): void
+    /**
+     * Tests whether the verify function returns a false value if the given string
+     * is already used as the active keyword.
+     *
+     * The verify function should return a false value if the given string is
+     * already used as the active keyword.
+     */
+    public function testStringIsAlreadyUsedAsTheActiveKeyword(): void
     {
         config(['urlhub.keyword_length' => 5]);
         $value = $this->keyGenerator->generate('https://github.com/realodix');
@@ -99,6 +127,13 @@ class KeyGeneratorServiceTest extends TestCase
         $this->assertFalse($this->keyGenerator->verify($value));
     }
 
+    /**
+     * Tests whether the verify function returns a false value if the given string
+     * is a reserved keyword.
+     *
+     * The verify function should return a false value if the given string is
+     * a reserved keyword.
+     */
     public function testStringIsAReservedKeyword(): void
     {
         $value = 'foobar';
@@ -108,6 +143,13 @@ class KeyGeneratorServiceTest extends TestCase
         $this->assertFalse($this->keyGenerator->verify($value));
     }
 
+    /**
+     * Tests whether the verify function returns a false value if the given string
+     * is a registered route.
+     *
+     * The verify function should return a false value if the given string is
+     * a registered route.
+     */
     public function testStringIsRegisteredRoute(): void
     {
         $value = 'admin';
@@ -115,16 +157,29 @@ class KeyGeneratorServiceTest extends TestCase
         $this->assertFalse($this->keyGenerator->verify($value));
     }
 
+    /**
+     * If the keyword is the same as the name of a public path, then it
+     * shouldn't be used as a keyword.
+     */
     public function testStringIsPublicPath(): void
     {
         $fileSystem = new \Illuminate\Filesystem\Filesystem;
-        $value = fake()->word();
+        $value = 'zzz' . fake()->word();
 
         $fileSystem->makeDirectory(public_path($value));
         $this->assertFalse($this->keyGenerator->verify($value));
         $fileSystem->deleteDirectory(public_path($value));
     }
 
+    /**
+     * Menguji apakah fungsi reservedActiveKeyword mengembalikan nilai yang sesuai.
+     *
+     * reservedActiveKeyword mengembalikan keyword yang terdaftar sebagai reserved
+     * keyword dan sudah digunakan sebagai custom keyword.
+     *
+     * Kondisi 1: Belum ada reserved keyword yang digunakan.
+     * Kondisi 2: Ada beberapa reserved keyword yang sudah digunakan.
+     */
     public function testReservedActiveKeyword()
     {
         $fileSystem = new \Illuminate\Filesystem\Filesystem;
@@ -132,21 +187,31 @@ class KeyGeneratorServiceTest extends TestCase
         // Test case 1: No reserved keywords already in use
         $this->assertEquals(
             new \Illuminate\Support\Collection,
-            $this->keyGenerator->reservedActiveKeyword()
+            $this->keyGenerator->reservedActiveKeyword(),
         );
 
         // Test case 2: Some reserved keywords already in use
-        $usedKeyWord = fake()->word();
-        Url::factory()->create(['keyword' => $usedKeyWord]);
+        $activeKeyword = 'zzz' . fake()->word();
+        Url::factory()->create(['keyword' => $activeKeyword]);
 
-        $fileSystem->makeDirectory(public_path($usedKeyWord));
+        $fileSystem->makeDirectory(public_path($activeKeyword));
         $this->assertEquals(
-            $usedKeyWord,
-            $this->keyGenerator->reservedActiveKeyword()->implode('')
+            $activeKeyword,
+            $this->keyGenerator->reservedActiveKeyword()->implode(''),
         );
-        $fileSystem->deleteDirectory(public_path($usedKeyWord));
+        $fileSystem->deleteDirectory(public_path($activeKeyword));
     }
 
+    /**
+     * Menguji apakah fungsi possibleOutput mengembalikan nilai yang sesuai.
+     *
+     * possibleOutput mengembalikan jumlah kombinasi string yang mungkin
+     * dihasilkan oleh generator keyword. Jika panjang keyword yang dihasilkan
+     * terlalu panjang maka fungsi ini mengembalikan nilai PHP_INT_MAX.
+     *
+     * Kondisi 1: Panjang keyword yang dihasilkan relatif pendek.
+     * Kondisi 2: Panjang keyword yang dihasilkan relatif panjang.
+     */
     #[PHPUnit\Test]
     public function possibleOutput(): void
     {
@@ -155,14 +220,8 @@ class KeyGeneratorServiceTest extends TestCase
         config(['urlhub.keyword_length' => 2]);
         $this->assertSame(pow($charLen, 2), $this->keyGenerator->possibleOutput());
 
-        if (! extension_loaded('gmp')) {
-            $this->markTestSkipped('The GMP extension is not available.');
-        }
         config(['urlhub.keyword_length' => 11]);
-        $this->assertSame(
-            gmp_intval(gmp_pow($charLen, 11)),
-            $this->keyGenerator->possibleOutput()
-        );
+        $this->assertSame(PHP_INT_MAX, $this->keyGenerator->possibleOutput());
     }
 
     /**

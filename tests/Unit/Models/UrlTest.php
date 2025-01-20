@@ -61,7 +61,7 @@ class UrlTest extends TestCase
     {
         $longUrl = 'https://example.com';
 
-        $this->post(route('su_create'), ['long_url' => $longUrl]);
+        $this->post(route('link.create'), ['long_url' => $longUrl]);
 
         $url = Url::whereDestination($longUrl)->first();
 
@@ -99,7 +99,7 @@ class UrlTest extends TestCase
         $url->whereUserId($url->author->id)->first();
 
         $expected = $url->short_url;
-        $actual = url('/'.$url->keyword);
+        $actual = url('/' . $url->keyword);
         $this->assertSame($expected, $actual);
     }
 
@@ -160,7 +160,7 @@ class UrlTest extends TestCase
     }
 
     #[PHPUnit\Test]
-    public function currentUserUrlCount(): void
+    public function authUserUrlCount(): void
     {
         $user = $this->basicUser();
         $nCurrentUser = 8;
@@ -170,7 +170,7 @@ class UrlTest extends TestCase
         Url::factory()->count($nUser)->create();
 
         $this->actingAs($user);
-        $this->assertSame($nCurrentUser, $this->url->currentUserUrlCount());
+        $this->assertSame($nCurrentUser, $this->url->authUserUrlCount());
         $this->assertSame($nUser + $nCurrentUser, $this->url->count());
     }
 

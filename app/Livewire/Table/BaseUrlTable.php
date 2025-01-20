@@ -5,9 +5,7 @@ namespace App\Livewire\Table;
 use App\Models\Url;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Footer;
-use PowerComponents\LivewirePowerGrid\Header;
-use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
@@ -33,10 +31,10 @@ class BaseUrlTable extends PowerGridComponent
     public function setUp(): array
     {
         return [
-            Header::make()
+            PowerGrid::header()
                 ->showToggleColumns()
                 ->showSearchInput(),
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage(25, [10, 25, 50, 100])
                 ->showRecordCount('full'),
         ];
@@ -67,7 +65,7 @@ class BaseUrlTable extends PowerGridComponent
             ->add('keyword', function (Url $url) {
                 return view('components.table.keyword', [
                     'shortLink' => $url->short_url,
-                    'keyword' => $url->keyword,
+                    'keyword'   => $url->keyword,
                 ])->render();
             })
             ->add('destination', function (Url $url) {
@@ -79,7 +77,7 @@ class BaseUrlTable extends PowerGridComponent
             })
             ->add('t_clicks', function (Url $url) {
                 return view('components.table.visit', [
-                    'clicks' => $url->visits_count,
+                    'clicks'       => $url->visits_count,
                     'uniqueClicks' => $url->unique_visit_count,
                 ])->render();
             })
@@ -90,9 +88,9 @@ class BaseUrlTable extends PowerGridComponent
             })
             ->add('action', function (Url $url) {
                 return view('components.table.action-button', [
-                    'detail_link' => route('su_detail', $url->keyword),
-                    'edit_link' => route('dboard.url.edit.show', $url),
-                    'delete_link' => route('dboard.url.delete', $url),
+                    'detail_link' => route('link_detail', $url->keyword),
+                    'edit_link'   => route('link.edit', $url),
+                    'delete_link' => route('link.delete', $url),
                 ])->render();
             });
     }

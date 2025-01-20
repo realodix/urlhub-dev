@@ -13,8 +13,8 @@
     @endif
 
     @if ($errors->any())
-        <div>
-            <div>{{ __('Whoops! Something went wrong.') }}</div>
+        <div class="alert alert-error">
+            <div class="font-bold">{{ __('Whoops! Something went wrong.') }}</div>
 
             <ul>
                 @foreach ($errors->all() as $error)
@@ -25,23 +25,21 @@
     @endif
 
     <div class="auth-card">
-        <p>{{ __('Forgot your password? No problem.') }}</p> <br>
-        <p>{{ __('Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}</p>
+        <p class="mb-1">{{ __('Forgot your password? No problem.') }}
+        <p class="text-gray-600 text-sm">
+            {{ __('Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+        </p>
 
-        <br>
-
-        <form method="POST" action="{{ route('password.email') }}">
+        <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
         @csrf
             <div>
                 <label class="form-label">{{ __('Email') }}</label>
-                <input type="email" name="email" class="form-input" id="email" value="{{ old('email') }}" required autofocus>
+                <input type="email" name="email" required value="{{ old('email') }}" class="form-input" autofocus>
             </div>
 
-            <div class="flex items-center justify-center mt-8">
-                <button type="submit" class="btn btn-primary ml-4">
-                    {{ __('Email Password Reset Link') }}
-                </button>
-            </div>
+            <button type="submit" class="btn btn-primary w-full">
+                {{ __('Email Password Reset Link') }}
+            </button>
         </form>
     </div>
 </div>

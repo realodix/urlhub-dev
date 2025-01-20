@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use Spatie\Url\Url as SpatieUrl;
+use Composer\Pcre\Preg;
 
 class Helper
 {
@@ -21,38 +21,52 @@ class Helper
     }
 
     /**
-     * A URL formatted according to the specified format.
+     * Format URL links for display.
      *
-     * @param string   $value         URL links
-     * @param null|int $limit         Length string will be truncated to, including suffix
-     * @param bool     $scheme        Show or remove URL schemes
-     * @param bool     $trailingSlash Show or remove trailing slash
+     * @param string $value URL links
+     * @param int|null $limit Length string will be truncated to, including suffix
+     * @param bool $scheme Show or remove URL schemes
+     * @param bool $trailingSlash Show or remove trailing slash
+     * @param int $maxHostLength Maximum length of the host
      * @return string
      */
-    public static function urlFormat(string $value, ?int $limit = null, bool $scheme = true, bool $trailingSlash = true)
-    {
-        $sUrl = SpatieUrl::fromString($value);
-        $hostLen = strlen($sUrl->getScheme().'://'.$sUrl->getHost());
-        $limit = $limit ?? strlen($value);
+    public static function urlFormat(
+        string $value,
+        ?int $limit = null,
+        bool $scheme = true,
+        bool $trailingSlash = true,
+        int $maxHostLength = 45,
+    ) {
+        $uri = \Illuminate\Support\Uri::of($value);
+        $schemePrefix = $scheme && $uri->scheme() ? $uri->scheme() . '://' : '';
 
-        // Optionally strip scheme
-        if ($scheme === false) {
-            $value = preg_replace('{^http(s)?://}', '', $value);
-            $hostLen = strlen($sUrl->getHost());
+        // Strip scheme if not required
+        if (!$scheme) {
+            $value = Preg::replace('/^https?:\/\//', '', $value);
         }
 
-        // Optionally strip trailing slash
-        if ($trailingSlash === false) {
+        // Remove trailing slash if not required
+        if (!$trailingSlash) {
             $value = rtrim($value, '/');
         }
 
+        $limit = $limit ?? strlen($value);
+        $hostLength = strlen($schemePrefix . $uri->host());
+
+        // Truncate the URL if necessary
         if (strlen($value) > $limit) {
             $trimMarker = '...';
-            $pathLen = $limit - $hostLen;
-            $firstPartLen = $hostLen + intval(($pathLen - 1) * 0.5) + strlen($trimMarker);
-            $lastPartLen = -abs($limit - $firstPartLen);
+            $adjustedLimit = $limit - strlen($trimMarker);
 
-            return mb_strimwidth($value, 0, $firstPartLen, $trimMarker).substr($value, $lastPartLen);
+            // Handle cases where host is too long or the limit is shorter than the host
+            if ($hostLength >= $maxHostLength || $hostLength >= $adjustedLimit) {
+                $firstHalf = mb_substr($value, 0, intval($adjustedLimit * 0.8));
+                $secondHalf = mb_substr($value, -intval($adjustedLimit * 0.2));
+
+                return $firstHalf . $trimMarker . $secondHalf;
+            }
+
+            return \Illuminate\Support\Str::limit($value, $adjustedLimit, $trimMarker);
         }
 
         return $value;
@@ -67,8 +81,7 @@ class Helper
     {
         return collect(\Illuminate\Support\Facades\Route::getRoutes()->get())
             ->map(fn(\Illuminate\Routing\Route $route) => $route->uri)
-            ->reject(fn($value) => ! preg_match('/^[a-zA-Z\-]+$/', $value))
-            ->unique()->sort()
+            ->pipe(fn($value) => self::collisionCandidateFilter($value))
             ->toArray();
     }
 
@@ -86,12 +99,19 @@ class Helper
         }
 
         return collect($publicPathList)
-            // remove ., ..,
-            ->reject(fn($value) => in_array($value, ['.', '..']))
-            // remove file with extension
-            ->filter(fn($value) => ! preg_match('/\.[a-z]+$/', $value))
-            // remove array value which is in config('urlhub.reserved_keyword')
-            ->reject(fn($value) => in_array($value, config('urlhub.reserved_keyword')))
+            ->pipe(fn($value) => self::collisionCandidateFilter($value))
             ->toArray();
+    }
+
+    /**
+     * @param \Illuminate\Support\Collection $value
+     * @return \Illuminate\Support\Collection
+     */
+    public static function collisionCandidateFilter($value)
+    {
+        return collect($value)
+            ->filter(fn($value) => Preg::isMatch('/^([0-9a-zA-Z\-])+$/', $value))
+            ->reject(fn($value) => in_array($value, config('urlhub.reserved_keyword')))
+            ->unique();
     }
 }

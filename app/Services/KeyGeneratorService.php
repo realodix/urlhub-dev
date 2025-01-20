@@ -6,6 +6,7 @@ use App\Models\Url;
 
 class KeyGeneratorService
 {
+    /** @var string */
     const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
@@ -16,20 +17,39 @@ class KeyGeneratorService
      */
     public function generate(string $value): string
     {
-        $string = $this->simpleString($value);
-
-        if (! $this->verify($string) || strlen($string) < config('urlhub.keyword_length')) {
-            do {
-                $randomString = $this->randomString();
-            } while (! $this->verify($randomString));
-
-            return $randomString;
+        $str = $this->hashedString($value);
+        if ($this->verify($str)) {
+            return $str;
         }
 
-        return $string;
+        // If the first attempt fail, try to make the string uppercase
+        $strUpper = strtoupper($str);
+        if ($this->verify($strUpper)) {
+            return $strUpper;
+        }
+
+        // If the second attempt fail, try to append the last url id
+        $str = $this->hashedString($value . Url::latest('id')->value('id'));
+        if ($this->verify($str)) {
+            return $str;
+        }
+
+        // If the string is still not unique, then generate a random string
+        // until it is unique
+        do {
+            $randomString = $this->randomString();
+        } while (!$this->verify($randomString));
+
+        return $randomString;
     }
 
-    public function simpleString(string $value): string
+    /**
+     * Hashes the given string and truncates it to the configured keyword length.
+     *
+     * @param string $value The input string to hash.
+     * @return string The hashed and truncated string.
+     */
+    public function hashedString(string $value): string
     {
         return substr(hash('xxh3', $value), 0, config('urlhub.keyword_length'));
     }
@@ -67,7 +87,7 @@ class KeyGeneratorService
     public function verify(string $value): bool
     {
         $alreadyInUse = Url::whereKeyword($value)->exists();
-        $reservedKeyword = in_array($value, $this->reservedKeyword()->toArray());
+        $reservedKeyword = $this->reservedKeyword()->contains($value);
 
         if ($alreadyInUse || $reservedKeyword) {
             return false;
@@ -77,6 +97,8 @@ class KeyGeneratorService
     }
 
     /**
+     * The keywords that are currently in use as reserved keywords.
+     *
      * @return \Illuminate\Support\Collection
      */
     public function reservedKeyword()
@@ -87,20 +109,21 @@ class KeyGeneratorService
             \App\Helpers\Helper::publicPathCollisionList(),
         ];
 
-        return collect($data)->flatten()->unique();
+        return collect($data)->flatten()->unique()->sort();
     }
 
     /**
-     * Reserved keywords that are already in use as url shortened keywords.
+     * The keywords that are currently in use as reserved keywords, but on the other
+     * hand also used as active keywords.
      *
      * @return \Illuminate\Support\Collection
      */
     public function reservedActiveKeyword()
     {
         $reservedKeyword = $this->reservedKeyword();
-        $usedKeyWord = Url::pluck('keyword')->toArray();
+        $activeKeyword = Url::pluck('keyword')->toArray();
 
-        return $reservedKeyword->intersect($usedKeyWord);
+        return $reservedKeyword->intersect($activeKeyword);
     }
 
     /*
@@ -119,22 +142,10 @@ class KeyGeneratorService
         $nChar = strlen(self::ALPHABET);
         $strLen = config('urlhub.keyword_length');
 
-        // for testing purposes only
-        // tests\Unit\Middleware\UrlHubLinkCheckerTest.php
-        if ($strLen < 1) {
-            return 0;
-        }
-
         $nPossibleOutput = pow($nChar, $strLen);
 
         if ($nPossibleOutput > PHP_INT_MAX) {
-            // @codeCoverageIgnoreStart
-            if (! extension_loaded('gmp')) {
-                throw new \RuntimeException('The "GMP" PHP extension is required.');
-            }
-            // @codeCoverageIgnoreEnd
-
-            return gmp_intval(gmp_pow($nChar, $strLen));
+            return PHP_INT_MAX;
         }
 
         return $nPossibleOutput;
