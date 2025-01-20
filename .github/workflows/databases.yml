@@ -50,7 +50,7 @@ jobs:
                 php artisan config:clear
                 npm run build
           - name: Execute tests
-            run: vendor/bin/phpunit
+            run: vendor/bin/phpunit --group accross_db
 
 
     mysql_8:
@@ -98,7 +98,7 @@ jobs:
                 php artisan config:clear
                 npm run build
           - name: Execute tests
-            run: vendor/bin/phpunit
+            run: vendor/bin/phpunit --group accross_db
 
 
     mariadb:
@@ -145,7 +145,7 @@ jobs:
                 php artisan config:clear
                 npm run build
           - name: Execute tests
-            run: vendor/bin/phpunit
+            run: vendor/bin/phpunit --group accross_db
 
 
     pgsql:
@@ -195,4 +195,4 @@ jobs:
                 php artisan config:clear
                 npm run build
           - name: Execute tests
-            run: vendor/bin/phpunit
+            run: vendor/bin/phpunit --group accross_db
