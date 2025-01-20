@@ -1,5 +1,6 @@
 import forms from '@tailwindcss/forms';
 import presetPowerGrid from './vendor/power-components/livewire-powergrid/tailwind.config.js';
+import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -18,18 +19,12 @@ export default {
     theme: {
         extend: {
             colors: {
-                "primary-50": "#eef2ff",
-                "primary-100": "#e0e7ff",
-                "primary-200": "#c7d2fe",
-                "primary-300": "#a5b4fc",
-                "primary-400": "#818cf8",
-                "primary-500": "#6366f1",
-                "primary-600": "#4f46e5",
-                "primary-700": "#4338ca",
-                "primary-800": "#3730a3",
+                "primary": colors.blue,
                 "uh-blue": "#3d5b99",
                 "border-200": "#e7e5e4",
                 "border-300": "#d6d3d1",
+                // PowerGrid
+                'pg-primary': colors.gray,
             },
         },
     },

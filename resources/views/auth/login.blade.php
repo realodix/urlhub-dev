@@ -21,21 +21,21 @@
         <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}" class="space-y-4">
         @csrf
             <div>
-                <label for="email" class="form-label">
+                <label class="form-label">
                     {{ __('E-Mail / Username') }}
                 </label>
-                <input name="identity" class="form-input mt-1" value="{{ old('identity') }}" required autofocus>
+                <input name="identity" required value="{{ old('identity') }}" id="identity" class="form-input mt-1" autofocus>
             </div>
 
             <div>
-                <label for="password" class="form-label">
+                <label class="form-label">
                     {{ __('Password') }}
                 </label>
-                <input type="password" name="password" class="form-input mt-1" autocomplete="current_password" required>
+                <input type="password" name="password" required autocomplete="current_password" class="form-input mt-1">
             </div>
 
             <div class="flex items-center justify-end">
-                <a href="{{ route('password.request') }}" class="text-primary-600 hover:text-primary-500 font-medium">
+                <a href="{{ route('password.request') }}" class="text-primary-700 hover:text-primary-500 font-medium">
                     {{ __('Forgot password?') }}
                 </a>
             </div>
@@ -48,7 +48,7 @@
         @if (Route::has('register') and Config::get('urlhub.registration'))
         <div class="mt-6 text-center text-sm text-gray-600">
             Don't have an account?
-            <a href="{{ route('register') }}" target="_blank" class="text-primary-600 hover:text-primary-500 font-medium">Sign up</a>
+            <a href="{{ route('register') }}" class="text-primary-700 hover:text-primary-500 font-medium">Sign up</a>
         </div>
         @endif
     </div>
