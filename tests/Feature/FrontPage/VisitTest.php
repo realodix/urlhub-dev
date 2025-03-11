@@ -13,23 +13,23 @@ class VisitTest extends TestCase
 
     public function testLogBotVisits(): void
     {
-        config(['urlhub.track_bot_visits' => true]);
+        settings()->fill(['track_bot_visits' => true])->save();
 
         $url = Url::factory()->create();
 
         $this->withHeaders(['user-agent' => self::BOT_UA])
-            ->get(route('home') . '/' . $url->keyword);
+            ->get(route('home').'/'.$url->keyword);
         $this->assertCount(1, Visit::all());
     }
 
     public function testDontLogBotVisits(): void
     {
-        config(['urlhub.track_bot_visits' => false]);
+        settings()->fill(['track_bot_visits' => false])->save();
 
         $url = Url::factory()->create();
 
         $this->withHeaders(['user-agent' => self::BOT_UA])
-            ->get(route('home') . '/' . $url->keyword);
+            ->get(route('home').'/'.$url->keyword);
         $this->assertCount(0, Visit::all());
     }
 }

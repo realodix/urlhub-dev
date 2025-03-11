@@ -7,7 +7,7 @@ use Livewire\Component;
 /**
  * - https://livewire.laravel.com/docs/validation#real-time-validation
  * - resources\views\frontend\homepage.blade.php
- * - resources\views\livewire\validation\validate-custom-keyword.blade.php.
+ * - resources\views\livewire\validation\validate-custom-keyword.blade.php
  */
 class ValidateCustomKeyword extends Component
 {
@@ -21,8 +21,9 @@ class ValidateCustomKeyword extends Component
      */
     public function rules()
     {
-        $minLen = config('urlhub.custom_keyword_min_length');
-        $maxLen = config('urlhub.custom_keyword_max_length');
+        $settings = app(\App\Settings\GeneralSettings::class);
+        $minLen = $settings->custom_keyword_min_length;
+        $maxLen = $settings->custom_keyword_max_length;
 
         return [
             'keyword' => [

@@ -9,11 +9,19 @@ use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
+/**
+ * @codeCoverageIgnore
+ */
 class LinkVisitChart extends ChartWidget
 {
     protected static ?string $maxHeight = '250px';
 
     public Url $model;
+
+    public function getDescription(): ?string
+    {
+        return 'Stats for past quarter';
+    }
 
     protected function getData(): array
     {
@@ -45,10 +53,5 @@ class LinkVisitChart extends ChartWidget
     protected function getType(): string
     {
         return 'line';
-    }
-
-    public function getDescription(): ?string
-    {
-        return 'Stats for past quarter';
     }
 }

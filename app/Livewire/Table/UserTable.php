@@ -4,7 +4,6 @@ namespace App\Livewire\Table;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
@@ -44,29 +43,27 @@ final class UserTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('name', function (User $user) {
                 $urlCount = $user->urls_count;
-                $urlCountTitle = number_format($urlCount) . ' short ' . Str::plural('link', $urlCount);
+                $urlCountTitle = number_format($urlCount).' short '.Str::plural('link', $urlCount);
 
-                return $user->name . ' <span title="' . $urlCountTitle . '">(' . n_abb($urlCount) . ')</span>';
+                return $user->name.' <span title="'.$urlCountTitle.'" class="dark:text-dark-400">('.n_abb($urlCount).')</span>';
             })
             ->add('email')
             ->add('created_at_formatted', function (User $user) {
+                $date = $user->created_at->inUserTz();
+                $offset = '('.$date->getOffsetString().')';
+
                 return
-                    '<span title="' . $user->created_at->toDayDateTimeString() . '">'
-                        . $user->created_at->shortRelativeDiffForHumans() .
+                    '<span title="'.$date->toDayDateTimeString().' '.$offset.'" class="dark:text-dark-400">'
+                        .$date->shortRelativeDiffForHumans().
                     '</span>';
             })
             ->add('action', function (User $user) {
-                return
-                    '<a role="button" href="' . route('user.edit', $user) . '" title="' . __('Details') . '"
-                        class="btn btn-secondary btn-square btn-xs"
-                    >'
-                        . Blade::render('@svg(\'icon-person-edit\')') .
-                    '</a>
-                    <a role="button" href="' . route('user.password.show', $user) . '" title="' . __('Change Password') . '"
-                        class="btn btn-secondary btn-square btn-xs"
-                    >'
-                        . Blade::render('@svg(\'icon-key\')') .
-                    '</a>';
+                return view('components.table.action-button_user', [
+                    'model' => $user,
+                    'detail_link' => route('user.edit', $user),
+                    'cp_link' => route('user.password.show', $user),
+                    'delete_link' => route('user.delete.confirm', $user),
+                ])->render();
             });
     }
 
@@ -77,12 +74,12 @@ final class UserTable extends PowerGridComponent
     {
         return [
             Column::make('USERNAME', 'name')
-                ->sortable()
-                ->searchable(),
+                ->sortable()->searchable()
+                ->contentClassField('dark:text-dark-300'),
 
             Column::make('EMAIL', 'email')
-                ->sortable()
-                ->searchable(),
+                ->sortable()->searchable()
+                ->contentClassField('dark:text-dark-300'),
 
             Column::make('CREATED AT', 'created_at_formatted', 'created_at')
                 ->searchable()

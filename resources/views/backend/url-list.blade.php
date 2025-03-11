@@ -3,8 +3,12 @@
 @section('title', __('URLs List'))
 
 @section('content')
-<main>
-    <div class="content">
+<div class="container-alt max-w-340">
+    <div class="w-full md:max-w-md">
+        @include('partials/messages')
+    </div>
+
+    <div class="content-container card card-fluid">
         <div class="content-header">
             <p class="text-2xl">{{ __('List of All URLs') }}</p>
             <div class="flex justify-end">
@@ -14,9 +18,7 @@
             </div>
         </div>
 
-        @include('partials/messages')
-
         @livewire('table.url-list-table')
     </div>
-</main>
+</div>
 @endsection

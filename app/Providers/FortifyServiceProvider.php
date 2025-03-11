@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Services\Fortify\CreateNewUser;
+use App\Services\Fortify\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -39,7 +40,6 @@ class FortifyServiceProvider extends ServiceProvider
 
         // Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         // Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
-        // Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         Fortify::verifyEmailView(function () {
             return view('auth.verify-email');
@@ -48,7 +48,7 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->identity;
 
-            return Limit::perMinute(5)->by($email . $request->ip());
+            return Limit::perMinute(5)->by($email.$request->ip());
         });
 
         RateLimiter::for('two-factor', function (Request $request) {
@@ -104,6 +104,7 @@ class FortifyServiceProvider extends ServiceProvider
                 'email' => $request->email,
             ]);
         });
+        Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         // @codeCoverageIgnoreEnd
 
         Fortify::confirmPasswordView(function () {

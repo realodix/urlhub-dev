@@ -3,6 +3,18 @@
 use App\Helpers\Helper;
 use Illuminate\Support\Number;
 
+if (!function_exists('settings')) {
+    /**
+     * Get the settings.
+     *
+     * @return \App\Settings\GeneralSettings
+     */
+    function settings()
+    {
+        return app(\App\Settings\GeneralSettings::class);
+    }
+}
+
 if (!function_exists('urlFormat')) {
     /**
      * Display the link according to what You need.
@@ -23,8 +35,8 @@ if (!function_exists('n_abb')) {
      * This is modified version of Laravel Number::abbreviate() method with the
      * default value of maxPrecision is 2.
      *
-     * - https://laravel.com/docs/11.x/helpers#method-number-abbreviate
-     * - https://github.com/laravel/framework/blob/5d4b26e/src/Illuminate/Support/Number.php#L154
+     * - https://laravel.com/docs/12.x/helpers#method-number-abbreviate
+     * - https://github.com/laravel/framework/blob/e6753fc3/src/Illuminate/Support/Number.php#L184
      *
      * @param int|float $number
      * @param int $precision

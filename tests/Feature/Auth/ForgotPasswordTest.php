@@ -4,26 +4,24 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\{DB, Hash, Notification, Password};
 use PHPUnit\Framework\Attributes as PHPUnit;
 use Tests\TestCase;
 
 #[PHPUnit\Group('auth-page')]
 class ForgotPasswordTest extends TestCase
 {
-    protected function requestRoute(): string
+    private function requestRoute(): string
     {
         return route('password.request');
     }
 
-    protected function getRoute(): string
+    private function getRoute(): string
     {
         return route('password.email');
     }
 
-    protected function postRoute(): string
+    private function postRoute(): string
     {
         return route('password.email');
     }
@@ -105,5 +103,28 @@ class ForgotPasswordTest extends TestCase
         $response
             ->assertRedirect($this->getRoute())
             ->assertSessionHasErrors('email');
+    }
+
+    public function test_user_can_reset_password()
+    {
+        $email = 'test@example.com';
+        $newPassword = 'newPassword';
+        $user = User::factory()->create(['email' => $email]);
+
+        // Send password reset link
+        $this->post('/forgot-password', ['email' => $email]);
+
+        // Reset password
+        $response = $this->post('/reset-password', [
+            'token' => Password::createToken($user),
+            'email' => $email,
+            'password' => $newPassword,
+            'password_confirmation' => $newPassword,
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
+
+        // Check if password was reset
+        $this->assertTrue(Hash::check($newPassword, $user->fresh()->password));
     }
 }

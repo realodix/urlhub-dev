@@ -2,22 +2,15 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserType;
 use App\Models\Url;
-use App\Models\Visit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Visit>
+ * @extends Factory<\App\Models\Visit>
  */
 class VisitFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var class-string<Visit>
-     */
-    protected $model = Visit::class;
-
     /**
      * Define the model's default state.
      *
@@ -27,9 +20,19 @@ class VisitFactory extends Factory
     {
         return [
             'url_id'         => Url::factory(),
-            'visitor_id'     => 'foo_bar',
+            'user_type'      => UserType::User,
+            'user_uid'       => fake()->uuid(),
             'is_first_click' => true,
             'referer'        => 'https://github.com/realodix/urlhub',
         ];
+    }
+
+    public function guest(): static
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'user_type' => UserType::Guest,
+            ];
+        });
     }
 }

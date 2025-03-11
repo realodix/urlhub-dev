@@ -4,13 +4,16 @@ namespace App\Services;
 
 use App\Helpers\Helper;
 use App\Models\Url;
-use App\Models\User;
 use App\Models\Visit;
+use App\Settings\GeneralSettings;
 use Illuminate\Support\Uri;
 
 class VisitorService
 {
-    public function __construct(public User $user) {}
+    public function __construct(
+        protected UserService $userService,
+        protected GeneralSettings $settings,
+    ) {}
 
     /**
      * Store the visitor data.
@@ -20,7 +23,7 @@ class VisitorService
      */
     public function create(Url $url)
     {
-        $logBotVisit = config('urlhub.track_bot_visits');
+        $logBotVisit = $this->settings->track_bot_visits;
         $device = Helper::deviceDetector();
         $referer = request()->header('referer');
 
@@ -30,7 +33,8 @@ class VisitorService
 
         Visit::create([
             'url_id'         => $url->id,
-            'visitor_id'     => $this->user->signature(),
+            'user_type'      => $this->userService->userType(),
+            'user_uid'       => $this->userService->signature(),
             'is_first_click' => $this->isFirstClick($url),
             'referer'        => $this->getRefererHost($referer),
         ]);
@@ -45,16 +49,16 @@ class VisitorService
     public function isFirstClick(Url $url): bool
     {
         $hasVisited = $url->visits()
-            ->whereVisitorId($this->user->signature())
+            ->where('user_uid', $this->userService->signature())
             ->exists();
 
         return $hasVisited ? false : true;
     }
 
     /**
-     * Get the referer host.
+     * Get the referer host
      *
-     * Only input the URL host into the referer column
+     * Only input the URL host into the referer column.
      */
     public function getRefererHost(?string $value): ?string
     {
@@ -64,6 +68,6 @@ class VisitorService
 
         $referer = Uri::of($value);
 
-        return $referer->scheme() . '://' . $referer->host();
+        return $referer->scheme().'://'.$referer->host();
     }
 }
