@@ -4,25 +4,24 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\{Event, Hash};
 use PHPUnit\Framework\Attributes as PHPUnit;
 use Tests\TestCase;
 
 #[PHPUnit\Group('auth-page')]
 class RegisterTest extends TestCase
 {
-    protected function successfulRegistrationRoute(): string
+    private function successfulRegistrationRoute(): string
     {
         return route('home');
     }
 
-    protected function getRoute(): string
+    private function getRoute(): string
     {
         return route('register');
     }
 
-    protected function postRoute(): string
+    private function postRoute(): string
     {
         return route('register');
     }
@@ -65,7 +64,7 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'i-love-laravel',
         ]);
 
-        $user = User::whereName('John Doe')->first();
+        $user = User::where('name', 'John Doe')->first();
 
         $response->assertRedirect($this->successfulRegistrationRoute());
         $this->assertCount(1, User::all());
@@ -173,7 +172,7 @@ class RegisterTest extends TestCase
     public function emailShouldNotBeTooLong(): void
     {
         $response = $this->post('/register', [
-            'email' => str_repeat('a', 247) . '@test.com', // 256
+            'email' => str_repeat('a', 247).'@test.com', // 256
         ]);
 
         $response->assertStatus(302);

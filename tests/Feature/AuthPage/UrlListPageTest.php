@@ -4,6 +4,7 @@ namespace Tests\Feature\AuthPage;
 
 use App\Models\Url;
 use PHPUnit\Framework\Attributes as PHPUnit;
+use Tests\Support\Helper;
 use Tests\TestCase;
 
 #[PHPUnit\Group('auth-page')]
@@ -106,7 +107,7 @@ class UrlListPageTest extends TestCase
     #[PHPUnit\Test]
     public function adminCanAccessGuestUsersLinkEditPage(): void
     {
-        $url = Url::factory()->create(['user_id' => Url::GUEST_ID]);
+        $url = Url::factory()->guest()->create();
         $response = $this->actingAs($this->adminUser())
             ->get(route('link.edit', $url->keyword));
         $response->assertOk();
@@ -138,13 +139,36 @@ class UrlListPageTest extends TestCase
         $newLongUrl = 'https://phpunit.readthedocs.io/en/9.1';
         $response = $this->actingAs($this->adminUser())
             ->from(route('link.edit', $url->keyword))
-            ->post(route('link.update', $url->keyword), [
-                'title'    => $url->title,
-                'long_url' => $newLongUrl,
-            ]);
+            ->post(
+                route('link.update', $url->keyword),
+                Helper::updateLinkData($url, ['long_url' => $newLongUrl]),
+            );
 
         $response
-            ->assertRedirectToRoute('dashboard')
+            ->assertRedirectToRoute('dboard.allurl')
+            ->assertSessionHas('flash_success');
+        $this->assertSame($newLongUrl, $url->fresh()->destination);
+    }
+
+    /**
+     * Admin can update guest users link.
+     *
+     * @see App\Http\Controllers\UrlController::update()
+     */
+    #[PHPUnit\Test]
+    public function adminCanUpdateGuestUsersLink(): void
+    {
+        $url = Url::factory()->guest()->create();
+        $newLongUrl = 'https://phpunit.readthedocs.io/en/9.1';
+        $response = $this->actingAs($this->adminUser())
+            ->from(route('link.edit', $url->keyword))
+            ->post(
+                route('link.update', $url->keyword),
+                Helper::updateLinkData($url, ['long_url' => $newLongUrl]),
+            );
+
+        $response
+            ->assertRedirectToRoute('dboard.allurl.u-guest')
             ->assertSessionHas('flash_success');
         $this->assertSame($newLongUrl, $url->fresh()->destination);
     }
@@ -165,10 +189,10 @@ class UrlListPageTest extends TestCase
         $newLongUrl = 'https://phpunit.readthedocs.io/en/9.1';
         $response = $this->actingAs($this->basicUser())
             ->from(route('link.edit', $url->keyword))
-            ->post(route('link.update', $url->keyword), [
-                'title'    => $url->title,
-                'long_url' => $newLongUrl,
-            ]);
+            ->post(
+                route('link.update', $url->keyword),
+                Helper::updateLinkData($url, ['long_url' => $newLongUrl]),
+            );
 
         $response->assertForbidden();
         $this->assertNotSame($newLongUrl, $url->fresh()->destination);

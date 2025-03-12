@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Middleware\UrlHubLinkChecker;
 use App\Http\Requests\StoreUrlRequest;
 use App\Models\Url;
-use App\Models\User;
 use App\Models\Visit;
 use App\Services\QrCodeService;
-use Illuminate\Http\Request;
+use App\Services\UserService;
 use Illuminate\Routing\Controllers\{HasMiddleware, Middleware};
 use Illuminate\Support\Facades\Gate;
 
@@ -27,13 +26,17 @@ class UrlController extends Controller implements HasMiddleware
      */
     public function create(StoreUrlRequest $request)
     {
+        $userService = app(UserService::class);
+
         $url = Url::create([
             'user_id'   => auth()->id(),
+            'user_type' => $userService->userType(),
             'destination' => $request->long_url,
             'title'     => app(Url::class)->getWebTitle($request->long_url),
             'keyword'   => app(Url::class)->getKeyword($request),
             'is_custom' => isset($request->custom_key) ? true : false,
-            'user_sign' => app(User::class)->signature(),
+            'forward_query' => auth()->check() ? true : false,
+            'user_uid'  => $userService->signature(),
         ]);
 
         return to_route('link_detail', $url->keyword);
@@ -49,6 +52,7 @@ class UrlController extends Controller implements HasMiddleware
     {
         $data = [
             'url' => $url,
+            'createdAt' => $url->created_at,
             'visit' => app(Visit::class),
             'visitsCount' => $url->visits()->count(),
             'qrCode' => app(QrCodeService::class)->execute($url->short_url),
@@ -67,37 +71,51 @@ class UrlController extends Controller implements HasMiddleware
     {
         Gate::authorize('updateUrl', $url);
 
-        return view('backend.edit', ['url' => $url]);
+        $data = [
+            'url' => $url,
+            'createdAt' => $url->created_at->inUserTz(),
+            'updatedAt' => $url->updated_at->inUserTz(),
+        ];
+
+        return view('backend.edit', $data);
     }
 
     /**
      * Update the destination URL.
      *
-     * @param Request $request \Illuminate\Http\Request
+     * @param StoreUrlRequest $request \App\Http\Requests\StoreUrlRequest
      * @param Url $url \App\Models\Url
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, Url $url)
+    public function update(StoreUrlRequest $request, Url $url)
     {
         Gate::authorize('updateUrl', $url);
 
         $request->validate([
-            'title'    => ['max:' . Url::TITLE_LENGTH],
-            'long_url' => [
-                'required', 'url', 'max:65535',
-                new \App\Rules\NotBlacklistedDomain,
-            ],
+            'title' => ['max:'.Url::TITLE_LENGTH],
         ]);
 
         $url->update([
             'destination' => $request->long_url,
             'title'       => $request->title,
+            'forward_query' => $request->forward_query ? true : false,
         ]);
 
-        return to_route('dashboard')
-            ->with('flash_success', __('Link changed successfully !'));
+        $flashType = 'flash_success';
+        $message = __('Link updated successfully !');
+        // if the user is not the author of the link
+        if (!$url->author()->is(auth()->user())) {
+            // if the author of the link is guest
+            if ($url->user_id === null) {
+                return to_route('dboard.allurl.u-guest')->with($flashType, $message);
+            }
+
+            return to_route('dboard.allurl')->with($flashType, $message);
+        }
+
+        return to_route('dashboard')->with($flashType, $message);
     }
 
     /**

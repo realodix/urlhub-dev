@@ -5,26 +5,51 @@ namespace Tests\Feature\FrontPage\ShortenUrl;
 use App\Models\Url;
 use App\Services\KeyGeneratorService;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes as PHPUnit;
 use Tests\TestCase;
 
 #[\PHPUnit\Framework\Attributes\Group('front-page')]
 class CreateShortLinkTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->partialMock(Url::class, function (MockInterface $mock) {
+            $mock->shouldReceive('getWebTitle')->andReturn('Mocked Web Title');
+        });
+    }
+
     /**
      * Users shorten the URLs, they don't fill in the custom keyword field. The
      * is_custom column (Urls table) must be filled with 0 / false.
      */
-    public function testShortenUrl(): void
+    #[PHPUnit\Test]
+    #[PHPUnit\Group('forward-query')]
+    public function shortenUrl(): void
     {
         $longUrl = 'https://laravel.com';
-        $response = $this->post(route('link.create'), [
-            'long_url' => $longUrl,
-        ]);
+        $response = $this->actingAs($this->basicUser())
+            ->post(route('link.create'), ['long_url' => $longUrl]);
 
-        $url = Url::whereDestination($longUrl)->first();
+        $url = Url::where('destination', $longUrl)->first();
 
         $response->assertRedirectToRoute('link_detail', $url->keyword);
         $this->assertFalse($url->is_custom);
+        $this->assertTrue($url->forward_query);
+    }
+
+    #[PHPUnit\Group('forward-query')]
+    public function testGuestCanShortenUrl(): void
+    {
+        $longUrl = 'https://laravel.com';
+        $response = $this->post(route('link.create'), ['long_url' => $longUrl]);
+
+        $url = Url::where('destination', $longUrl)->first();
+
+        $response->assertRedirectToRoute('link_detail', $url->keyword);
+        $this->assertFalse($url->is_custom);
+        $this->assertFalse($url->forward_query);
     }
 
     /**
@@ -34,26 +59,16 @@ class CreateShortLinkTest extends TestCase
      */
     public function testShortenUrlWithCustomKeyword(): void
     {
-        $longUrl = 'https://t.co';
+        $longUrl = 'https://example.com/shorten-url-with-custom-keyword';
 
         $customKey = 'foobar';
-        config(['urlhub.keyword_length' => strlen($customKey) + 1]);
-        $response = $this->post(route('link.create'), [
-            'long_url'   => $longUrl,
-            'custom_key' => $customKey,
-        ]);
+        $response = $this->actingAs($this->basicUser())
+            ->post(route('link.create'), [
+                'long_url'   => $longUrl,
+                'custom_key' => $customKey,
+            ]);
         $response->assertRedirectToRoute('link_detail', $customKey);
-        $url = Url::whereDestination($longUrl)->first();
-        $this->assertTrue($url->is_custom);
-
-        $customKey = 'barfoo';
-        config(['urlhub.keyword_length' => strlen($customKey) - 1]);
-        $response = $this->post(route('link.create'), [
-            'long_url'   => $longUrl,
-            'custom_key' => $customKey,
-        ]);
-        $response->assertRedirectToRoute('link_detail', $customKey);
-        $url = Url::whereDestination($longUrl)->first();
+        $url = Url::where('destination', $longUrl)->first();
         $this->assertTrue($url->is_custom);
     }
 
@@ -74,7 +89,8 @@ class CreateShortLinkTest extends TestCase
             $mock->shouldReceive('remainingCapacity')->andReturn(0);
         });
 
-        $response = $this->post(route('link.create'), ['long_url' => 'https://laravel.com']);
+        $response = $this->actingAs($this->basicUser())
+            ->post(route('link.create'), ['long_url' => 'https://laravel.com']);
         $response
             ->assertRedirectToRoute('home')
             ->assertSessionHas('flash_error');
@@ -82,13 +98,15 @@ class CreateShortLinkTest extends TestCase
 
     public function testShortenUrlWithInternalLink(): void
     {
-        $response = $this->post(route('link.create'), ['long_url' => request()->getHost()]);
+        $response = $this->actingAs($this->basicUser())
+            ->post(route('link.create'), ['long_url' => request()->getHost()]);
         $response
             ->assertRedirectToRoute('home')
             ->assertSessionHas('flash_error');
         $this->assertCount(0, Url::all());
 
-        $response = $this->post(route('link.create'), ['long_url' => config('app.url')]);
+        $response = $this->actingAs($this->basicUser())
+            ->post(route('link.create'), ['long_url' => config('app.url')]);
         $response
             ->assertRedirectToRoute('home')
             ->assertSessionHas('flash_error');
@@ -108,10 +126,11 @@ class CreateShortLinkTest extends TestCase
     {
         $url = Url::factory()->create();
 
-        $response = $this->post(route('link.create'), [
-            'long_url'   => 'https://laravel-news.com',
-            'custom_key' => $url->keyword,
-        ]);
+        $response = $this->actingAs($this->basicUser())
+            ->post(route('link.create'), [
+                'long_url'   => 'https://laravel-news.com',
+                'custom_key' => $url->keyword,
+            ]);
 
         $response
             ->assertRedirectToRoute('home')

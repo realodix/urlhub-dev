@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Hash;
 
 class ChangePasswordController extends Controller
 {
@@ -41,7 +40,7 @@ class ChangePasswordController extends Controller
         $request->validate([
             'current_password' => ['current_password'],
             'new_password' => [
-                'required', 'min:6', 'confirmed',
+                ...\App\Rules\UserRules::passwordWithConfirm(),
                 'unique:users,password', 'different:current_password',
             ],
         ]);
@@ -51,10 +50,10 @@ class ChangePasswordController extends Controller
         // Check if admin user is changing another user's password.
         // Admin authority check has been done by the gate.
         if (!auth()->user()->is($user)) {
-            $user->password = Hash::make($newPassword);
+            $user->password = $newPassword;
             $user->save();
         } else {
-            $request->user()->password = Hash::make($newPassword);
+            $request->user()->password = $newPassword;
             $request->user()->save();
 
             // Clear sessions on other devices

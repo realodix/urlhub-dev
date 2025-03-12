@@ -21,6 +21,14 @@ class UrlTest extends TestCase
         $this->visit = new Visit;
     }
 
+    public function testFactory(): void
+    {
+        $m = Url::factory()->guest()->create();
+
+        $this->assertSame(Url::GUEST_ID, $m->user_id);
+        $this->assertSame(\App\Enums\UserType::Guest, $m->user_type);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Eloquent: Relationships
@@ -63,7 +71,7 @@ class UrlTest extends TestCase
 
         $this->post(route('link.create'), ['long_url' => $longUrl]);
 
-        $url = Url::whereDestination($longUrl)->first();
+        $url = Url::where('destination', $longUrl)->first();
 
         $this->assertSame(Url::GUEST_ID, $url->user_id);
     }
@@ -96,10 +104,10 @@ class UrlTest extends TestCase
     public function getShortUrlAttribute(): void
     {
         $url = Url::factory()->create();
-        $url->whereUserId($url->author->id)->first();
+        $url->where('user_id', $url->author->id)->first();
 
         $expected = $url->short_url;
-        $actual = url('/' . $url->keyword);
+        $actual = url('/'.$url->keyword);
         $this->assertSame($expected, $actual);
     }
 
@@ -120,7 +128,7 @@ class UrlTest extends TestCase
     #[PHPUnit\Test]
     public function setMetaTitleAttributeWhenWebTitleSetToFalse(): void
     {
-        config(['urlhub.web_title' => false]);
+        settings()->fill(['retrieve_web_title' => false])->save();
 
         $url = Url::factory()->create(['destination' => 'http://example.com/']);
 
@@ -132,6 +140,18 @@ class UrlTest extends TestCase
     | General
     |--------------------------------------------------------------------------
     */
+
+    public function testKeywordColumnIsCaseSensitive(): void
+    {
+        $url_1 = Url::factory()->create(['keyword' => 'foo', 'destination' => 'https://example.com']);
+        $url_2 = Url::factory()->create(['keyword' => 'Foo', 'destination' => 'https://example.org']);
+
+        $dest_1 = $url_1->where('keyword', 'foo')->first();
+        $dest_2 = $url_2->where('keyword', 'Foo')->first();
+
+        $this->assertSame('https://example.com', $dest_1->destination);
+        $this->assertSame('https://example.org', $dest_2->destination);
+    }
 
     #[PHPUnit\Test]
     public function getWebTitle(): void
@@ -146,13 +166,13 @@ class UrlTest extends TestCase
     }
 
     /**
-     * When config('urlhub.web_title') set `false`, title() should return
+     * When `retrieve_web_title` set `false`, title() should return
      * 'No Title' if the title is empty.
      */
     #[PHPUnit\Test]
     public function getWebTitle_ShouldReturnNoTitle(): void
     {
-        config(['urlhub.web_title' => false]);
+        settings()->fill(['retrieve_web_title' => false])->save();
 
         $expected = 'No Title';
         $actual = $this->url->getWebTitle('https://example123456789.com');
@@ -160,7 +180,7 @@ class UrlTest extends TestCase
     }
 
     #[PHPUnit\Test]
-    public function authUserUrlCount(): void
+    public function authUserLinks(): void
     {
         $user = $this->basicUser();
         $nCurrentUser = 8;
@@ -170,45 +190,33 @@ class UrlTest extends TestCase
         Url::factory()->count($nUser)->create();
 
         $this->actingAs($user);
-        $this->assertSame($nCurrentUser, $this->url->authUserUrlCount());
+        $this->assertSame($nCurrentUser, $this->url->authUserLinks());
         $this->assertSame($nUser + $nCurrentUser, $this->url->count());
     }
 
     #[PHPUnit\Test]
-    public function userUrlCount(): void
+    public function userLinks(): void
     {
         $nUser = 6;
         $nGuest = 4;
 
         Url::factory()->count($nUser)->create();
-        Url::factory()->count($nGuest)->create(['user_id' => Url::GUEST_ID]);
+        Url::factory()->count($nGuest)->guest()->create();
 
-        $this->assertSame($nUser, $this->url->userUrlCount());
+        $this->assertSame($nUser, $this->url->userLinks());
         $this->assertSame($nUser + $nGuest, $this->url->count());
     }
 
     #[PHPUnit\Test]
-    public function guestUserUrlCount(): void
+    public function guestLinks(): void
     {
         $nUser = 6;
         $nGuest = 4;
 
         Url::factory()->count($nUser)->create();
-        Url::factory()->count($nGuest)->create(['user_id' => Url::GUEST_ID]);
+        Url::factory()->count($nGuest)->guest()->create();
 
-        $this->assertSame($nGuest, $this->url->guestUserUrlCount());
+        $this->assertSame($nGuest, $this->url->guestLinks());
         $this->assertSame($nUser + $nGuest, $this->url->count());
-    }
-
-    public function testKeywordColumnIsCaseSensitive(): void
-    {
-        $url_1 = Url::factory()->create(['keyword' => 'foo', 'destination' => 'https://example.com']);
-        $url_2 = Url::factory()->create(['keyword' => 'Foo', 'destination' => 'https://example.org']);
-
-        $dest_1 = $url_1->whereKeyword('foo')->first();
-        $dest_2 = $url_2->whereKeyword('Foo')->first();
-
-        $this->assertSame('https://example.com', $dest_1->destination);
-        $this->assertSame('https://example.org', $dest_2->destination);
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\UserType;
 use App\Http\Requests\StoreUrlRequest;
 use App\Services\KeyGeneratorService;
+use App\Settings\GeneralSettings;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,11 +13,13 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property int|null $user_id
+ * @property UserType $user_type
  * @property string $keyword
  * @property bool $is_custom
  * @property string $destination
  * @property string $title
- * @property string $user_sign
+ * @property bool $forward_query
+ * @property string $user_uid
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property User $author
@@ -40,23 +44,25 @@ class Url extends Model
      */
     protected $fillable = [
         'user_id',
+        'user_type',
         'keyword',
         'is_custom',
         'destination',
         'title',
-        'user_sign',
+        'forward_query',
+        'user_uid',
     ];
 
     /**
      * Get the attributes that should be cast.
-     *
-     * @return array{user_id:'integer',is_custom:'boolean'}
      */
     protected function casts(): array
     {
         return [
             'user_id' => 'integer',
+            'user_type' => UserType::class,
             'is_custom' => 'boolean',
+            'forward_query' => 'boolean',
         ];
     }
 
@@ -105,7 +111,7 @@ class Url extends Model
     protected function shortUrl(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attr) => url('/' . $attr['keyword']),
+            get: fn($value, $attr) => url('/'.$attr['keyword']),
         );
     }
 
@@ -150,9 +156,9 @@ class Url extends Model
     public function getWebTitle(string $value): string
     {
         $uri = \Illuminate\Support\Uri::of($value);
-        $defaultTitle = $uri->host() . ' - Untitled';
+        $defaultTitle = $uri->host().' - Untitled';
 
-        if (config('urlhub.web_title')) {
+        if (app(GeneralSettings::class)->retrieve_web_title) {
             try {
                 $title = app(\Embed\Embed::class)->get($value)->title ?? $defaultTitle;
             } catch (\Exception) {
@@ -167,29 +173,29 @@ class Url extends Model
     }
 
     /**
-     * Total short URLs that have been created by the currently logged-in user.
+     * The number of short links created by the currently logged-in user.
      */
-    public function authUserUrlCount(): int
+    public function authUserLinks(): int
     {
         return self::where('user_id', auth()->id())
             ->count();
     }
 
     /**
-     * Total short URLs that have been created by all users.
+     * The number of short links created by all registered users.
      */
-    public function userUrlCount(): int
+    public function userLinks(): int
     {
-        return self::where('user_id', '!=', self::GUEST_ID)
+        return self::where('user_type', UserType::User)
             ->count();
     }
 
     /**
-     * Total short URLs that have been created by all guest users.
+     * The number of short links created by all guest users.
      */
-    public function guestUserUrlCount(): int
+    public function guestLinks(): int
     {
-        return self::where('user_id', self::GUEST_ID)
+        return self::where('user_type', UserType::Guest)
             ->count();
     }
 }
