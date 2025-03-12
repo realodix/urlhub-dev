@@ -205,13 +205,23 @@ class KeyGeneratorService
      * Calculates the total number of keywords with the correct length and format.
      * The length of the generated string (random string) and the length of the
      * reserved string must be identical.
+     *
+     * Coba gunakan `when`
+     * https://github.com/laravel/framework/pull/52147
+     * https://laravel.com/docs/11.x/queries#conditional-clauses
      */
     public function keywordCount(): int
     {
         $length = $this->settings->keyword_length;
+        $opRegexp = 'REGEXP';
+
+        // For PostgreSQL connection
+        if (\Illuminate\Support\Facades\DB::getDriverName() === 'pgsql') {
+            $opRegexp = '~';
+        }
 
         return Url::whereRaw('LENGTH(keyword) = ?', [$length])
-            ->whereRaw('keyword REGEXP "^[a-zA-Z0-9]{'.$length.'}$"')
+            ->where('keyword', $opRegexp, '^[a-zA-Z0-9]{'.$length.'}$')
             ->count();
     }
 
