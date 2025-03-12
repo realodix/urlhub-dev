@@ -3,7 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Helpers\Helper;
+use App\Enums\UserType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +16,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $email
  * @property string $email_verified_at
  * @property string $password
+ * @property bool $forward_query
+ * @property string $timezone
  * @property string $two_factor_secret
  * @property string $two_factor_recovery_codes
  * @property string $remember_token
@@ -34,6 +37,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password',
+        'forward_query', 'timezone',
     ];
 
     /**
@@ -45,16 +49,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array{email_verified_at:'datetime',password:'hashed'}
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'forward_query' => 'boolean',
         ];
     }
 
@@ -76,39 +76,34 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
+    | Eloquent: Accessors & Mutators
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get the user's timezone. If the attribute is null, it defaults to the
+     * application's timezone.
+     */
+    protected function timezone(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ?? config('app.timezone'),
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | General
     |--------------------------------------------------------------------------
     */
 
     /*
-     * Count the total number of guest users
+     * The number of guest users.
      */
-    public function totalGuestUsers(): int
+    public function guestUserCount(): int
     {
-        return Url::where('user_id', null)
-            ->distinct('user_sign')
+        return Url::where('user_type', UserType::Guest)
+            ->distinct('user_uid')
             ->count();
-    }
-
-    public function signature(): string
-    {
-        if (auth()->check() === false) {
-            $device = Helper::deviceDetector();
-            $browser = $device->getClient();
-            $os = $device->getOs();
-
-            $userDeviceInfo = implode([
-                request()->ip(),
-                $browser['name'] ?? '',
-                $os['name'] ?? '',
-                $os['version'] ?? '',
-                $device->getDeviceName() . $device->getModel() . $device->getBrandName(),
-                request()->getPreferredLanguage(),
-            ]);
-
-            return hash('xxh3', $userDeviceInfo);
-        }
-
-        return (string) auth()->id();
     }
 }

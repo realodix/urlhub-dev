@@ -1,8 +1,8 @@
 ![screenshot](https://i.imgur.com/MeZvgiz.png)
 
-[![LaravelVersion](https://img.shields.io/badge/Laravel-11-f56857.svg?style=flat-square)](https://laravel.com/docs/10.x/releases#laravel-10)
+[![LaravelVersion](https://img.shields.io/badge/Laravel-12-f53003.svg?style=flat-square)](https://laravel.com/docs/12.x/releases#laravel-12)
 ![PHPVersion](https://img.shields.io/badge/PHP-8.2-777BB4.svg?style=flat-square)
-[![GitHub license](https://img.shields.io/github/license/realodix/newt.svg?style=flat-square)](https://github.com/realodix/newt/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/realodix/urlhub.svg?style=flat-square)](https://github.com/realodix/urlhub/blob/master/LICENSE)
 ![Build Status](https://github.com/realodix/urlhub/actions/workflows/tests.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/realodix/urlhub/badge.svg?branch=master)](https://coveralls.io/github/realodix/urlhub) <br>
 [![MadeWithLaravel.com shield](https://madewithlaravel.com/storage/repo-shields/1049-shield.svg)](https://madewithlaravel.com/p/plur/shield-link)
@@ -14,9 +14,11 @@ UrlHub was created, and is maintained by [Budi Hermawan](https://github.com/real
 ### Features
 - **Reliable link shortner:** Does the job really well and it is very consistent. UrlHub is definitely one of the most reliable self-hosted URL shortener out there. Would recommend easily.
 - **Custom URLs (ex: example.com/laravel):** Allows users to create more descriptive short URLs rather than a randomly generated mix of letters and numbers.
-- **QR code generator for each short link:** The fastest way to access to this data is most likely opening the link from a phone. Though short URLs are handy for typing, a more convenient approach to transfer a web link to a mobile phone is through QR codes scanning.
+- **QR Code Generation:** The fastest way to access to this data is most likely opening the link from a phone. Though short URLs are handy for typing, a more convenient approach to transfer a web link to a mobile phone is through QR codes scanning.
 - **Edit or delete your links:** You can change both the address and the destination URL. You can even delete your URL, a feature that is not available with most shorteners.
+- **Parameter Passing**: Forward query parameters from your short link to the destination URL.
 - **View where link goes:** It's nice to see where the link goes before clicking on it so you can avoid sketchy links.
+- **Dark mode**: Switch to a darker color scheme for a more comfortable experience in low-light environments.
 - **Power of customisation:** Do you want your site to be just for your use, so no one can register? No problem. It's in the configuration. Users must be registered to create Short URL? That's okay. It's in the configuration. From configuration file, you can edit pretty everything of your website. The choice is yours.
 - **Sortable list of shortened URLs.**
 - **Modern and simple interface.**
@@ -80,7 +82,7 @@ From the projects root folder run
 - or `composer test`
 - or `./vendor/bin/phpunit`
 
-![screenshot](https://github.com/realodix/urlhub/assets/1314456/ae460c2d-77c6-44de-9183-7fca6cf50095)
+![phpunit_image](https://github.com/user-attachments/assets/ea34dc59-8a72-4e7c-864a-c7ba768ff02b)
 
 
 ## Bug Report

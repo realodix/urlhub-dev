@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\SettingController;
 use App\Http\Controllers\Dashboard\User\ChangePasswordController;
 use App\Http\Controllers\Dashboard\User\UserController;
+use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\UrlController;
-use App\Http\Controllers\UrlRedirectController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'frontend.homepage')->name('home');
@@ -27,15 +28,22 @@ Route::prefix('admin')->middleware(['auth', 'auth.session'])->group(function () 
     // User
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'view'])->name('user.index');
+        Route::get('/new', [UserController::class, 'create'])->name('user.new');
+        Route::post('/store', [UserController::class, 'store'])->name('user.store');
         Route::get('/{user:name}/edit', [UserController::class, 'edit'])->name('user.edit');
         Route::post('/{user:name}/edit', [UserController::class, 'update'])->name('user.update');
+        Route::delete('/{user:name}/delete', [UserController::class, 'delete'])->name('user.delete');
+        Route::get('/{user:name}/delete', [UserController::class, 'confirmDelete'])->name('user.delete.confirm');
 
         Route::get('/{user:name}/changepassword', [ChangePasswordController::class, 'view'])->name('user.password.show');
         Route::post('/{user:name}/changepassword', [ChangePasswordController::class, 'update'])->name('user.password.store');
     });
 
+    Route::get('/settings', [SettingController::class, 'view'])->name('dboard.settings');
+    Route::post('/settings', [SettingController::class, 'update'])->name('dboard.settings.update');
+
     // About Page
     Route::get('/about', [DashboardController::class, 'aboutView'])->name('dboard.about');
 });
 
-Route::get('/{url:keyword}', UrlRedirectController::class);
+Route::get('/{url:keyword}', RedirectController::class);

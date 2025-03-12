@@ -3,6 +3,7 @@
 namespace Tests\Feature\AuthPage\User;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes as PHPUnit;
 use Tests\TestCase;
 
@@ -10,12 +11,12 @@ use Tests\TestCase;
 #[PHPUnit\Group('user-page')]
 class AccountTest extends TestCase
 {
-    protected function getRoute(mixed $value): string
+    private function getRoute(mixed $value): string
     {
         return route('user.edit', $value);
     }
 
-    protected function postRoute(mixed $value): string
+    private function postRoute(mixed $value): string
     {
         return route('user.update', $value);
     }
@@ -74,15 +75,18 @@ class AccountTest extends TestCase
     public function testCanUpdateEmail(): void
     {
         $user = $this->basicUser();
+        $newEmail = 'new_user_email@urlhub.test';
+
         $response = $this->actingAs($user)
             ->from($this->getRoute($user->name))
             ->post($this->postRoute($user->name), [
-                'email' => 'new_email@example.com',
+                'email' => $newEmail,
             ]);
 
         $response
             ->assertRedirect($this->getRoute($user->name))
             ->assertSessionHas('flash_success');
+        $this->assertSame($newEmail, $user->fresh()->email);
     }
 
     /**
@@ -136,64 +140,56 @@ class AccountTest extends TestCase
         $this->assertSame('user2@urlhub.test', $user->email);
     }
 
-    public function testValidateEmailRequired(): void
-    {
-        $user = $this->basicUser();
-
-        $response = $this->actingAs($user)
-            ->from($this->getRoute($user->name))
-            ->post($this->postRoute($user->name), [
-                'email' => '',
-            ]);
-
-        $response
-            ->assertRedirect($this->getRoute($user->name))
-            ->assertSessionHasErrors('email');
-    }
-
-    public function testValidateEmailInvalidFormat(): void
-    {
-        $user = $this->basicUser();
-
-        $response = $this->actingAs($user)
-            ->from($this->getRoute($user->name))
-            ->post($this->postRoute($user->name), [
-                'email' => 'invalid_format',
-            ]);
-
-        $response
-            ->assertRedirect($this->getRoute($user->name))
-            ->assertSessionHasErrors('email');
-    }
-
-    public function testValidateEmailMaxLength(): void
-    {
-        $user = $this->basicUser();
-
-        $response = $this->actingAs($user)
-            ->from($this->getRoute($user->name))
-            ->post($this->postRoute($user->name), [
-                // 255 + 9
-                'email' => str_repeat('a', 255) . '@mail.com',
-            ]);
-
-        $response
-            ->assertRedirect($this->getRoute($user->name))
-            ->assertSessionHasErrors('email');
-    }
-
     public function testValidateEmailUnique(): void
     {
         $user = $this->basicUser();
+        $response = $this->actingAs($user)
+            ->from($this->getRoute($user->name));
+
+        $response
+            ->post($this->postRoute($user->name), [
+                'email' => $user->email, // same with self
+            ])
+            ->assertRedirect($this->getRoute($user->name))
+            ->assertSessionHasErrors('email');
+
+        $response
+            ->post($this->postRoute($user->name), [
+                'email' => $this->adminUser()->email, // same with others
+            ])
+            ->assertRedirect($this->getRoute($user->name))
+            ->assertSessionHasErrors('email');
+    }
+
+    public function testUserCanDisableForwardQuery()
+    {
+        $user = $this->basicUser();
+        $request = new Request([
+            'forward_query' => false,
+        ]);
 
         $response = $this->actingAs($user)
             ->from($this->getRoute($user->name))
-            ->post($this->postRoute($user->name), [
-                'email' => $this->basicUser()->email,
-            ]);
+            ->post($this->postRoute($user->name), $request->all());
 
-        $response
-            ->assertRedirect($this->getRoute($user->name))
-            ->assertSessionHasErrors('email');
+        $response->assertRedirect($this->getRoute($user->name));
+        $this->assertDatabaseHas(User::class, ['forward_query' => 0]);
+        $this->assertSame(false, $user->fresh()->forward_query);
+    }
+
+    public function testUserChangeTimezone()
+    {
+        $user = $this->basicUser();
+        $timezone = 'America/New_York';
+        $request = new Request([
+            'user_timezone' => $timezone,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->from($this->getRoute($user->name))
+            ->post($this->postRoute($user->name), $request->all());
+
+        $response->assertRedirect($this->getRoute($user->name));
+        $this->assertSame($timezone, $user->fresh()->timezone);
     }
 }

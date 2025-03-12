@@ -6,22 +6,11 @@
 
 @section('content')
 <div class="flex flex-col min-h-screen sm:justify-center items-center pt-6 sm:pt-0">
-    @if ($errors->any())
-        <div class="alert alert-error">
-            <div class="font-bold">{{ __('Whoops! Something went wrong.') }}</div>
+    @include('partials/messages')
 
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <div class="auth-card">
+    <div class="auth-box card">
         <form method="POST" action="{{ route('password.update') }}" class="space-y-4">
         @csrf
-
             <input type="hidden" name="token" value="{{ $token }}">
 
             <div>

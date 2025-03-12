@@ -1,42 +1,7 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Unregistered Users Access
-    |--------------------------------------------------------------------------
-    */
-
-    /*
-     * If you set false, users must be registered to create Short URL.
-     */
-    'public_site' => true,
-
-    /*
-     * Enable users registration. If disabled it, no one can register.
-     */
-    'registration' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Shorten URL
-    |--------------------------------------------------------------------------
-    */
-
-    /*
-     * The expected length of the keyword generated when creating a new short URL.
-     */
-    'keyword_length' => 5, // >= 1
-
-    /*
-     * Minimum length of custom keyword.
-     */
-    'custom_keyword_min_length' => 3,
-
-    /*
-     * Maximum length of custom keyword.
-     */
-    'custom_keyword_max_length' => 11,
+    'app_version' => '1.12.x-dev',
 
     /*
      * List of non allowed domain
@@ -62,30 +27,8 @@ return [
         'assets', 'fonts', 'images', 'img', 'storage',
     ],
 
-    'web_title' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Visiting
-    |--------------------------------------------------------------------------
-    */
-
-    /*
-     * HTTP redirect status code.
+    /**
+     * The HTTP status code to use when redirecting a visitor to the original URL.
      */
-    'redirect_status_code' => 302,
-
-    /*
-     * Indicates that the response remains fresh until N seconds after the response
-     * is generated.
-     */
-    'redirect_cache_max_age' => 30,
-
-    /*
-     * Determine whether bot visits count or not.
-     *
-     * - true: bot will be counted as a visitor
-     * - false: bots will not be counted as visitors
-     */
-    'track_bot_visits' => false,
+    'redirection_status_code' => 302,
 ];

@@ -21,37 +21,33 @@ class UserTest extends TestCase
         $this->assertInstanceOf(Url::class, $user->urls->first());
     }
 
+    #[PHPUnit\Test]
+    public function getTimezone(): void
+    {
+        $user = User::factory()->create();
+        $this->assertSame(config('app.timezone'), $user->timezone);
+
+        $user = User::factory()->create(['timezone' => 'America/New_York']);
+        $this->assertSame('America/New_York', $user->timezone);
+    }
+
     /**
      * Jumlah tamu yang memiliki tanda tangan yang berbeda.
      */
     #[PHPUnit\Test]
-    public function totalGuestUsers(): void
+    public function guestUserCount(): void
     {
-        Url::factory()->count(2)->create(['user_id' => Url::GUEST_ID]);
-        $this->assertSame(2, (new User)->totalGuestUsers());
+        Url::factory()->count(2)->guest()->create();
+        $this->assertSame(2, (new User)->guestUserCount());
     }
 
     /**
      * Semua tamu yang memiliki tanda tangan yang identik, harus disatukan.
      */
     #[PHPUnit\Test]
-    public function totalGuestUsers2(): void
+    public function guestUserCount2(): void
     {
-        Url::factory()->count(5)->create(['user_id' => Url::GUEST_ID, 'user_sign' => 'foo']);
-        $this->assertSame(1, (new User)->totalGuestUsers());
-    }
-
-    /**
-     * Test the signature of the user.
-     */
-    public function testSignature(): void
-    {
-        $user = app(User::class);
-        $this->assertTrue(strlen($user->signature()) >= 16);
-
-        $user = $this->basicUser();
-        $this->actingAs($user)
-            ->post(route('link.create'), ['long_url' => 'https://laravel.com']);
-        $this->assertEquals($user->id, $user->signature());
+        Url::factory()->count(5)->guest()->create(['user_uid' => 'foo']);
+        $this->assertSame(1, (new User)->guestUserCount());
     }
 }

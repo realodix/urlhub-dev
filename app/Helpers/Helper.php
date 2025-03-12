@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 use Composer\Pcre\Preg;
+use Illuminate\Support\Str;
+use Illuminate\Support\Uri;
 
 class Helper
 {
@@ -37,8 +39,8 @@ class Helper
         bool $trailingSlash = true,
         int $maxHostLength = 45,
     ) {
-        $uri = \Illuminate\Support\Uri::of($value);
-        $schemePrefix = $scheme && $uri->scheme() ? $uri->scheme() . '://' : '';
+        $uri = Uri::of($value);
+        $schemePrefix = $scheme && $uri->scheme() ? $uri->scheme().'://' : '';
 
         // Strip scheme if not required
         if (!$scheme) {
@@ -51,7 +53,7 @@ class Helper
         }
 
         $limit = $limit ?? strlen($value);
-        $hostLength = strlen($schemePrefix . $uri->host());
+        $hostLength = strlen($schemePrefix.$uri->host());
 
         // Truncate the URL if necessary
         if (strlen($value) > $limit) {
@@ -63,55 +65,12 @@ class Helper
                 $firstHalf = mb_substr($value, 0, intval($adjustedLimit * 0.8));
                 $secondHalf = mb_substr($value, -intval($adjustedLimit * 0.2));
 
-                return $firstHalf . $trimMarker . $secondHalf;
+                return $firstHalf.$trimMarker.$secondHalf;
             }
 
-            return \Illuminate\Support\Str::limit($value, $adjustedLimit, $trimMarker);
+            return Str::limit($value, $adjustedLimit, $trimMarker);
         }
 
         return $value;
-    }
-
-    /**
-     * List of potentially colliding routes with shortened link keywords.
-     *
-     * @return array
-     */
-    public static function routeCollisionList()
-    {
-        return collect(\Illuminate\Support\Facades\Route::getRoutes()->get())
-            ->map(fn(\Illuminate\Routing\Route $route) => $route->uri)
-            ->pipe(fn($value) => self::collisionCandidateFilter($value))
-            ->toArray();
-    }
-
-    /**
-     * List of files/folders in the public/ directory that will potentially collide
-     * with shortened link keywords.
-     *
-     * @return array
-     */
-    public static function publicPathCollisionList()
-    {
-        $publicPathList = scandir(public_path());
-        if ($publicPathList === false) {
-            return [];
-        }
-
-        return collect($publicPathList)
-            ->pipe(fn($value) => self::collisionCandidateFilter($value))
-            ->toArray();
-    }
-
-    /**
-     * @param \Illuminate\Support\Collection $value
-     * @return \Illuminate\Support\Collection
-     */
-    public static function collisionCandidateFilter($value)
-    {
-        return collect($value)
-            ->filter(fn($value) => Preg::isMatch('/^([0-9a-zA-Z\-])+$/', $value))
-            ->reject(fn($value) => in_array($value, config('urlhub.reserved_keyword')))
-            ->unique();
     }
 }

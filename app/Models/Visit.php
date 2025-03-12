@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Enums\UserType;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
  * @property int $url_id
- * @property string $visitor_id
+ * @property UserType $user_type
+ * @property string $user_uid
  * @property bool $is_first_click
  * @property string $referer
  * @property \Carbon\Carbon $created_at
@@ -27,19 +30,16 @@ class Visit extends Model
      */
     protected $fillable = [
         'url_id',
-        'visitor_id',
+        'user_type',
+        'user_uid',
         'is_first_click',
         'referer',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array{is_first_click:'boolean'}
-     */
     protected function casts(): array
     {
         return [
+            'user_type' => UserType::class,
             'is_first_click' => 'boolean',
         ];
     }
@@ -67,32 +67,67 @@ class Visit extends Model
     */
 
     /**
-     * Number of link visits from the currently logged-in user.
+     * Scope a query to only include visits from guest users.
+     *
+     * @param Builder<self> $query
      */
-    public function authUserLinkVisitCount(): int
+    public function scopeIsGuest(Builder $query): void
     {
-        return self::whereHas('url', function ($query) {
-            $query->where('user_id', auth()->id());
-        })->count();
+        $query->where('user_type', UserType::Guest)
+            ->orWhere('user_type', UserType::Bot);
     }
 
     /**
-     * Number of user link visits.
+     * The number of clicks from links created by the currently authenticated
+     * user.
      */
-    public function userLinkVisitCount(): int
+    public function authUserLinkVisits(): int
     {
-        return self::whereHas('url', function ($query) {
-            $query->where('user_id', '!=', Url::GUEST_ID);
-        })->count();
+        return self::whereRelation('url', 'user_id', auth()->id())
+            ->count();
     }
 
     /**
-     * Number of guest user link visits.
+     * The number of clicks from links created by all registered users.
      */
-    public function guestUserLinkVisitCount(): int
+    public function userLinkVisits(): int
     {
-        return self::whereHas('url', function ($query) {
-            $query->where('user_id', Url::GUEST_ID);
-        })->count();
+        return self::whereRelation('url', 'user_type', UserType::User)
+            ->count();
+    }
+
+    /**
+     * The number of clicks from links created by all guest users.
+     */
+    public function guestLinkVisits(): int
+    {
+        return self::whereRelation('url', 'user_type', UserType::Guest)
+            ->count();
+    }
+
+    /**
+     *  Total users who clicked on a link.
+     */
+    public function userVisits(): int
+    {
+        return self::where('user_type', UserType::User)->count();
+    }
+
+    /**
+     * Total guest users who clicked on a link.
+     */
+    public function guestVisits(): int
+    {
+        return self::isGuest()->count();
+    }
+
+    /**
+     * Total unique guest users who clicked on a link.
+     */
+    public function uniqueGuestVisits(): int
+    {
+        return self::isGuest()
+            ->distinct('user_uid')
+            ->count();
     }
 }

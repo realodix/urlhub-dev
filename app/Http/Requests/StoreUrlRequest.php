@@ -7,6 +7,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUrlRequest extends FormRequest
 {
+    /** @var int */
+    const URL_LENGTH = 7000;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,11 +27,20 @@ class StoreUrlRequest extends FormRequest
      */
     public function rules()
     {
-        $minLen = config('urlhub.custom_keyword_min_length');
-        $maxLen = config('urlhub.custom_keyword_max_length');
+        $settings = app(\App\Settings\GeneralSettings::class);
+        $maxUrlLen = self::URL_LENGTH;
+        $minLen = $settings->custom_keyword_min_length;
+        $maxLen = $settings->custom_keyword_max_length;
 
         return [
-            'long_url' => ['required', 'url', 'max:65535', new NotBlacklistedDomain],
+            'long_url' => [
+                'required', "max:{$maxUrlLen}", new NotBlacklistedDomain,
+                function ($attribute, $value, $fail) {
+                    if (!preg_match('/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^\s]+$/', $value)) {
+                        $fail('The :attribute field must be a valid URL or a valid deeplink.');
+                    }
+                },
+            ],
             'custom_key' => [
                 'nullable', 'unique:urls,keyword',
                 "min:{$minLen}", "max:{$maxLen}", 'lowercase',
