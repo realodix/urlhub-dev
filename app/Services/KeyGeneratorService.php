@@ -212,7 +212,7 @@ class KeyGeneratorService
      */
     public function keywordCount(): int
     {
-        $length = config('urlhub.keyword_length');
+        $length = $this->settings->keyword_length;
         $opRegexp = 'REGEXP';
 
         // For PostgreSQL connection
